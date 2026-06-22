@@ -1,10 +1,10 @@
-# Shared "operator" account, applied to every node via hive.nix `defaults`.
+# Shared "operateur" account, applied to every node via hive.nix `defaults`.
 # - uid 1000
 # - passwordless sudo
 # - may reboot/poweroff without sudo (polkit)
 { ... }:
 {
-  users.users.operator = {
+  users.users.operateur = {
     isNormalUser = true;
     uid = 1000;
     description = "Operator";
@@ -17,10 +17,10 @@
 
   users.users.root.hashedPasswordFile = "/persist/secrets/root-password.txt";
 
-  # Passwordless sudo, scoped to the operator user only.
+  # Passwordless sudo, scoped to the operateur user only.
   security.sudo.extraRules = [
     {
-      users = [ "operator" ];
+      users = [ "operateur" ];
       commands = [
         {
           command = "ALL";
@@ -30,12 +30,12 @@
     }
   ];
 
-  # Allow operator to reboot/power off without sudo (or any authentication),
+  # Allow operateur to reboot/power off without sudo (or any authentication),
   # even when other sessions are active or inhibitors are set.
   security.polkit.enable = true;
   security.polkit.extraConfig = ''
     polkit.addRule(function(action, subject) {
-      if (subject.user == "operator" &&
+      if (subject.user == "operateur" &&
           (action.id == "org.freedesktop.login1.power-off" ||
            action.id == "org.freedesktop.login1.power-off-multiple-sessions" ||
            action.id == "org.freedesktop.login1.power-off-ignore-inhibit" ||
