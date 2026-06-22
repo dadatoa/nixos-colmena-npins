@@ -1,0 +1,39 @@
+name: Update npins
+
+on:
+  schedule:
+    # Runs at 02:00 every Friday
+    - cron: '0 2 * * 5'
+  workflow_dispatch:
+
+jobs:
+  update-npins:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@v16
+
+      - name: Run npins update
+        run: |
+          nix shell nixpkgs#npins --command npins update
+
+      - name: Commit and Push Changes
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Only stage the sources file
+          git add npins/sources.json
+
+          # Check if there are any changes to commit
+          if ! git diff-index --quiet HEAD; then
+            git commit -m "chore: update npins sources"
+            git push
+          else
+            echo "No changes detected. Skipping commit."
+          fi
