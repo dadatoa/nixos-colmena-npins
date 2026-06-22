@@ -8,10 +8,14 @@
     isNormalUser = true;
     uid = 1000;
     description = "Operator";
-    # No password / SSH key is set here. Add one per-host (or here) so the
-    # account can actually log in, e.g.:
-    #   users.users.operator.openssh.authorizedKeys.keys = [ "ssh-ed25519 ..." ];
+    openssh.authorizedKeys.keys = [
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBA52LLKZPhszwrzrqOwLJ2a2spNzjAn/ls6krE9SM/i dadatoa@dadabook"
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHnWrIExo7hWe04wTUUEn6smnx/LRfNtPtatR+NgQlfz SpaceK@dadabook"
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIF36sv0vHnOUCx8uMWCkwLwpQoBgWP0NzYRhd6+6vr8t deploy_app_to_server_github_actions"
+    ];
   };
+
+  users.users.root.hashedPasswordFile = "/persist/secrets/root-password.txt";
 
   # Passwordless sudo, scoped to the operator user only.
   security.sudo.extraRules = [

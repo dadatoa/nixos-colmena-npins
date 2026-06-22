@@ -29,7 +29,7 @@
   time.timeZone = "Asia/Bangkok";
 
   # French keyboard for the virtual consoles (TTYs).
-  console.keyMap = "fr";
+  # console.keyMap = "fr";
 
   # French keyboard for X11 / Wayland sessions (no-op on headless hosts, but
   # ensures any graphical session is localised as well).

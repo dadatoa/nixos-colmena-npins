@@ -13,7 +13,7 @@ let
 
   pkgs = import sources.nixpkgs {
     config = {
-      # allowUnfree = true;
+      allowUnfree = true;
     };
     overlays = [ unstableOverlay ];
   };
@@ -36,36 +36,68 @@ in
 
   # Applied to every node.
   defaults = { pkgs, ... }: {
-    imports = [ ./common/locale.nix ./common/users.nix ];
-    environment.systemPackages = [ pkgs.git pkgs.vim ];
-    services.openssh.enable = true;
+    deployment.buildOnTarget = true;
+    
+    boot.supportedFilesystems.btrfs = true;
+    
+    imports = [
+      (sources.disko + "/module.nix")
+      (sources.preservation + "/module.nix")
+      ./common/locale.nix 
+      ./common/users.nix 
+    ];
+
+    nix.gc = {
+      automatic = true;
+      dates = "weekly";
+      options = "--delete-older-than 7d";
+    };
+
+    nix.settings.auto-optimise-store = true;
     nix.settings.experimental-features = [ "nix-command" "flakes" ];
+    nix.channel.enable = false;
+    
+    environment.systemPackages = with pkgs; [
+      btrfs-progs
+      e2fsprogs # ext2,3,4 filesytem
+      git
+      pciutils
+      usbutils
+      vim
+      wget
+    ];
+    
+    programs.mosh.enable = true;
+    # start ssh-agent
+    programs.ssh.startAgent = true;
+    
+    services.openssh.enable = true;
+
+    # enable Tailscale with config
+    services.tailscale = {
+      enable = true;
+      authKeyFile = "/persist/secrets/ts-key.txt";
+      package = pkgs.unstable.tailscale;
+    };
+
+    ## enable mdns autodiscovery
+    services.avahi = {
+      publish = {
+        enable = true;
+        userServices = true;
+      };
+      enable = true;
+      openFirewall = true;
+      nssmdns4 = true;
+    };
   };
 
-  web01 = { ... }: {
+  xen = { name, nodes, ... }: {
     deployment = {
-      targetHost = "web01.example.com";
-      targetUser = "root";
-      tags = [ "web" ];
+      targetHost = "xen.blue-edmontosaurus.ts.net";
+      targetUser = "operateur";
+      tags = [ "dom0" ];
     };
-    imports = [ ./hosts/web01.nix ];
-  };
-
-  db01 = { ... }: {
-    deployment = {
-      targetHost = "db01.example.com";
-      targetUser = "root";
-      tags = [ "db" ];
-    };
-    imports = [ ./hosts/db01.nix ];
-  };
-
-  xen = { ... }: {
-    deployment = {
-      targetHost = "xen.example.com";
-      targetUser = "root";
-      tags = [ "hypervisor" ];
-    };
-    imports = [ ./hosts/xen.nix ];
+    imports = [ ./hosts/xen ];
   };
 }
