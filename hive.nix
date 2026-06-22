@@ -36,7 +36,7 @@ in
 
   # Applied to every node.
   defaults = { pkgs, ... }: {
-    imports = [ ./common/locale.nix ];
+    imports = [ ./common/locale.nix ./common/users.nix ];
     environment.systemPackages = [ pkgs.git pkgs.vim ];
     services.openssh.enable = true;
     nix.settings.experimental-features = [ "nix-command" "flakes" ];
