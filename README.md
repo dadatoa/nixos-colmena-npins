@@ -12,10 +12,24 @@ from **nixos-unstable** via an overlay exposed as `pkgs.unstable.*`.
 .
 ├── npins/            # pinned sources (stable nixpkgs + unstable nixpkgs)
 ├── hive.nix          # colmena entrypoint (defines the unstable overlay + nodes)
+├── common/           # shared modules applied to every node
+│   └── locale.nix    # French localization (locale, timezone, keyboard)
 └── hosts/            # per-node NixOS modules
     ├── web01.nix
     └── db01.nix
 ```
+
+## Localization (French)
+
+`common/locale.nix` is imported from `hive.nix`'s `defaults`, so every node is
+localised in French:
+
+- `i18n.defaultLocale` and all `LC_*` categories set to `fr_FR.UTF-8`
+- `time.timeZone = "Asia/Bangkok"`
+- `console.keyMap = "fr"` and `services.xserver.xkb.layout = "fr"`
+
+To localise a single node differently, override these options in its
+`hosts/*.nix` module.
 
 ## How stable + unstable works
 
