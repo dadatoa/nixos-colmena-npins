@@ -10,7 +10,7 @@ from **nixos-unstable** via an overlay exposed as `pkgs.unstable.*`.
 
 ```
 .
-├── npins/            # pinned sources (stable nixpkgs + unstable nixpkgs)
+├── npins/            # pinned sources (nixpkgs, disko, preservation)
 ├── hive.nix          # colmena entrypoint (defines the unstable overlay + nodes)
 ├── common/           # shared modules applied to every node
 │   ├── locale.nix    # French localization (locale, timezone, keyboard)
@@ -20,6 +20,16 @@ from **nixos-unstable** via an overlay exposed as `pkgs.unstable.*`.
     ├── db01.nix
     └── xen.nix       # Xen hypervisor dom0
 ```
+
+## Disko & Preservation
+
+[disko](https://github.com/nix-community/disko) (declarative disk partitioning)
+and [preservation](https://github.com/nix-community/preservation) (persistent
+state on tmpfs-root setups) are pinned via npins and imported in `hive.nix`
+`defaults`, so their NixOS options are available on **every node**.
+
+Per-host disk layouts go in `hosts/<node>/disko.nix` and preservation rules in
+`hosts/<node>/preservation.nix` (see `hosts/xen/` for an example).
 
 ## Xen hypervisor host
 
