@@ -59,4 +59,13 @@ in
     };
     imports = [ ./hosts/db01.nix ];
   };
+
+  xen = { ... }: {
+    deployment = {
+      targetHost = "xen.example.com";
+      targetUser = "root";
+      tags = [ "hypervisor" ];
+    };
+    imports = [ ./hosts/xen.nix ];
+  };
 }
