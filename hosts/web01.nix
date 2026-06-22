@@ -13,7 +13,7 @@
     fsType = "ext4";
   };
 
-  # Mixing stable and unstable packages: the system stays on stable (24.11),
+  # Mixing stable and unstable packages: the system stays on stable (26.05),
   # but these packages come from nixos-unstable via the overlay.
   environment.systemPackages = [
     pkgs.htop            # stable
@@ -32,5 +32,5 @@
 
   networking.firewall.allowedTCPPorts = [ 80 443 ];
 
-  system.stateVersion = "24.11";
+  system.stateVersion = "26.05";
 }
