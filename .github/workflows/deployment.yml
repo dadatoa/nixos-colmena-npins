@@ -2,13 +2,6 @@ name: deploy nixos configurations
 
 on:
   workflow_dispatch:
-  schedule:
-    # Runs at 03:00 every Friday
-    - cron: '0 3 * * 5'
-
-  # push:
-  #   branches:
-  #     - main
 
 jobs:
   deploy-nixos:

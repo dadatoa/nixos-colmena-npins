@@ -11,6 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      actions: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
@@ -34,6 +35,15 @@ jobs:
           if ! git diff-index --quiet HEAD; then
             git commit -m "chore: update npins sources"
             git push
+            echo "changes=true" >> "$GITHUB_OUTPUT"
           else
             echo "No changes detected. Skipping commit."
+            echo "changes=false" >> "$GITHUB_OUTPUT"
           fi
+        id: commit
+
+      - name: Trigger deployment
+        if: steps.commit.outputs.changes == 'true'
+        run: gh workflow run deployment.yml
+        env:
+          GH_TOKEN: ${{ github.token }}
