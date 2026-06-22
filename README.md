@@ -17,8 +17,18 @@ from **nixos-unstable** via an overlay exposed as `pkgs.unstable.*`.
 │   └── users.nix     # shared "operator" user (passwordless sudo, power mgmt)
 └── hosts/            # per-node NixOS modules
     ├── web01.nix
-    └── db01.nix
+    ├── db01.nix
+    └── xen.nix       # Xen hypervisor dom0
 ```
+
+## Xen hypervisor host
+
+`hosts/xen.nix` (node `xen`, tag `hypervisor`) runs as a Xen type-1 hypervisor
+with NixOS as dom0 (`virtualisation.xen.enable`). On nixos-26.05 the Xen module
+requires **systemd-boot** (or Lanzaboote/Limine) plus a systemd-based initrd, so
+unlike the GRUB-based hosts this node boots via UEFI. Attach the real uplink to
+`xenbr0` and replace the placeholder filesystems with the target's
+`hardware-configuration.nix`.
 
 ## Localization (French)
 
