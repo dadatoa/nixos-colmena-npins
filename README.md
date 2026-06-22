@@ -14,7 +14,7 @@ from **nixos-unstable** via an overlay exposed as `pkgs.unstable.*`.
 ├── hive.nix          # colmena entrypoint (defines the unstable overlay + nodes)
 ├── common/           # shared modules applied to every node
 │   ├── locale.nix    # French localization (locale, timezone, keyboard)
-│   └── users.nix     # shared "operator" user (passwordless sudo, power mgmt)
+│   └── users.nix     # shared "operateur" user (passwordless sudo, power mgmt)
 └── hosts/            # per-node NixOS modules
     ├── web01.nix
     ├── db01.nix
@@ -54,13 +54,13 @@ To localise a single node differently, override these options in its
 
 ## Shared user
 
-`common/users.nix` defines an `operator` account (uid `1000`) on every node:
+`common/users.nix` defines an `operateur` account (uid `1000`) on every node:
 
-- passwordless `sudo` (scoped to `operator` via `security.sudo.extraRules`)
+- passwordless `sudo` (scoped to `operateur` via `security.sudo.extraRules`)
 - may `reboot`/`poweroff` without sudo, via a polkit rule
 
 No password or SSH key is set by default — add one so the account can log in,
-e.g. `users.users.operator.openssh.authorizedKeys.keys = [ "ssh-ed25519 ..." ]`.
+e.g. `users.users.operateur.openssh.authorizedKeys.keys = [ "ssh-ed25519 ..." ]`.
 
 ## How stable + unstable works
 
