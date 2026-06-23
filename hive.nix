@@ -100,4 +100,12 @@ in
     };
     imports = [ ./hosts/xen ];
   };
+  deckard = { name, nodes, ... }: {
+    deployment = {
+      targetHost = "deckard.blue-edmontosaurus.ts.net";
+      targetUser = "operateur";
+      tags = [ "domU" ];
+    };
+    imports = [ ./hosts/deckard ];
+  };
 }
