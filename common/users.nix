@@ -8,6 +8,7 @@
     isNormalUser = true;
     uid = 1000;
     description = "Operator";
+    extraGroups = [ "wheel" "video" ];
     openssh.authorizedKeys.keys = [
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBA52LLKZPhszwrzrqOwLJ2a2spNzjAn/ls6krE9SM/i dadatoa@dadabook"
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHnWrIExo7hWe04wTUUEn6smnx/LRfNtPtatR+NgQlfz SpaceK@dadabook"
@@ -46,4 +47,7 @@
       }
     });
   '';
+
+  # allow nix-copy to live system
+  nix.settings.trusted-users = [ "operateur" ];
 }

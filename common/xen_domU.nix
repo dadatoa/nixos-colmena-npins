@@ -28,4 +28,7 @@
 
   # Don't run ntpd, since we should get the correct time from Dom0.
   services.timesyncd.enable = false;
+  
+  # Automatically log in at the virtual consoles.
+  services.getty.autologinUser = "operateur";
 }
