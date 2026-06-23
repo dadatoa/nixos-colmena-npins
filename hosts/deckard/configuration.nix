@@ -1,11 +1,10 @@
-{ config, pkgs, lib, ... }:
+{ lib, pkgs, ... }:
 {
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
 
   system.stateVersion = "26.05";
 
-  environment.systemPackages = with pkgs; [
-  ];
+  environment.systemPackages = with pkgs; [ forgejo-runner];
 
   networking.hostName = "deckard";
 
