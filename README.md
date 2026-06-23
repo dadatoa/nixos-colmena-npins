@@ -15,9 +15,9 @@ from **nixos-unstable** via an overlay exposed as `pkgs.unstable.*`.
 ├── common/           # shared modules applied to every node
 │   ├── locale.nix    # French localization (locale, timezone, keyboard)
 │   └── users.nix     # shared "operateur" user (passwordless sudo, power mgmt)
+│   └── domU.nix      # shared configuration for domU VMs
 └── hosts/            # per-node NixOS modules
-    ├── web01.nix
-    ├── db01.nix
+    ├── deckard.nix   # Forgejo runner
     └── xen.nix       # Xen hypervisor dom0
 ```
 
@@ -52,6 +52,10 @@ localised in French:
 To localise a single node differently, override these options in its
 `hosts/*.nix` module.
 
+## Shared configuration for domU VMs
+
+`common/domU.nix` is imported in `hosts/*.nix` files that are domU VMs, so every node that is a domU VM has the same configuration.
+
 ## Shared user
 
 `common/users.nix` defines an `operateur` account (uid `1000`) on every node:
@@ -59,8 +63,6 @@ To localise a single node differently, override these options in its
 - passwordless `sudo` (scoped to `operateur` via `security.sudo.extraRules`)
 - may `reboot`/`poweroff` without sudo, via a polkit rule
 
-No password or SSH key is set by default — add one so the account can log in,
-e.g. `users.users.operateur.openssh.authorizedKeys.keys = [ "ssh-ed25519 ..." ]`.
 
 ## How stable + unstable works
 
