@@ -61,6 +61,7 @@ in
       btrfs-progs
       e2fsprogs # ext2,3,4 filesytem
       git
+      iproute2
       pciutils
       usbutils
       vim
@@ -92,7 +93,7 @@ in
     };
   };
 
-  xen = { name, nodes, ... }: {
+  xen = { ... }: {
     deployment = {
       targetHost = "xen.blue-edmontosaurus.ts.net";
       targetUser = "operateur";
@@ -100,8 +101,10 @@ in
     };
     imports = [ ./hosts/xen ];
   };
-  deckard = { name, nodes, ... }: {
+  deckard = { ... }: {
     deployment = {
+      # Allow local deployment with `colmena apply-local`
+      allowLocalDeployment = true;
       targetHost = "deckard.blue-edmontosaurus.ts.net";
       targetUser = "operateur";
       tags = [ "domU" ];

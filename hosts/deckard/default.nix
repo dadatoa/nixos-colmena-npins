@@ -4,5 +4,6 @@
     ./configuration.nix
     ./preservation.nix
     ./filesystems.nix
+    ./runner.nix
   ];
 }
