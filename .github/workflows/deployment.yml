@@ -37,6 +37,5 @@ jobs:
             StrictHostKeyChecking no
           END
       - name: "deployment"
-        run: |
-          colmena build
-          colmena apply boot
+        run: colmena apply boot
+
