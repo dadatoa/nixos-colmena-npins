@@ -12,5 +12,5 @@ jobs:
           oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
           oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
           tags: tag:testlab
-          ping: 10.10.10.87, 10.10.10.175
+          ping: xen, deckard
 
