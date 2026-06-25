@@ -95,7 +95,7 @@ in
 
   xen = { ... }: {
     deployment = {
-      targetHost = "xen.blue-edmontosaurus.ts.net";
+      targetHost = "10.10.10.175";
       targetUser = "operateur";
       tags = [ "dom0" ];
     };
@@ -103,7 +103,7 @@ in
   };
   nas = { ... }: {
     deployment = {
-      targetHost = "nas.blue-edmontosaurus.ts.net";
+      targetHost = "10.10.10.95";
       targetUser = "operateur";
       tags = [ "domU" ];
     };
@@ -113,7 +113,7 @@ in
     deployment = {
       # Allow local deployment with `colmena apply-local`
       allowLocalDeployment = true;
-      targetHost = "deckard.blue-edmontosaurus.ts.net";
+      targetHost = "10.10.10.87";
       targetUser = "operateur";
       tags = [ "domU" ];
     };
