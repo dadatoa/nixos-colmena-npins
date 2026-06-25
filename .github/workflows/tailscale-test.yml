@@ -1,6 +1,7 @@
 name: test tailscale connect
 
-on: { workflow_dispatch }
+on: workflow_dispatch
+
 jobs:
   tailscale:
     runs-on: ubuntu-latest
