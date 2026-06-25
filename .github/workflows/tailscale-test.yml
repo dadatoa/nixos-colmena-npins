@@ -1,8 +1,6 @@
 name: test tailscale connect
 
-on:
-  workflow_dispatch:
-
+on: { workflow_dispatch }
 jobs:
   tailscale:
     runs-on: ubuntu-latest
@@ -12,5 +10,22 @@ jobs:
           oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
           oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
           tags: tag:testlab
-          ping: xen, deckard
+          ping: xen.{{ secrets.TS_TAILNET }}
 
+      - name: "Configure SSH"
+        env:
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_KEY: ${{ secrets.SSH_KEY }}
+        run: |
+          mkdir -p ~/.ssh/
+          echo "$SSH_KEY" > ~/.ssh/external-machine.key
+          chmod 600 ~/.ssh/external-machine.key
+          cat >>~/.ssh/config <<END
+          Host *
+            User $SSH_USER
+            IdentityFile ~/.ssh/external-machine.key
+            StrictHostKeyChecking no
+          END
+
+      - name: "Test SSH"
+        run: ssh operateur@10.10.10.175 -t "echo 'SSH connection successful'"
