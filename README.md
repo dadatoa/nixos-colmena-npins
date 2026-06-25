@@ -10,15 +10,31 @@ from **nixos-unstable** via an overlay exposed as `pkgs.unstable.*`.
 
 ```
 .
-├── npins/            # pinned sources (nixpkgs, disko, preservation)
-├── hive.nix          # colmena entrypoint (defines the unstable overlay + nodes)
-├── common/           # shared modules applied to every node
-│   ├── locale.nix    # French localization (locale, timezone, keyboard)
-│   └── users.nix     # shared "operateur" user (passwordless sudo, power mgmt)
-│   └── domU.nix      # shared configuration for domU VMs
-└── hosts/            # per-node NixOS modules
-    ├── deckard.nix   # Forgejo runner
-    └── xen.nix       # Xen hypervisor dom0
+├── npins/                    # pinned sources (nixpkgs, disko, preservation)
+├── hive.nix                  # colmena entrypoint (defines the unstable overlay + nodes)
+├── common/                   # shared modules applied to every node
+│   ├── locale.nix            # French localization (locale, timezone, keyboard)
+│   ├── users.nix             # shared "operateur" user (passwordless sudo, power mgmt)
+│   └── xen_domU.nix          # shared configuration for Xen domU VMs
+└── hosts/                    # per-node NixOS modules
+    ├── deckard/              # Forgejo runner (domU)
+    │   ├── default.nix
+    │   ├── configuration.nix
+    │   ├── filesystems.nix
+    │   ├── preservation.nix
+    │   └── runner.nix
+    ├── nas/                  # NAS (domU)
+    │   ├── default.nix
+    │   ├── configuration.nix
+    │   ├── filesystems.nix
+    │   ├── preservation.nix
+    │   └── runner.nix
+    └── xen/                  # Xen hypervisor dom0
+        ├── default.nix
+        ├── configuration.nix
+        ├── disko.nix
+        ├── hardware-configuration.nix
+        └── preservation.nix
 ```
 
 ## Disko & Preservation
@@ -33,7 +49,7 @@ Per-host disk layouts go in `hosts/<node>/disko.nix` and preservation rules in
 
 ## Xen hypervisor host
 
-`hosts/xen.nix` (node `xen`, tag `hypervisor`) runs as a Xen type-1 hypervisor
+`hosts/xen/` (node `xen`, tag `dom0`) runs as a Xen type-1 hypervisor
 with NixOS as dom0 (`virtualisation.xen.enable`). On nixos-26.05 the Xen module
 requires **systemd-boot** (or Lanzaboote/Limine) plus a systemd-based initrd, so
 unlike the GRUB-based hosts this node boots via UEFI. Attach the real uplink to
@@ -54,7 +70,7 @@ To localise a single node differently, override these options in its
 
 ## Shared configuration for domU VMs
 
-`common/domU.nix` is imported in `hosts/*.nix` files that are domU VMs, so every node that is a domU VM has the same configuration.
+`common/xen_domU.nix` is imported in the `default.nix` of each domU host (`deckard`, `nas`), providing shared Xen guest configuration.
 
 ## Shared user
 
@@ -111,5 +127,5 @@ colmena apply --on @web  # only nodes tagged "web"
 colmena apply build --on web01
 ```
 
-> The `hosts/*.nix` filesystem/bootloader settings are placeholders so the config
-> evaluates. Replace them with each target's real `hardware-configuration.nix`.
+> The `hosts/*/filesystems.nix` disk UUIDs and the `hosts/xen/hardware-configuration.nix`
+> are host-specific. Replace them with each target's real values before deploying.

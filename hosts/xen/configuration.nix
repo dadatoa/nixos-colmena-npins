@@ -7,7 +7,7 @@
   #
   # The Xen dom0 module requires systemd-boot (or Lanzaboote/Limine) and a
   # systemd-based initrd, so this host boots via UEFI rather than GRUB.
-  boot.kernelParams = 
+  boot.kernelParams =
   [
     ### xen special boot kernel param
     ### hide pci device wifi from dom0 to be abble to pass it on anther damain
@@ -19,15 +19,15 @@
   boot.loader.systemd-boot.consoleMode = "0";
 
   boot.loader.efi.canTouchEfiVariables = true;
-  
+
   ## use latest kernel available
   boot.kernelPackages = pkgs.linuxPackages_latest;
-  
+
   # to disable "A start job is running for /dev/tpmrm0" timeout
   systemd.tpm2.enable = false;
   # if the previous one is not enough:
   boot.initrd.systemd.tpm2.enable = false;
-  
+
   boot.initrd.systemd.enable = true;
   boot.initrd.kernelModules =  [ "vfio_pci" "vfio" "vfio_iommu_type1" ];
 
@@ -52,6 +52,7 @@
     grub2_xen_pvh
     grub2_pvhgrub_image
     grub2
+    python # add python for Xen guest management with ansible
   ];
 
   networking.firewall.enable = false;

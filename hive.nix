@@ -37,14 +37,14 @@ in
   # Applied to every node.
   defaults = { pkgs, ... }: {
     deployment.buildOnTarget = true;
-    
+
     boot.supportedFilesystems.btrfs = true;
-    
+
     imports = [
       (sources.disko + "/module.nix")
       (sources.preservation + "/module.nix")
-      ./common/locale.nix 
-      ./common/users.nix 
+      ./common/locale.nix
+      ./common/users.nix
     ];
 
     nix.gc = {
@@ -56,7 +56,7 @@ in
     nix.settings.auto-optimise-store = true;
     nix.settings.experimental-features = [ "nix-command" "flakes" ];
     nix.channel.enable = false;
-    
+
     environment.systemPackages = with pkgs; [
       btrfs-progs
       e2fsprogs # ext2,3,4 filesytem
@@ -67,11 +67,11 @@ in
       vim
       wget
     ];
-    
+
     programs.mosh.enable = true;
     # start ssh-agent
     programs.ssh.startAgent = true;
-    
+
     services.openssh.enable = true;
 
     # enable Tailscale with config
@@ -100,6 +100,14 @@ in
       tags = [ "dom0" ];
     };
     imports = [ ./hosts/xen ];
+  };
+  nas = { ... }: {
+    deployment = {
+      targetHost = "nas.blue-edmontosaurus.ts.net";
+      targetUser = "operateur";
+      tags = [ "domU" ];
+    };
+    imports = [ ./hosts/nas ];
   };
   deckard = { ... }: {
     deployment = {
