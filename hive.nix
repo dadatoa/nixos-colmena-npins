@@ -116,7 +116,7 @@ in
     deployment = {
       # Allow local deployment with `colmena apply-local`
       allowLocalDeployment = true;
-      targetHost = "10.10.10.87";
+      targetHost = "100.79.215.126";
       targetUser = "operateur";
       tags = [ "domU" ];
     };
