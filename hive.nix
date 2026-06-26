@@ -54,7 +54,10 @@ in
     };
 
     nix.settings.auto-optimise-store = true;
-    nix.settings.experimental-features = [ "nix-command" "flakes" ];
+    nix.settings.experimental-features = [
+      "nix-command"
+      "flakes"
+    ];
     nix.channel.enable = false;
 
     environment.systemPackages = with pkgs; [
@@ -103,7 +106,7 @@ in
   };
   nas = { ... }: {
     deployment = {
-      targetHost = "10.10.10.95";
+      targetHost = "10.10.10.107";
       targetUser = "operateur";
       tags = [ "domU" ];
     };
