@@ -11,7 +11,7 @@ jobs:
           oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
           oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
           tags: tag:testlab
-          ping: xen.${{ secrets.TS_TAILNET }}
+          ping: xen.${{ secrets.TS_TAILNET }},deckard.${{ secrets.TS_TAILNET }}
 
       - name: "Configure SSH"
         env:
