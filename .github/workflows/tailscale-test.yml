@@ -11,7 +11,7 @@ jobs:
           oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
           oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
           tags: tag:testlab
-          ping: 100.64.110.106, 100.79.215.126
+          ping: ${{ secrets.TS_PING }}
 
       - name: "Configure SSH"
         env:
