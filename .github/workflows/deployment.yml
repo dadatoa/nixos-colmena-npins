@@ -36,5 +36,9 @@ jobs:
             IdentityFile ~/.ssh/external-machine.key
             StrictHostKeyChecking no
           END
-      - name: "deployment"
-        run: colmena apply boot
+
+      - name: "deployment to vms"
+        run: colmena apply --reboot --on @domU
+
+      - name: "deployment to xen"
+        run: colmena apply --reboot --on @dom0
