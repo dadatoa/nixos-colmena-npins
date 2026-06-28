@@ -1,4 +1,4 @@
-name: deploy nixos configurations
+name: deploy nixos on Xen
 
 on:
   workflow_dispatch:

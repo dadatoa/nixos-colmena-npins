@@ -1,4 +1,4 @@
-name: deploy nixos configurations
+name: deploy nixos on DomUs
 
 on:
   workflow_dispatch:
