@@ -37,8 +37,8 @@ jobs:
             StrictHostKeyChecking no
           END
 
-      - name: "deployment to vms"
-        run: colmena apply --reboot --on @domU
+      # - name: "deployment to vms"
+      # run: colmena apply --reboot --on @domU
 
       - name: "deployment to xen"
         run: colmena apply --reboot --on @dom0

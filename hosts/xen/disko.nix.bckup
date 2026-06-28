@@ -1,17 +1,13 @@
 {
-
+  
   fileSystems."/nix".neededForBoot = true;
   fileSystems."/persist" = {
     neededForBoot = true; # sometimes needed too
     device = "/dev/nvme_vg/dom0";
     fsType = "btrfs";
-    options = [
-      "subvol=persist"
-      "compress=zstd"
-      "noatime"
-    ];
+    options = ["subvol=persist" "compress=zstd" "noatime"];
   };
-
+  
   disko.devices = {
     nodev = {
       "/" = {
@@ -22,7 +18,7 @@
         ];
       };
     };
-
+    
     disk.main = {
       # device = "/dev/nvme0n1";
       device = "/dev/disk/by-id/nvme-EDILOCA_EN600_Pro_512GB_AA240220910";
@@ -43,7 +39,7 @@
               type = "filesystem";
               format = "vfat";
               mountpoint = "/boot";
-              mountOptions = [ "umask=0077" ];
+              # mountOptions = [ "umask=0077" ];
             };
           };
           swap = {
@@ -53,7 +49,7 @@
               resumeDevice = true;
             };
           };
-          # root
+          # root 
           main = {
             name = "main";
             size = "100%";
@@ -67,29 +63,23 @@
       };
     };
     lvm_vg = {
-      # root_vg
+      # root_vg 
       nvme_vg = {
         type = "lvm_vg";
         lvs = {
           dom0 = {
-            size = "40G";
+            size = "20G";
             content = {
               type = "btrfs";
               extraArgs = [ "-f" ];
               subvolumes = {
                 "/nix" = {
-                  mountOptions = [
-                    "subvol=nix"
-                    "noatime"
-                  ];
+                  mountOptions = [ "subvol=nix" "noatime" ];
                   mountpoint = "/nix";
                 };
-                "/persist" = {
-                  mountOptions = [
-                    "subvol=persist"
-                    "noatime"
-                  ];
-                  mountpoint = "/persist";
+                "/persistent" = {
+                  mountOptions = [ "subvol=persistent" "noatime"];
+                  mountpoint = "/persistent";
                 };
               };
             };

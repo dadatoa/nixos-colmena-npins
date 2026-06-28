@@ -98,7 +98,7 @@ in
 
   xen = { ... }: {
     deployment = {
-      targetHost = "10.10.10.175";
+      targetHost = "100.107.28.98";
       targetUser = "operateur";
       tags = [ "dom0" ];
     };
