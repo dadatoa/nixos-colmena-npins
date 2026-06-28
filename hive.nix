@@ -106,7 +106,7 @@ in
   };
   nas = { ... }: {
     deployment = {
-      targetHost = "10.10.10.107";
+      targetHost = "100.70.23.23";
       targetUser = "operateur";
       tags = [ "domU" ];
     };
@@ -118,7 +118,7 @@ in
       allowLocalDeployment = true;
       targetHost = "100.79.215.126";
       targetUser = "operateur";
-      tags = [ "domU" ];
+      tags = [ "" ];
     };
     imports = [ ./hosts/deckard ];
   };
