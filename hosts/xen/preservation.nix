@@ -8,19 +8,20 @@
         # "/var/lib/bluetooth"
         "/var/lib/tailscale"
         "/var/lib/xen"
-        { directory = "/var/lib/nixos"; inInitrd = true; }
+        {
+          directory = "/var/lib/nixos";
+          inInitrd = true;
+        }
 
-        ];
+      ];
 
       files = [
         "/etc/ssh/authorized_keys.d/operateur"
-        { file = "/etc/machine-id"; inInitrd = true; }
+        {
+          file = "/etc/machine-id";
+          inInitrd = true;
+        }
       ];
-      users.operateur = {
-        directories = [
-          "xl-configs"
-        ];
-      };
     };
   };
 }
