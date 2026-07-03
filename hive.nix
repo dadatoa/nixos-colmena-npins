@@ -80,7 +80,6 @@ in
     # enable Tailscale with config
     services.tailscale = {
       enable = true;
-      authKeyFile = "/persist/secrets/ts-key.txt";
       package = pkgs.unstable.tailscale;
     };
 
@@ -108,7 +107,7 @@ in
     deployment = {
       targetHost = "100.70.23.23";
       targetUser = "operateur";
-      tags = [ "domU" ];
+      tags = [ "domu" ];
     };
     imports = [ ./hosts/nas ];
   };

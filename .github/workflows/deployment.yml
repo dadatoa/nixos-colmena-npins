@@ -38,8 +38,8 @@ jobs:
             UserKnownHostsFile /dev/null
           END
 
-      # - name: "deployment to vms"
-      # run: colmena apply --reboot --on @domU
+      - name: "deployment to vms"
+        run: colmena apply --reboot --on @domu
 
       - name: "deployment to xen"
         run: colmena apply --reboot --on @dom0
