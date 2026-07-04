@@ -7,19 +7,19 @@
 
   fileSystems."/nix" = {
     neededForBoot = true;
-    device = "/dev/disk/by-uuid/4176eb8b-ab69-4313-bed8-dea05679a316";
+    device = "/dev/xvda";
     fsType = "btrfs";
     options = ["subvol=nix" "compress=zstd" "noatime"];
   };
   fileSystems."/persist" = {
     neededForBoot = true;
-    device = "/dev/disk/by-uuid/4176eb8b-ab69-4313-bed8-dea05679a316";
+    device = "/dev/xvda";
     fsType = "btrfs";
     options = ["subvol=persist" "compress=zstd" "noatime"];
   };
   fileSystems."/boot" = {
     neededForBoot = true;
-    device = "/dev/disk/by-uuid/4176eb8b-ab69-4313-bed8-dea05679a316";
+    device = "/dev/xvda";
     fsType = "btrfs";
     options = ["subvol=boot" "noatime"];
   };
