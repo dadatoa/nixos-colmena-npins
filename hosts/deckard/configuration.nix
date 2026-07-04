@@ -4,13 +4,13 @@
 
   system.stateVersion = "26.05";
 
-  environment.systemPackages = with pkgs; [ forgejo-runner];
+  environment.systemPackages = with pkgs; [ forgejo-runner ];
 
   networking.hostName = "deckard";
 
   networking.firewall.enable = false;
 
-  ## manage network with systemd
+  # Manage network with systemd
   networking.useNetworkd = true;
   systemd.network.enable = true;
   systemd.network.networks = {

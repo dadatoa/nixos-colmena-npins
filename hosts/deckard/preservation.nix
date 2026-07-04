@@ -8,12 +8,18 @@
         # "/var/lib/bluetooth"
         "/var/lib/tailscale"
         "/var/lib/glusterd"
-        { directory = "/var/lib/nixos"; inInitrd = true; }
+        {
+          directory = "/var/lib/nixos";
+          inInitrd = true;
+        }
       ];
 
       files = [
         "/etc/ssh/authorized_keys.d/operateur"
-        { file = "/etc/machine-id"; inInitrd = true; }
+        {
+          file = "/etc/machine-id";
+          inInitrd = true;
+        }
       ];
 
       # Preserve user files
@@ -23,7 +29,7 @@
       };
       users.root = {
         home = "/root";
-        directories = [ ];
+        directories = [];
         files = [ ".gitconfig" ];
       };
     };

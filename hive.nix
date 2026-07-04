@@ -35,7 +35,8 @@ in
   };
 
   # Applied to every node.
-  defaults = { pkgs, ... }: {
+  defaults = { pkgs, ... }:
+  {
     deployment.buildOnTarget = true;
 
     boot.supportedFilesystems.btrfs = true;
@@ -83,7 +84,7 @@ in
       package = pkgs.unstable.tailscale;
     };
 
-    ## enable mdns autodiscovery
+    # Enable mDNS autodiscovery
     services.avahi = {
       publish = {
         enable = true;
@@ -95,7 +96,8 @@ in
     };
   };
 
-  xen = { ... }: {
+  xen = { ... }:
+  {
     deployment = {
       targetHost = "100.107.28.98";
       targetUser = "operateur";
@@ -103,7 +105,8 @@ in
     };
     imports = [ ./hosts/xen ];
   };
-  nas = { ... }: {
+  nas = { ... }:
+  {
     deployment = {
       targetHost = "100.70.23.23";
       targetUser = "operateur";
@@ -111,7 +114,8 @@ in
     };
     imports = [ ./hosts/nas ];
   };
-  deckard = { ... }: {
+  deckard = { ... }:
+  {
     deployment = {
       # Allow local deployment with `colmena apply-local`
       allowLocalDeployment = true;

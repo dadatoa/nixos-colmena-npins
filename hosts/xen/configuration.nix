@@ -61,6 +61,5 @@
     python3 # add python for Xen guest management with ansible
   ];
 
-
   system.stateVersion = "26.05";
 }
