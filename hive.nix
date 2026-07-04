@@ -125,4 +125,14 @@ in
     };
     imports = [ ./hosts/deckard ];
   };
+
+  giles = { ... }:
+  {
+    deployment = {
+      targetHost = "100.82.170.70";
+      targetUser = "operateur";
+      tags = [ "domu" ];
+    };
+    imports = [ ./hosts/giles ];
+  };
 }
