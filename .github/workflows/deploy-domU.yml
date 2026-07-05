@@ -39,4 +39,4 @@ jobs:
           END
 
       - name: "deployment to vms"
-        run: colmena apply --reboot --on @domu
+        run: colmena apply dry-activate -f colmena/hive.nix --on @domu

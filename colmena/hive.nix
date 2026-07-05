@@ -1,5 +1,5 @@
 let
-  sources = import ./npins;
+  sources = import ../npins;
 
   # Overlay that exposes the unstable channel as `pkgs.unstable.*` on every node.
   # It inherits the base system and config (allowUnfree, etc.) so unstable
