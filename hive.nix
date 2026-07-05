@@ -119,9 +119,9 @@ in
     deployment = {
       # Allow local deployment with `colmena apply-local`
       allowLocalDeployment = true;
-      targetHost = "100.79.215.126";
+      targetHost = "100.127.50.22";
       targetUser = "operateur";
-      tags = [ "" ];
+      tags = [ "domu" ];
     };
     imports = [ ./hosts/deckard ];
   };
