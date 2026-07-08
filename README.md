@@ -91,23 +91,18 @@ colmena/
 ### Bootstrap a new machine (flake)
 
 ```bash
-# Install the Xen dom0
-nixos install --flake "git+https://your-instance.fogejo.example/username/nixos-config#xen"
-# Directly from my github repo
-nixos install --flake github:dadatoa/nixos-colmena-npins#xen
+# Build and activate the Xen dom0
+nixos-rebuild boot --flake .#xen
 
 # Build and activate the reference Xen VM
-nixos install --flake "git+https://your-instance.fogejo.example/username/nixos-config#nixdomu"
-# Directly from my github repo
-nixos install --flake github:dadatoa/nixos-colmena-npins#xen
-
+nixos-rebuild boot --flake .#nixdomu
 ```
 
 ### Deploy with Colmena
 
 ```bash
 # Deploy to all machines
-colmena apply # add -f colmena/hive.nix if you are in the root dir
+colmena apply
 
 # Deploy to domUs only (nas, deckard, giles)
 colmena apply --tags domu
@@ -122,6 +117,7 @@ colmena apply dry-activate
 ### Update pinned sources
 
 ```bash
+cd npins
 npins update
 
 # Or let the weekly GitHub Actions workflow do it for you.
