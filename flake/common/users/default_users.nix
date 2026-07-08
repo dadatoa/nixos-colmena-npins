@@ -17,7 +17,7 @@
     ];
   };
   users.users.root = {
-    initialPassword = "*perateur"; ## dont lock myself out at first boot
+    initialPassword = "r**t"; ## dont lock myself out at first boot
   };
   security.sudo.wheelNeedsPassword = false;
 }
