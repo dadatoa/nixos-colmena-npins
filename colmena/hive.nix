@@ -78,12 +78,6 @@ in
 
     services.openssh.enable = true;
 
-    # enable Tailscale with config
-    services.tailscale = {
-      enable = true;
-      package = pkgs.unstable.tailscale;
-    };
-
     # Enable mDNS autodiscovery
     services.avahi = {
       publish = {
@@ -103,7 +97,10 @@ in
       targetUser = "operateur";
       tags = [ "dom0" ];
     };
-    imports = [ ./hosts/xen ];
+    imports = [
+      ./hosts/xen
+      ./common/tailscale.nix
+    ];
   };
   nas = { ... }:
   {

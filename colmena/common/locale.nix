@@ -1,4 +1,4 @@
-# French localization, applied to every node via hive.nix `defaults`.
+l# French localization, applied to every node via hive.nix `defaults`.
 # Sets the system locale, all per-category LC_* settings, the timezone and the
 # console/X11 keyboard layout to French.
 { ... }:
