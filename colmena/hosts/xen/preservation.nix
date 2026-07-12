@@ -22,6 +22,11 @@
           inInitrd = true;
         }
       ];
+      users.operateur = {
+        directories = [ ".ssh" ".config" "xl-configs" ];
+        files = [ ".gitconfig" ];
+      };
+
     };
   };
 }
