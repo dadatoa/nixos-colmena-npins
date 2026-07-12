@@ -19,7 +19,7 @@
 
   environment.shells = [ pkgs.nushell ];
 
-  users.users.root.hashedPasswordFile = "/persist/secrets/root-password.txt";
+  users.users.root.hashedPassword = "$y$j9T$7KS0JnyfiA/D3xjb5KhkL.$4ftVKMN9aVxQZ4HGXWOB8eVaq9EOXFL01Jq8vyEBG93";
 
   # Passwordless sudo, scoped to the operateur user only.
   security.sudo.extraRules = [
