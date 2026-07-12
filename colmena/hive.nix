@@ -38,7 +38,7 @@ in
   defaults = { pkgs, ... }:
   {
     deployment.buildOnTarget = true;
-
+    deployment.allowLocalDeployment = true; # allow all hosts to deploy locally
     boot.supportedFilesystems.btrfs = true;
 
     imports = [
@@ -72,22 +72,7 @@ in
       wget
     ];
 
-    programs.mosh.enable = true;
-    # start ssh-agent
-    programs.ssh.startAgent = true;
 
-    services.openssh.enable = true;
-
-    # Enable mDNS autodiscovery
-    services.avahi = {
-      publish = {
-        enable = true;
-        userServices = true;
-      };
-      enable = true;
-      openFirewall = true;
-      nssmdns4 = true;
-    };
   };
 
   xen = { ... }:
@@ -100,6 +85,7 @@ in
     imports = [
       ./hosts/xen
       ./common/tailscale.nix
+      ./common/remote.nix
     ];
   };
   nas = { ... }:
@@ -109,7 +95,7 @@ in
       targetUser = "operateur";
       tags = [ "domu" ];
     };
-    imports = [ ./hosts/nas ];
+    imports = [ ./hosts/nas ./common/remote.nix ];
   };
   deckard = { ... }:
   {
@@ -120,7 +106,7 @@ in
       targetUser = "operateur";
       tags = [ "domu" ];
     };
-    imports = [ ./hosts/deckard ];
+    imports = [ ./hosts/deckard ./common/remote.nix ];
   };
 
   giles = { ... }:
@@ -130,6 +116,14 @@ in
       targetUser = "operateur";
       tags = [ "domu" ];
     };
-    imports = [ ./hosts/giles ];
+    imports = [ ./hosts/giles ./common/remote.nix ];
+  };
+
+  orbnix = { ... }:
+  {
+    deployment = {
+      targetHost = null;
+    };
+    imports = [ ./hosts/orbnix/configuration.nix ];
   };
 }
