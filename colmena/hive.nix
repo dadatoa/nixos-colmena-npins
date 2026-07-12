@@ -95,7 +95,11 @@ in
       targetUser = "operateur";
       tags = [ "domu" ];
     };
-    imports = [ ./hosts/nas ./common/remote.nix ];
+    imports = [
+      ./hosts/nas
+      ./common/remote.nix
+      ./common/tailscale.nix
+    ];
   };
   deckard = { ... }:
   {
@@ -106,7 +110,11 @@ in
       targetUser = "operateur";
       tags = [ "domu" ];
     };
-    imports = [ ./hosts/deckard ./common/remote.nix ];
+    imports = [
+      ./hosts/deckard
+      ./common/remote.nix
+      ./common/tailscale.nix
+    ];
   };
 
   giles = { ... }:
@@ -116,7 +124,11 @@ in
       targetUser = "operateur";
       tags = [ "domu" ];
     };
-    imports = [ ./hosts/giles ./common/remote.nix ];
+    imports = [
+      ./hosts/giles
+      ./common/remote.nix
+      ./common/tailscale.nix
+    ];
   };
 
   orbnix = { ... }:
