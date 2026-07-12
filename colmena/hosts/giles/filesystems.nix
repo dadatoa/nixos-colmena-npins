@@ -44,4 +44,14 @@
       size = 4 * 1024; # Creates an 4GB swap file
     }
   ];
+
+  ## Gluster mounts
+  filesystems."/data/media" = {
+    device = "100.70.23.23:gv_media";
+    fsType = "glusterfs";
+  };
+  filesystems."/data/appdata" = {
+    device = "100.70.23.23:gv_appdata";
+    fsType = "glusterfs";
+  };
 }

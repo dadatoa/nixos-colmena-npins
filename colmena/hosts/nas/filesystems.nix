@@ -44,4 +44,16 @@
       size = 4 * 1024; # Creates an 4GB swap file
     }
   ];
+
+  ## gluster server volumes
+  fileSystems."/srv/gluster/appdata" = {
+    device = "/dev/disk/by-label/appadata";
+    fsType = "btrfs";
+    options = [ noatime ];
+  };
+  fileSystems."/srv/gluster/media" = {
+    device = "/dev/disk/by-label/media";
+    fsType = "btrfs";
+    options = [ noatime ];
+  };
 }
