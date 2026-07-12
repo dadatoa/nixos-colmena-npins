@@ -47,13 +47,13 @@
 
   ## gluster server volumes
   fileSystems."/srv/gluster/appdata" = {
-    device = "/dev/disk/by-label/appadata";
+    device = "/dev/disk/by-label/appdata";
     fsType = "btrfs";
-    options = [ noatime ];
+    options = [ "noatime" ];
   };
   fileSystems."/srv/gluster/media" = {
     device = "/dev/disk/by-label/media";
     fsType = "btrfs";
-    options = [ noatime ];
+    options = [ "noatime" ];
   };
 }
