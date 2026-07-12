@@ -1,4 +1,4 @@
-l# French localization, applied to every node via hive.nix `defaults`.
+# French localization, applied to every node via hive.nix `defaults`.
 # Sets the system locale, all per-category LC_* settings, the timezone and the
 # console/X11 keyboard layout to French.
 { ... }:
@@ -33,8 +33,8 @@ l# French localization, applied to every node via hive.nix `defaults`.
 
   # French keyboard for X11 / Wayland sessions (no-op on headless hosts, but
   # ensures any graphical session is localised as well).
-  services.xserver.xkb = {
-    layout = "fr";
-    variant = "";
-  };
+  # services.xserver.xkb = {
+  #   layout = "fr";
+  #   variant = "";
+  # };
 }

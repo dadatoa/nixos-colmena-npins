@@ -1,7 +1,8 @@
 { config, pkgs, ... }:
 {
   users.users.operateur = {
-    initialPassword = "*perateur"; ## dont lock myself out at first boot
+    ## dont lock myself out at first boot
+    hashedPassword = "$y$j9T$NxPYeSkHmzOaNbGuQkLK1.$Pv7ni5ZnntgNWGisvJ07uSMoJ.mdLgDcAZ7mK8.7wv9";
     isNormalUser = true;
     uid = 1000;
     description = "main user";
@@ -17,7 +18,8 @@
     ];
   };
   users.users.root = {
-    initialPassword = "r**t"; ## dont lock myself out at first boot
+    ## dont lock myself out at first boot
+    hashedPassword = "$y$j9T$uYTs80JuhTlMyiLgfok3V.$5tJtvXBuLUI0h8kUC2jEL9q3VSro1I/KksPfFbmKrSA"
   };
   security.sudo.wheelNeedsPassword = false;
 }
