@@ -29,9 +29,7 @@ Used for **bootstrapping** new machines — initial installs and one-off builds.
 
 - Defines `nixosConfigurations` for `xen` (dom0) and `nixdomu` (a reference
   Xen VM guest)
-- Built with `nixos-rebuild` using the top-level `flake.nix`
-- Pins are managed via `flake.lock`
-- Best for: initial machine provisioning, testing config changes locally
+- Build with `nixos-install` using the top-level `flake.nix`
 
 ### 2. Colmena + npins (`colmena/`)
 
@@ -90,12 +88,53 @@ colmena/
 
 ### Bootstrap a new machine (flake)
 
-```bash
-# Build and activate the Xen dom0
-nixos-rebuild boot --flake .#xen
+#### Prepare Disks
 
-# Build and activate the reference Xen VM
-nixos-rebuild boot --flake .#nixdomu
+I use [Disko](https://github.com/nix-community/disko) for bare metal hosts (only xen so far)
+
+``` bash
+# format and mount your drive(s)
+sudo nix --experimental-features "nix-command flakes" run github:nix-community/disko/latest -- --mode destroy,format,mount /<path>/<to>/<your>/<disko>/<config> # can be relative Path
+
+# install nix
+sudo nixos-install --flake .#your-flake
+
+```
+For VMs, I just create a LVM Logical Volume (LV) which will be my root filesystem, as I use *btrfs* I eventually create the subvolumes that I need directly from dom0.
+
+``` bash
+sudo lvcreate --name my_filesystem_lv --size 10G my_vg
+
+sudo mkfs.btrfs /dev/my_vg/my_filesystem_lv
+
+# If I go with impermanence, I will need sub-volumes for /nix, /boot, and /persist
+# in order to create subvolumes with btrfs, I need to mount the LV
+sudo mount /dev/my_vg/my_filesystem_lv /mnt
+
+# /persist can have any name, it is for keeping preserved files and dirs with preservation module
+sudo btrfs subvolume create /mnt/nix
+sudo btrfs subvolume create /mnt/boot
+sudo btrfs subvolume create /mnt/persist
+
+# As I want to have something clean with impermanence, I unmount <my_filesystem_lv>
+# and I will mount each subvolume separately on /mnt
+sudo umount /mnt
+sudo mkdir /mnt/{nix boot persist}
+sudo mount -t btrfs -o subvolume=boot /dev/my_vg/my_filesystem_lv /mnt/boot
+sudo mount -t btrfs -o subvolume=nix /dev/my_vg/my_filesystem_lv /mnt/nix
+sudo mount -t btrfs -o subvolume=persist /dev/my_vg/my_filesystem_lv /mnt/persist
+```
+
+#### Install the system
+
+```bash
+# Install Xen dom0
+# launched from an installation media
+nixos-install --flake .#xen
+
+# Install a Xen VM
+# can be executed directly on dom0
+nixos-install --flake .#nixdomu
 ```
 
 ### Deploy with Colmena
