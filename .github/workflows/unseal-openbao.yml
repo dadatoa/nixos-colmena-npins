@@ -1,0 +1,51 @@
+name: Unseal OpenBao
+
+on:
+  workflow_dispatch:
+
+jobs:
+  unseal:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: tailscale/github-action@v4
+        with:
+          oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+          oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
+          tags: tag:testlab
+          ping: bifrost.${{ secrets.TS_TAILNET }}
+
+      - name: Check and unseal OpenBao
+        env:
+          OPENBAO_ADDR: ${{ secrets.OPENBAO_ADDR }}
+          UNSEAL_KEY_1: ${{ secrets.UNSEAL_KEY_1 }}
+          UNSEAL_KEY_2: ${{ secrets.UNSEAL_KEY_2 }}
+          UNSEAL_KEY_3: ${{ secrets.UNSEAL_KEY_3 }}
+        run: |
+          set -euo pipefail
+
+          echo "Checking OpenBao seal status at ${OPENBAO_ADDR}..."
+
+          STATUS=$(curl -s "${OPENBAO_ADDR}/v1/sys/seal-status")
+          SEALED=$(echo "$STATUS" | jq -r '.sealed')
+
+          if [ "$SEALED" = "false" ]; then
+            echo "Vault is already unsealed. Nothing to do."
+            exit 0
+          fi
+
+          echo "Vault is sealed. Unsealing with 3 keys..."
+
+          for key in "$UNSEAL_KEY_1" "$UNSEAL_KEY_2" "$UNSEAL_KEY_3"; do
+            RESPONSE=$(curl -s -X PUT "${OPENBAO_ADDR}/v1/sys/unseal" \
+              -H "Content-Type: application/json" \
+              -d "{\"key\": \"${key}\"}")
+            SEALED=$(echo "$RESPONSE" | jq -r '.sealed')
+            echo "Key submitted. Sealed: ${SEALED}"
+          done
+
+          if [ "$SEALED" = "true" ]; then
+            echo "Error: Vault is still sealed after submitting all 3 keys."
+            exit 1
+          fi
+
+          echo "Vault successfully unsealed."
