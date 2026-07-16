@@ -1,9 +1,6 @@
-let
-  sources = import ../npins;
+let sources = import ../npins;
 
-  # Overlay that exposes the unstable channel as `pkgs.unstable.*` on every node.
-  # It inherits the base system and config (allowUnfree, etc.) so unstable
-  # packages evaluate consistently with the rest of the system.
+  # Overlay that exposes the unstable channel as `pkgs.unstable.*` on every node.# It inherits the base system and config (allowUnfree, etc.) so unstable packages evaluate consistently with the rest of the system.
   unstableOverlay = final: prev: {
     unstable = import sources.unstable {
       inherit (prev) system;
@@ -71,12 +68,11 @@ in
       vim
       wget
     ];
-
-
   };
 
   xen = { ... }:
   {
+    networking.hostName = "xen";
     deployment = {
       targetHost = "100.107.28.98";
       targetUser = "operateur";
@@ -84,12 +80,12 @@ in
     };
     imports = [
       ./hosts/xen
-      ./common/tailscale.nix
       ./common/remote.nix
     ];
   };
   nas = { ... }:
   {
+    networking.hostName = "nas";
     deployment = {
       targetHost = "100.70.23.23";
       targetUser = "operateur";
@@ -98,11 +94,11 @@ in
     imports = [
       ./hosts/nas
       ./common/remote.nix
-      ./common/tailscale.nix
     ];
   };
   deckard = { ... }:
   {
+    networking.hostName = "deckard";
     deployment = {
       # Allow local deployment with `colmena apply-local`
       allowLocalDeployment = true;
@@ -113,21 +109,20 @@ in
     imports = [
       ./hosts/deckard
       ./common/remote.nix
-      ./common/tailscale.nix
     ];
   };
 
-  giles = { ... }:
+  bender = { ... }:
   {
+    networking.hostName = "bender";
     deployment = {
       targetHost = "100.82.170.70";
       targetUser = "operateur";
       tags = [ "domu" ];
     };
     imports = [
-      ./hosts/giles
+      ./hosts/bender
       ./common/remote.nix
-      ./common/tailscale.nix
     ];
   };
 
