@@ -7,6 +7,11 @@
 
   services.openssh.enable = true;
 
+  services.tailscale = {
+    enable = true;
+    package = pkgs.unstable.tailscale;
+  };
+
   # Enable mDNS autodiscovery
   services.avahi = {
     publish = {

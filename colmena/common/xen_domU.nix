@@ -32,4 +32,70 @@
 
   # Automatically log in at the virtual consoles.
   services.getty.autologinUser = "operateur";
+
+  nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
+
+  system.stateVersion = "26.05";
+
+  environment.systemPackages = with pkgs; [ forgejo-runner ];
+
+  networking.firewall.enable = false;
+
+  # Manage network with systemd
+  networking.useNetworkd = true;
+  systemd.network.enable = true;
+  systemd.network.networks = {
+    "30-lan" = {
+      matchConfig.Name = "enX0";
+      networkConfig.DHCP = "ipv4";
+    };
+  };
+
+  services.glusterfs.enable = true;
+
+  fileSystems."/" = {
+    device = "none";
+    fsType = "tmpfs";
+    options = [
+      "size=25%"
+      "mode=755"
+    ]; # mode=755 so only root can write to those files
+  };
+
+  fileSystems."/nix" = {
+    neededForBoot = true;
+    device = "/dev/xvda";
+    fsType = "btrfs";
+    options = [
+      "subvol=nix"
+      "compress=zstd"
+      "noatime"
+    ];
+  };
+  fileSystems."/persist" = {
+    neededForBoot = true;
+    device = "/dev/xvda";
+    fsType = "btrfs";
+    options = [
+      "subvol=persist"
+      "compress=zstd"
+      "noatime"
+    ];
+  };
+  fileSystems."/boot" = {
+    neededForBoot = true;
+    device = "/dev/xvda";
+    fsType = "btrfs";
+    options = [
+      "subvol=boot"
+      "noatime"
+    ];
+  };
+
+  swapDevices = [
+    {
+      device = "/swap/swapfile";
+      size = 4 * 1024; # Creates an 4GB swap file
+    }
+  ];
 }

@@ -1,4 +1,20 @@
+{ ... }:
 {
+  imports = [
+    ../../common/xen_domU.nix
+    ../../common/docker.nix
+  ];
+
+  ## Gluster mounts
+  fileSystems."/data/media" = {
+    device = "100.70.23.23:gv_media";
+    fsType = "glusterfs";
+  };
+  fileSystems."/data/appdata" = {
+    device = "100.70.23.23:gv_appdata";
+    fsType = "glusterfs";
+  };
+
   preservation = {
     enable = true;
 
