@@ -72,7 +72,7 @@ in
 
   xen = { ... }:
   {
-    networking.hostname = "xen";
+    networking.hostName = "xen";
     deployment = {
       targetHost = "100.107.28.98";
       targetUser = "operateur";
@@ -85,7 +85,7 @@ in
   };
   nas = { ... }:
   {
-    networking.hostname = "nas";
+    networking.hostName = "nas";
     deployment = {
       targetHost = "100.70.23.23";
       targetUser = "operateur";
@@ -98,7 +98,7 @@ in
   };
   deckard = { ... }:
   {
-    networking.hostname = "deckard";
+    networking.hostName = "deckard";
     deployment = {
       # Allow local deployment with `colmena apply-local`
       allowLocalDeployment = true;
@@ -114,7 +114,7 @@ in
 
   bender = { ... }:
   {
-    networking.hostname = "bender";
+    networking.hostName = "bender";
     deployment = {
       targetHost = "100.82.170.70";
       targetUser = "operateur";
