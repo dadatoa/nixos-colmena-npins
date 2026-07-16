@@ -80,7 +80,6 @@ in
     };
     imports = [
       ./hosts/xen
-      ./common/tailscale.nix
       ./common/remote.nix
     ];
   };
@@ -95,7 +94,6 @@ in
     imports = [
       ./hosts/nas
       ./common/remote.nix
-      ./common/tailscale.nix
     ];
   };
   deckard = { ... }:
@@ -111,7 +109,6 @@ in
     imports = [
       ./hosts/deckard
       ./common/remote.nix
-      ./common/tailscale.nix
     ];
   };
 
@@ -126,7 +123,6 @@ in
     imports = [
       ./hosts/bender
       ./common/remote.nix
-      ./common/tailscale.nix
     ];
   };
 
