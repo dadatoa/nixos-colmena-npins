@@ -1,7 +1,5 @@
 { pkgs, ... }:
 {
-  networking.hostName = "xen";
-
   # Minimal bootable layout so the configuration evaluates/builds.
   # Replace these with the real values from the target's hardware-configuration.nix.
   #

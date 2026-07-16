@@ -110,16 +110,6 @@
           Description = "xen default bridge";
         };
       };
-      #   "20-vlan66" = { # vlan
-      #     netdevConfig = {
-      #       Kind = "vlan";
-      #       Name = "vlan66";
-      #       Description = "LAN Access";
-      #     };
-      #     vlanConfig = {
-      #       Id = 66;
-      #     };
-      #   };
     };
     networks = {
       # # network interfaces configurations
