@@ -1,4 +1,4 @@
-name: deploy nixos configurations
+name: Test deploy nixos configurations
 
 on:
   workflow_dispatch:
