@@ -3,6 +3,7 @@
   imports = [
     ../../common/xen_domU.nix
     ../../common/docker.nix
+    ./services.nix
   ];
 
   ## Gluster mounts
