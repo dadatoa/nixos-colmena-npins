@@ -26,6 +26,16 @@
         "/var/lib/tailscale"
         "/var/lib/glusterd"
         {
+          directory = "/var/lib/jellyfin";
+          user = "operateur";
+          group = "operateur";
+        }
+        {
+          directory = "/var/cache/jellyfin";
+          user = "operateur";
+          group = "operateur";
+        }
+        {
           directory = "/var/lib/nixos";
           inInitrd = true;
         }

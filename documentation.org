@@ -837,6 +837,16 @@ in
         "/var/lib/tailscale"
         "/var/lib/glusterd"
         {
+          directory = "/var/lib/jellyfin";
+          user = "operateur";
+          group = "operateur";
+        }
+        {
+          directory = "/var/cache/jellyfin";
+          user = "operateur";
+          group = "operateur";
+        }
+        {
           directory = "/var/lib/nixos";
           inInitrd = true;
         }
@@ -872,15 +882,12 @@ in
  services.technitium-dns-server.enable = true;
  services.jellyfin = {
    enable = true;
-   dataDir = "/data/appdata/jellyfin";
    user= "operateur";
    package = pkgs.unstable.jellyfin;
+   cacheDir = "/var/cache/jellyfin";
  };
 }
 #+end_src
-
-#+RESULTS:
-: <LAMBDA>
 
 *** Deckard
 
