@@ -6,5 +6,6 @@
    enable = true;
    dataDir = "/data/appdata/jellyfin";
    user= "operateur";
+   package = pkgs.unstable.jellyfin;
  };
 }
