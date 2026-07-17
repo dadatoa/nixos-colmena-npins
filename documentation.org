@@ -240,7 +240,7 @@ in
     description = "Operator";
     extraGroups = [ "wheel" "video" ];
     shell = pkgs.nushell;
-    packages = with pkgs; [ nushell zoxide fish carapace starship ];
+    packages = with pkgs; [ nushell zoxide fish carapace starship chezmoi ];
     openssh.authorizedKeys.keys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAID8cHhGVCwBSPMRvTj93JMMOIBl+jZE97APmjqiwJIEH dadatoa@MacBook"
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIF36sv0vHnOUCx8uMWCkwLwpQoBgWP0NzYRhd6+6vr8t deploy_app_to_server_github_actions"
@@ -813,24 +813,17 @@ in
     ./services.nix
   ];
 #+end_src
-#+begin_src nix :tangle ./colmena/hosts/bender/services.nix
-{ config, lib, pkgs, ... }:
-
-{
- services.technitium-dns-server.enable = true;
-}
-#+end_src
 
 #+begin_src nix :tangle ./colmena/hosts/bender/default.nix
   ## Gluster mounts
-  # fileSystems."/data/media" = {
-  #   device = "100.70.23.23:gv_media";
-  #   fsType = "glusterfs";
-  # };
-  # fileSystems."/data/appdata" = {
-  #   device = "100.70.23.23:gv_appdata";
-  #   fsType = "glusterfs";
-  # };
+  fileSystems."/data/media" = {
+    device = "100.70.23.23:gv_media";
+    fsType = "glusterfs";
+  };
+  fileSystems."/data/appdata" = {
+    device = "100.70.23.23:gv_appdata";
+    fsType = "glusterfs";
+  };
 #+end_src
 
 #+begin_src nix :tangle ./colmena/hosts/bender/default.nix
@@ -871,6 +864,20 @@ in
   };
 }
 #+end_src
+
+#+begin_src nix :tangle ./colmena/hosts/bender/services.nix
+{ config, lib, pkgs, ... }:
+
+{
+ services.technitium-dns-server.enable = true;
+ services.jellyfin = {
+   enable = true;
+   datadir = "/data/appdata/jellyfin";
+   user= "operateur";
+ };
+}
+#+end_src
+
 *** Deckard
 
 #+begin_src nix :tangle ./colmena/hosts/deckard/default.nix
