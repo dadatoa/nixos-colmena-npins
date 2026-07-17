@@ -1,5 +1,5 @@
 { config, lib, pkgs, ... }:
 
 {
- service.technitum.enable = true;
+ services.technitium-dns-server.enable = true;
 }
