@@ -3,7 +3,7 @@
 {
   services.technitium-dns-server = {
     enable = true;
-    # package = pkgs.unstable.technitium-dns-server;
+    package = pkgs.unstable.technitium-dns-server;
   };
 
   services.jellyfin = {
@@ -12,4 +12,5 @@
     package = pkgs.unstable.jellyfin;
     cacheDir = "/var/cache/jellyfin";
   };
+  environment.systemPackages = [ pkgs.unstable.jellyfin ];
 }
