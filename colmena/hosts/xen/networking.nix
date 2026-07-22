@@ -16,7 +16,7 @@
         };
       };
 
-      # VLAN 50 interface on the physical NIC
+      # VLAN 50 & 66 interface on the physical NIC
       "20-vlan50" = {
         netdevConfig = {
           Kind = "vlan";
@@ -25,12 +25,27 @@
         vlanConfig.Id = 50;
       };
 
-      # Isolated bridge for VLAN 50 — dom0 has no IP on this bridge
+      "20-vlan66" = {
+        netdevConfig = {
+          Kind = "vlan";
+          Name= "ensp2s0.66";
+        };
+        vlanConfig.Id = 66;
+      };
+
+      # Isolated bridge for VLAN 50 & 66 — dom0 has no IP on this bridge
       "20-xenbr50" = {
         netdevConfig = {
           Kind = "bridge";
           Name = "xenbr50";
           Description = "xen isolated bridge for VLAN 50";
+        };
+      };
+      "20-xenbr66" = {
+        netdevConfig = {
+          Kind = "bridge";
+          Name = "xenbr66";
+          Description = "xen isolated bridge for VLAN 66";
         };
       };
     };
@@ -42,13 +57,19 @@
         matchConfig.Name = "enp2s0";
         networkConfig.Bridge = "xenbr0";
         # Declare the VLAN sub-interface so systemd-networkd creates it
-        vlan = [ "enp2s0.50" ];
+        vlan = [ "enp2s0.50" "ensp2s0.66"];
       };
 
       # Enslave the VLAN 50 interface to the isolated bridge
       "35-vlan50" = {
         matchConfig.Name = "enp2s0.50";
         networkConfig.Bridge = "xenbr50";
+      };
+
+      # Enslave the VLAN 66 interface to the isolated bridge
+      "35-vlan66" = {
+        matchConfig.Name = "enp2s0.66";
+        networkConfig.Bridge = "xenbr66";
       };
 
       "40-xenbr0" = {
@@ -59,6 +80,14 @@
       # No IP on dom0 for this bridge — only domU guests use VLAN 50
       "40-xenbr50" = {
         matchConfig.Name = "xenbr50";
+        networkConfig = {
+          DHCP = "no";
+          LinkLocalAddressing = "no";
+        };
+      };
+      # No IP on dom0 for this bridge — only domU guests use VLAN 66
+      "40-xenbr66" = {
+        matchConfig.Name = "xenbr66";
         networkConfig = {
           DHCP = "no";
           LinkLocalAddressing = "no";
