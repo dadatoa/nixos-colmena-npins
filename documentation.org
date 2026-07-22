@@ -370,15 +370,7 @@ in
       "noatime"
     ];
   };
-  fileSystems."/var/lib" = {
-    neededForBoot = true;
-    device = "/dev/xvda";
-    fsType = "btrfs";
-    options = [
-      "subvol=varlib"
-      "noatime"
-    ];
-  };
+
 
   swapDevices = [
     {
@@ -839,6 +831,25 @@ in
 #+end_src
 
 #+begin_src nix :tangle ./colmena/hosts/bender/default.nix
+
+  fileSystems."/var" = {
+    neededForBoot = true;
+    device = "/dev/xvda";
+    fsType = "btrfs";
+    options = [
+      "subvol=varlib"
+      "noatime"
+    ];
+  };
+  fileSystems."/data" = {
+    neededForBoot = true;
+    device = "/dev/xvda";
+    fsType = "btrfs";
+    options = [
+      "subvol=data"
+      "noatime"
+    ];
+  };
   ## Gluster mounts
   fileSystems."/data/media" = {
     device = "100.70.23.23:gv_media";
@@ -857,22 +868,22 @@ in
     preserveAt."/persist" = {
       directories = [
         "/etc/nixos"
-        "/var/lib/tailscale"
-        "/var/lib/glusterd"
-        {
-          directory = "/var/lib/jellyfin";
-          user = "operateur";
-          group = "operateur";
-        }
-        {
-          directory = "/var/cache/jellyfin";
-          user = "operateur";
-          group = "operateur";
-        }
-        {
-          directory = "/var/lib/nixos";
-          inInitrd = true;
-        }
+        # "/var/lib/tailscale"
+        # "/var/lib/glusterd"
+        # {
+        #   directory = "/var/lib/jellyfin";
+        #   user = "operateur";
+        #   group = "operateur";
+        # }
+        # {
+        #   directory = "/var/cache/jellyfin";
+        #   user = "operateur";
+        #   group = "operateur";
+        # }
+        # {
+        #   directory = "/var/lib/nixos";
+        #   inInitrd = true;
+        # }
       ];
 
       files = [
@@ -926,6 +937,9 @@ in
     cacheDir = "/var/cache/jellyfin";
   };
   environment.systemPackages = [ pkgs.unstable.jellyfin ];
+
+
+
 }
 #+end_src
 

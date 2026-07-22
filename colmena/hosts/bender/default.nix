@@ -7,6 +7,24 @@
     ./services.nix
   ];
 
+  fileSystems."/var" = {
+    neededForBoot = true;
+    device = "/dev/xvda";
+    fsType = "btrfs";
+    options = [
+      "subvol=varlib"
+      "noatime"
+    ];
+  };
+  fileSystems."/data" = {
+    neededForBoot = true;
+    device = "/dev/xvda";
+    fsType = "btrfs";
+    options = [
+      "subvol=data"
+      "noatime"
+    ];
+  };
   ## Gluster mounts
   fileSystems."/data/media" = {
     device = "100.70.23.23:gv_media";
@@ -23,22 +41,22 @@
     preserveAt."/persist" = {
       directories = [
         "/etc/nixos"
-        "/var/lib/tailscale"
-        "/var/lib/glusterd"
-        {
-          directory = "/var/lib/jellyfin";
-          user = "operateur";
-          group = "operateur";
-        }
-        {
-          directory = "/var/cache/jellyfin";
-          user = "operateur";
-          group = "operateur";
-        }
-        {
-          directory = "/var/lib/nixos";
-          inInitrd = true;
-        }
+        # "/var/lib/tailscale"
+        # "/var/lib/glusterd"
+        # {
+        #   directory = "/var/lib/jellyfin";
+        #   user = "operateur";
+        #   group = "operateur";
+        # }
+        # {
+        #   directory = "/var/cache/jellyfin";
+        #   user = "operateur";
+        #   group = "operateur";
+        # }
+        # {
+        #   directory = "/var/lib/nixos";
+        #   inInitrd = true;
+        # }
       ];
 
       files = [
