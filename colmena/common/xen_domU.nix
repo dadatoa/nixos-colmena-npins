@@ -87,6 +87,15 @@
       "noatime"
     ];
   };
+  fileSystems."/var/lib" = {
+    neededForBoot = true;
+    device = "/dev/xvda";
+    fsType = "btrfs";
+    options = [
+      "subvol=varlib"
+      "noatime"
+    ];
+  };
 
   swapDevices = [
     {

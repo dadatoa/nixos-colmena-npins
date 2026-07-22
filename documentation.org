@@ -276,9 +276,8 @@ in
 }
 #+end_src
 *** Xen VMs
-
+**** base
 #+begin_src nix :tangle ./colmena/common/xen_domU.nix
-
 { config, pkgs, lib, ... }:
 {
   # Common configuration for Xen DomU NixOS virtual machines.
@@ -330,7 +329,7 @@ in
 
   services.glusterfs.enable = true;
 #+end_src
-
+**** systèmes de fichiers
 #+begin_src nix :tangle ./colmena/common/xen_domU.nix
 
   fileSystems."/" = {
@@ -371,6 +370,15 @@ in
       "noatime"
     ];
   };
+  fileSystems."/var/lib" = {
+    neededForBoot = true;
+    device = "/dev/xvda";
+    fsType = "btrfs";
+    options = [
+      "subvol=varlib"
+      "noatime"
+    ];
+  };
 
   swapDevices = [
     {
@@ -404,7 +412,7 @@ in
 #+end_src
 ** Configuations des hôtes
 *** Xen
-
+**** point d'entrée : default.nix
 #+begin_src nix :tangle ./colmena/hosts/xen/default.nix
 { ... }:
 {
