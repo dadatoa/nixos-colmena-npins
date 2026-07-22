@@ -58,7 +58,6 @@ in
       options = "--delete-older-than 7d";
     };
 
-    nix.settings.auto-optimise-store = true;
     nix.settings.experimental-features = [
       "nix-command"
       "flakes"
@@ -190,11 +189,7 @@ in
 }
 #+end_src
 
-
-#+RESULTS:
-: <LAMBDA>
 *** Accès distant
-
 #+begin_src nix :tangle ./colmena/common/remote.nix
 
 { config, lib, pkgs, ... }:
@@ -385,8 +380,7 @@ in
   ];
 }
 #+end_src
-#+RESULTS:
-: <LAMBDA>
+
 *** Docker
 #+begin_src nix :tangle ./colmena/common/docker.nix
 { ... }:
@@ -466,7 +460,7 @@ in
     boot.builderVerbosity = "info";
     ## Adds a handy report that lets you know which Xen boot entries were created.
     boot.params = [
-      "vga=ask"
+      # "vga=ask"
       "dom0=pvh"
     ];
     # Uses the PVH virtualisation mode for the Domain 0, instead of PV.

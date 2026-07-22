@@ -38,7 +38,7 @@
     boot.builderVerbosity = "info";
     ## Adds a handy report that lets you know which Xen boot entries were created.
     boot.params = [
-      "vga=ask"
+      # "vga=ask"
       "dom0=pvh"
     ];
     # Uses the PVH virtualisation mode for the Domain 0, instead of PV.

@@ -51,7 +51,6 @@ in
       options = "--delete-older-than 7d";
     };
 
-    nix.settings.auto-optimise-store = true;
     nix.settings.experimental-features = [
       "nix-command"
       "flakes"
