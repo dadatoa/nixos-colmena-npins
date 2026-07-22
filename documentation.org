@@ -200,7 +200,6 @@ in
 { config, lib, pkgs, ... }:
 
 {
-  programs.mosh.enable = true;
   # start ssh-agent
   programs.ssh.startAgent = true;
 
@@ -241,10 +240,6 @@ in
     extraGroups = [ "wheel" "video" ];
     shell = pkgs.nushell;
     packages = with pkgs; [ nushell zoxide fish carapace starship chezmoi ];
-    openssh.authorizedKeys.keys = [
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAID8cHhGVCwBSPMRvTj93JMMOIBl+jZE97APmjqiwJIEH dadatoa@MacBook"
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIF36sv0vHnOUCx8uMWCkwLwpQoBgWP0NzYRhd6+6vr8t deploy_app_to_server_github_actions"
-    ];
   };
 
   environment.shells = [ pkgs.nushell ];
@@ -291,10 +286,6 @@ in
 
 { config, pkgs, lib, ... }:
 {
-  imports = [
-    # ../remote_access.nix
-  ];
-
   # Common configuration for Xen DomU NixOS virtual machines.
   boot = {
     growPartition = true;
@@ -388,7 +379,7 @@ in
 
   swapDevices = [
     {
-      device = "/swap/swapfile";
+      device = "/persist/swapfile";
       size = 4 * 1024; # Creates an 4GB swap file
     }
   ];
@@ -864,7 +855,6 @@ in
     preserveAt."/persist" = {
       directories = [
         "/etc/nixos"
-        # "/var/lib/bluetooth"
         "/var/lib/tailscale"
         "/var/lib/glusterd"
         {

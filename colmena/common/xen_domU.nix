@@ -1,9 +1,5 @@
 { config, pkgs, lib, ... }:
 {
-  imports = [
-    # ../remote_access.nix
-  ];
-
   # Common configuration for Xen DomU NixOS virtual machines.
   boot = {
     growPartition = true;
@@ -94,7 +90,7 @@
 
   swapDevices = [
     {
-      device = "/swap/swapfile";
+      device = "/persist/swapfile";
       size = 4 * 1024; # Creates an 4GB swap file
     }
   ];

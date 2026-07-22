@@ -1,7 +1,6 @@
 { config, lib, pkgs, ... }:
 
 {
-  programs.mosh.enable = true;
   # start ssh-agent
   programs.ssh.startAgent = true;
 

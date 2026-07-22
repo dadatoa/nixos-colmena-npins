@@ -24,9 +24,16 @@
     options = ["subvol=boot" "noatime"];
   };
 
-  swapDevices = [{ 
-    device = "/swap/swapfile"; 
-    size = 4*1024; # Creates an 4GB swap file 
-  }];
+  # Persistent swap file on /persist subvolume.
+  # The /persist directory must exist and contain a swapfile created with:
+  #   mkswap -U clear /persist/swapfile
+  #   chmod 600 /persist/swapfile
+  fileSystems."/persist".neededForBoot = true;
+  swapDevices = [
+    {
+      device = "/persist/swapfile";
+      size = 4 * 1024; # 4GB
+    }
+  ];
 }
 
