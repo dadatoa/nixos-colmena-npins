@@ -115,7 +115,7 @@ in
   {
     networking.hostName = "bender";
     deployment = {
-      targetHost = "100.82.170.70";
+      targetHost = "100.90.137.95";
       targetUser = "operateur";
       tags = [ "domu" ];
     };
