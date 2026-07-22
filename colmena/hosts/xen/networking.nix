@@ -28,7 +28,7 @@
       "20-vlan66" = {
         netdevConfig = {
           Kind = "vlan";
-          Name= "ensp2s0.66";
+          Name = "enp2s0.66";
         };
         vlanConfig.Id = 66;
       };
@@ -57,7 +57,7 @@
         matchConfig.Name = "enp2s0";
         networkConfig.Bridge = "xenbr0";
         # Declare the VLAN sub-interface so systemd-networkd creates it
-        vlan = [ "enp2s0.50" "ensp2s0.66"];
+        vlan = [ "enp2s0.50" "enp2s0.66"];
       };
 
       # Enslave the VLAN 50 interface to the isolated bridge

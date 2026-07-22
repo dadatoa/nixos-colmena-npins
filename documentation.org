@@ -561,7 +561,7 @@ in
       "20-vlan66" = {
         netdevConfig = {
           Kind = "vlan";
-          Name= "ensp2s0.66";
+          Name = "enp2s0.66";
         };
         vlanConfig.Id = 66;
       };
@@ -590,7 +590,7 @@ in
         matchConfig.Name = "enp2s0";
         networkConfig.Bridge = "xenbr0";
         # Declare the VLAN sub-interface so systemd-networkd creates it
-        vlan = [ "enp2s0.50" "ensp2s0.66"];
+        vlan = [ "enp2s0.50" "enp2s0.66"];
       };
 
       # Enslave the VLAN 50 interface to the isolated bridge
@@ -840,6 +840,7 @@ in
   imports = [
     ../../common/xen_domU.nix
     ../../common/docker.nix
+    ./networking.nix
     ./services.nix
   ];
 #+end_src
@@ -900,6 +901,18 @@ in
         directories = [];
         files = [ ".gitconfig" ];
       };
+    };
+  };
+}
+#+end_src
+
+#+begin_src nix :tangle ./colmena/hosts/bender/networking.nix
+{ ... }:
+{
+  systemd.network.networks = {
+    "30-lan66" = {
+      matchConfig.Name = "enX1";
+      networkConfig.DHCP = "ipv4";
     };
   };
 }
