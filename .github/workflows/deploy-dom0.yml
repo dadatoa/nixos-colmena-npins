@@ -39,4 +39,4 @@ jobs:
           END
 
       - name: "deployment to xen"
-        run: colmena apply -f colmena/hive.nix --reboot --on @dom0
+        run: colmena apply boot -f colmena/hive.nix --on @dom0
