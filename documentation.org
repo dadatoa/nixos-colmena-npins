@@ -813,7 +813,6 @@ in
     preserveAt."/persist" = {
       directories = [
         "/etc/nixos"
-        # "/var/lib/bluetooth"
         "/var/lib/tailscale"
         "/var/lib/glusterd"
         {
@@ -832,7 +831,7 @@ in
 
       # Preserve user files
       users.operateur = {
-        directories = [ ".ssh" ];
+        directories = [ ".ssh" ".config" ];
         files = [ ".gitconfig" ];
       };
       users.root = {
@@ -898,7 +897,7 @@ in
 
       # Preserve user files
       users.operateur = {
-        directories = [ ".ssh" ];
+        directories = [ ".ssh" ".config" ];
         files = [ ".gitconfig" ];
       };
       users.root = {
@@ -979,7 +978,7 @@ Pour exposer les services sur le réseau du wifi AKA guests AKA vlan66
 
       # Preserve user files
       users.operateur = {
-        directories = [ ".ssh" ];
+        directories = [ ".ssh" ".config" ];
         files = [ ".gitconfig" ];
       };
       users.root = {

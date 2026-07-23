@@ -22,7 +22,6 @@
     preserveAt."/persist" = {
       directories = [
         "/etc/nixos"
-        # "/var/lib/bluetooth"
         "/var/lib/tailscale"
         "/var/lib/glusterd"
         {
@@ -41,7 +40,7 @@
 
       # Preserve user files
       users.operateur = {
-        directories = [ ".ssh" ];
+        directories = [ ".ssh" ".config" ];
         files = [ ".gitconfig" ];
       };
       users.root = {
