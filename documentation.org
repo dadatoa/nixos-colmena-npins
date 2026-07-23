@@ -394,7 +394,7 @@ in
 
 *** Docker
 #+begin_src nix :tangle ./colmena/common/docker.nix
-{ ... }:
+{ pkgs, ... }:
 {
   virtualisation.docker = {
     enable = true;
