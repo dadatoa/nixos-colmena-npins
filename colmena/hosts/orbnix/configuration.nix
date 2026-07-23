@@ -24,8 +24,9 @@
     home = "/home/dadatoa";
     homeMode = "700";
     useDefaultShell = true;
+    shell = pkgs.nushell;
   };
-
+  environment.shells = [ pkgs.nushell ];
   security.sudo.wheelNeedsPassword = false;
 
   # This being `true` leads to a few nasty bugs, change at your own risk!
