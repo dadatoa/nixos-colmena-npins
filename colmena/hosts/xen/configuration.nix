@@ -55,6 +55,7 @@
     grub2_xen
     grub2_xen_pvh
     grub2_pvhgrub_image
+    grub2_pvgrub_image
     grub2
     python3 # add python for Xen guest management with ansible
   ];
