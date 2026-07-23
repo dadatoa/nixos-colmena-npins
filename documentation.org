@@ -409,6 +409,15 @@ in
       fixed-cidr-v6 = "fd00::/80";
     };
   };
+
+  users.users.mobi = {
+    isNormalUser = true;
+    uid = 1005;
+    description = "docker user";
+    extraGroups = [ "docker" ];
+    shell = pkgs.nushell;
+    packages = with pkgs; [ nushell zoxide fish carapace starship chezmoi ];
+  };
 }
 #+end_src
 ** Configuations des hôtes
@@ -939,6 +948,7 @@ Pour exposer les services sur le réseau du wifi AKA guests AKA vlan66
 {
   imports = [
     ../../common/xen_domU.nix
+    ./test.nix
   ];
 #+end_src
 **** preservation
@@ -977,5 +987,14 @@ Pour exposer les services sur le réseau du wifi AKA guests AKA vlan66
       };
     };
   };
+}
+#+end_src
+**** experiments
+#+begin_src nix :tangle ./colmena/hosts/deckard/test.nix
+{ ... }:
+{
+  imports = [
+    ../../common/docker.nix
+  ];
 }
 #+end_src

@@ -2,6 +2,7 @@
 {
   imports = [
     ../../common/xen_domU.nix
+    ./test.nix
   ];
 
   preservation = {
