@@ -137,7 +137,9 @@ in
     deployment = {
       targetHost = null;
     };
-    imports = [ ./hosts/orbnix/configuration.nix ];
+    imports = [
+      ./hosts/orbnix/configuration.nix
+    ];
   };
 }
 #+end_src
@@ -1019,6 +1021,7 @@ Pour exposer les services sur le réseau du wifi AKA guests AKA vlan66
     uid = 502;
     extraGroups = [ "wheel" "orbstack" "audio" ];
 
+    packages = with pkgs; [ nushell zoxide fish carapace starship chezmoi ];
     # simulate isNormalUser, but with an arbitrary UID
     isSystemUser = true;
     group = "users";
@@ -1170,6 +1173,10 @@ AKA experimentations.
 #+begin_src nix :tangle ./colmena/hosts/orbnix/custom.nix
 { pkgs, ... }:
 {
+  services.tailscale = {
+    enable = true;
+    package = pkgs.unstable.tailscale;
+  };
 
   environment.systemPackages = with pkgs; [
     colmena

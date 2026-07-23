@@ -130,6 +130,8 @@ in
     deployment = {
       targetHost = null;
     };
-    imports = [ ./hosts/orbnix/configuration.nix ];
+    imports = [
+      ./hosts/orbnix/configuration.nix
+    ];
   };
 }

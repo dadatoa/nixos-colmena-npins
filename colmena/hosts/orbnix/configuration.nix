@@ -16,6 +16,7 @@
     uid = 502;
     extraGroups = [ "wheel" "orbstack" "audio" ];
 
+    packages = with pkgs; [ nushell zoxide fish carapace starship chezmoi ];
     # simulate isNormalUser, but with an arbitrary UID
     isSystemUser = true;
     group = "users";
