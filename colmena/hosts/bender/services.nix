@@ -13,7 +13,4 @@
     cacheDir = "/var/cache/jellyfin";
   };
   environment.systemPackages = [ pkgs.unstable.jellyfin ];
-
-
-
 }

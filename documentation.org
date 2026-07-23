@@ -835,6 +835,7 @@ in
 #+end_src
 
 *** Bender
+**** Imports
 #+begin_src nix :tangle ./colmena/hosts/bender/default.nix
 { ... }:
 {
@@ -845,7 +846,7 @@ in
     ./services.nix
   ];
 #+end_src
-
+**** filesystem ( pour monter Gluster)
 #+begin_src nix :tangle ./colmena/hosts/bender/default.nix
   fileSystems."/data" = {
     neededForBoot = true;
@@ -866,7 +867,7 @@ in
     fsType = "glusterfs";
   };
 #+end_src
-
+**** preservation
 #+begin_src nix :tangle ./colmena/hosts/bender/default.nix
   preservation = {
     enable = true;
@@ -898,7 +899,8 @@ in
   };
 }
 #+end_src
-
+**** seconde interface reseau
+Pour exposer les services sur le réseau du wifi AKA guests AKA vlan66
 #+begin_src nix :tangle ./colmena/hosts/bender/networking.nix
 { ... }:
 {
@@ -910,7 +912,7 @@ in
   };
 }
 #+end_src
-
+**** services à exposer
 #+begin_src nix :tangle ./colmena/hosts/bender/services.nix
 { config, lib, pkgs, ... }:
 
@@ -927,14 +929,11 @@ in
     cacheDir = "/var/cache/jellyfin";
   };
   environment.systemPackages = [ pkgs.unstable.jellyfin ];
-
-
-
 }
 #+end_src
 
 *** Deckard
-
+**** imports
 #+begin_src nix :tangle ./colmena/hosts/deckard/default.nix
 { ... }:
 {
@@ -942,7 +941,7 @@ in
     ../../common/xen_domU.nix
   ];
 #+end_src
-
+**** preservation
 #+begin_src nix :tangle ./colmena/hosts/deckard/default.nix
   preservation = {
     enable = true;
