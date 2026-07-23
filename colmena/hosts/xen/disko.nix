@@ -90,12 +90,12 @@
                   ];
                   mountpoint = "/persist";
                 };
-                "/var" = {
-                  mountOptions = [
-                    "subvol=var"
-                    "noatime"
-                  ];
-                  mountpoint = "/var";
+                # "/var" = {
+                #   mountOptions = [
+                #     "subvol=var"
+                #     "noatime"
+                #   ];
+                #   mountpoint = "/var";
                 };
               };
             };
