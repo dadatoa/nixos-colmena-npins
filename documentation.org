@@ -370,6 +370,15 @@ in
       "noatime"
     ];
   };
+  fileSystems."/var" = {
+    neededForBoot = true;
+    device = "/dev/xvda";
+    fsType = "btrfs";
+    options = [
+      "subvol=varlib"
+      "noatime"
+    ];
+  };
 
 
   swapDevices = [
@@ -709,6 +718,13 @@ in
                   ];
                   mountpoint = "/persist";
                 };
+                "/var" = {
+                  mountOptions = [
+                    "subvol=var"
+                    "noatime"
+                  ];
+                  mountpoint = "/var";
+                };
               };
             };
           };
@@ -831,16 +847,6 @@ in
 #+end_src
 
 #+begin_src nix :tangle ./colmena/hosts/bender/default.nix
-
-  fileSystems."/var" = {
-    neededForBoot = true;
-    device = "/dev/xvda";
-    fsType = "btrfs";
-    options = [
-      "subvol=varlib"
-      "noatime"
-    ];
-  };
   fileSystems."/data" = {
     neededForBoot = true;
     device = "/dev/xvda";
@@ -868,22 +874,6 @@ in
     preserveAt."/persist" = {
       directories = [
         "/etc/nixos"
-        # "/var/lib/tailscale"
-        # "/var/lib/glusterd"
-        # {
-        #   directory = "/var/lib/jellyfin";
-        #   user = "operateur";
-        #   group = "operateur";
-        # }
-        # {
-        #   directory = "/var/cache/jellyfin";
-        #   user = "operateur";
-        #   group = "operateur";
-        # }
-        # {
-        #   directory = "/var/lib/nixos";
-        #   inInitrd = true;
-        # }
       ];
 
       files = [
@@ -960,7 +950,6 @@ in
     preserveAt."/persist" = {
       directories = [
         "/etc/nixos"
-        # "/var/lib/bluetooth"
         "/var/lib/tailscale"
         "/var/lib/glusterd"
         {
