@@ -7,6 +7,8 @@
       "${modulesPath}/virtualisation/lxc-container.nix"
       # Include the OrbStack-specific configuration.
       ./orbstack.nix
+      # add custom confg
+      ./custom.nix
     ];
 
   networking.hostName = "orbnix";

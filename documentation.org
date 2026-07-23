@@ -1010,6 +1010,8 @@ Pour exposer les services sur le réseau du wifi AKA guests AKA vlan66
       "${modulesPath}/virtualisation/lxc-container.nix"
       # Include the OrbStack-specific configuration.
       ./orbstack.nix
+      # add custom confg
+      ./custom.nix
     ];
 
   networking.hostName = "orbnix";
@@ -1161,5 +1163,17 @@ YhRBlXtMyTIgyugLBAIgJpw1ishCTG8mKHqvzKfmtM2+52CJDFlnOQAEfExgpCY=
   ];
 
   users.groups.orbstack.gid = 67278;
+}
+#+end_src
+**** custom configuration
+AKA experimentations.
+#+begin_src nix :tangle ./colmena/hosts/orbnix/custom.nix
+{ pkgs, ... }:
+{
+
+  environment.systemPackages = with pkgs; [
+    colmena
+    npins
+  ];
 }
 #+end_src
