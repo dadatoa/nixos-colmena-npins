@@ -96,7 +96,7 @@
                 #     "noatime"
                 #   ];
                 #   mountpoint = "/var";
-                };
+                #
               };
             };
           };
