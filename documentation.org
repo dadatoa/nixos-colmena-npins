@@ -964,12 +964,12 @@ Pour exposer les services sur le réseau du wifi AKA guests AKA vlan66
     preserveAt."/persist" = {
       directories = [
         "/etc/nixos"
-        "/var/lib/tailscale"
-        "/var/lib/glusterd"
-        {
-          directory = "/var/lib/nixos";
-          inInitrd = true;
-        }
+        # "/var/lib/tailscale"
+        # "/var/lib/glusterd"
+        # {
+        #   directory = "/var/lib/nixos";
+        #   inInitrd = true;
+        # }
       ];
 
       files = [
