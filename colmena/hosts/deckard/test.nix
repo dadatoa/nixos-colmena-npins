@@ -1,6 +1,12 @@
 { ... }:
 {
   imports = [
-    ../../common/docker.nix
+    # ../../common/docker.nix
   ];
+
+  services.technitium-dns-server = {
+    enable = true;
+    package = pkgs.unstable.technitium-dns-server;
+    openFirewall = true;
+  };
 }

@@ -33,9 +33,8 @@
 
   system.stateVersion = "26.05";
 
-  environment.systemPackages = with pkgs; [ forgejo-runner ];
+  # environment.systemPackages = with pkgs; [ forgejo-runner ];
 
-  networking.firewall.enable = false;
 
   # Manage network with systemd
   networking.useNetworkd = true;

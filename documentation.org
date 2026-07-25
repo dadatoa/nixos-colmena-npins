@@ -315,9 +315,8 @@ in
 
   system.stateVersion = "26.05";
 
-  environment.systemPackages = with pkgs; [ forgejo-runner ];
+  # environment.systemPackages = with pkgs; [ forgejo-runner ];
 
-  networking.firewall.enable = false;
 
   # Manage network with systemd
   networking.useNetworkd = true;
@@ -791,6 +790,8 @@ in
   imports = [
     ../../common/xen_domU.nix
   ];
+
+  networking.firewall.enable = false;
 #+end_src
 
 #+begin_src nix :tangle ./colmena/hosts/nas/default.nix
@@ -853,7 +854,7 @@ in
   imports = [
     ../../common/xen_domU.nix
     ../../common/docker.nix
-    ./networking.nix
+    # ./networking.nix
     ./services.nix
   ];
 #+end_src
@@ -931,6 +932,7 @@ Pour exposer les services sur le réseau du wifi AKA guests AKA vlan66
   services.technitium-dns-server = {
     enable = true;
     package = pkgs.unstable.technitium-dns-server;
+    openFirewall = true;
   };
 
   services.jellyfin = {
@@ -938,6 +940,7 @@ Pour exposer les services sur le réseau du wifi AKA guests AKA vlan66
     user= "operateur";
     package = pkgs.unstable.jellyfin;
     cacheDir = "/var/cache/jellyfin";
+    openFirewall = true;
   };
   environment.systemPackages = [ pkgs.unstable.jellyfin ];
 }
@@ -996,8 +999,14 @@ Pour exposer les services sur le réseau du wifi AKA guests AKA vlan66
 { ... }:
 {
   imports = [
-    ../../common/docker.nix
+    # ../../common/docker.nix
   ];
+
+  services.technitium-dns-server = {
+    enable = true;
+    package = pkgs.unstable.technitium-dns-server;
+    openFirewall = true;
+  };
 }
 #+end_src
 *** Orbnix

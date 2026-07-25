@@ -3,7 +3,7 @@
   imports = [
     ../../common/xen_domU.nix
     ../../common/docker.nix
-    ./networking.nix
+    # ./networking.nix
     ./services.nix
   ];
 
