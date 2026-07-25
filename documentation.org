@@ -996,7 +996,7 @@ Pour exposer les services sur le réseau du wifi AKA guests AKA vlan66
 #+end_src
 **** experiments
 #+begin_src nix :tangle ./colmena/hosts/deckard/test.nix
-{ ... }:
+{ config, lib, pkgs, ... }:
 {
   imports = [
     # ../../common/docker.nix
