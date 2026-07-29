@@ -1,0 +1,43 @@
+name: Update Flake
+
+on:
+  schedule:
+    # Every Thursday at 22:00 UTC
+    - cron: "0 22 * * 4"
+  workflow_dispatch:
+
+jobs:
+  update-npins:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      actions: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@v31
+
+      - name: Run npins update
+        run: |
+          nix flake update
+
+      - name: Commit and Push Changes
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Only stage the sources file
+          git add npins/sources.json
+
+          # Check if there are any changes to commit
+          if ! git diff-index --quiet HEAD; then
+            git commit -m "chore: update flake.lock"
+            git push
+            echo "changes=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "No changes detected. Skipping commit."
+            echo "changes=false" >> "$GITHUB_OUTPUT"
+          fi
+        id: commit
