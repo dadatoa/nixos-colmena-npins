@@ -1,15 +1,6 @@
 {
   fileSystems."/nix".neededForBoot = true;
-  fileSystems."/persist" = {
-    neededForBoot = true; # sometimes needed too
-    device = "/dev/nvme_vg/dom0";
-    fsType = "btrfs";
-    options = [
-      "subvol=persist"
-      "compress=zstd"
-      "noatime"
-    ];
-  };
+  fileSystems."/persist".neededForBoot = true; # sometimes needed too
 
   disko.devices = {
     nodev = {

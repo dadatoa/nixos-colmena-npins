@@ -1,16 +1,7 @@
 {
 
   fileSystems."/nix".neededForBoot = true;
-  fileSystems."/persist" = {
-    neededForBoot = true; # sometimes needed too
-    device = "/dev/nvme_vg/dom0";
-    fsType = "btrfs";
-    options = [
-      "subvol=persist"
-      "compress=zstd"
-      "noatime"
-    ];
-  };
+  fileSystems."/persist".neededForBoot = true; # sometimes needed too
 
   disko.devices = {
     nodev = {
@@ -77,16 +68,26 @@
               type = "btrfs";
               extraArgs = [ "-f" ];
               subvolumes = {
-                "/nix" = {
+                "/@nix" = {
                   mountOptions = [
                     "subvol=nix"
+                    "compress=zstd"
                     "noatime"
                   ];
                   mountpoint = "/nix";
                 };
-                "/persist" = {
+                "/@var" = {
+                  mountOptions = [
+                    "subvol=nix"
+                    "compress=zstd"
+                    "noatime"
+                  ];
+                  mountpoint = "/var";
+                };
+                "/@persist" = {
                   mountOptions = [
                     "subvol=persist"
+                    "compress=zstd"
                     "noatime"
                   ];
                   mountpoint = "/persist";
