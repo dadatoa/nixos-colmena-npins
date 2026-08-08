@@ -12,7 +12,7 @@
     neededForBoot = true;
     device = "/dev/disk/by-uuid/A39E-73FE";
     fsType = "vfat";
-    options = [ "fmask=0022" "dmask=0022" ];
+    options = [ "fmask=0077" "dmask=0077" ];
     };
 
   fileSystems."/var" ={
