@@ -9,21 +9,27 @@
     neededForBoot = true;
     device = "/dev/xvda";
     fsType = "btrfs";
-    options = ["subvol=nix" "compress=zstd" "noatime"];
+    options = ["subvol=@nix" "compress=zstd" "noatime"];
   };
   fileSystems."/persist" = {
     neededForBoot = true;
     device = "/dev/xvda";
     fsType = "btrfs";
-    options = ["subvol=persist" "compress=zstd" "noatime"];
+    options = ["subvol=@persist" "compress=zstd" "noatime"];
   };
   fileSystems."/boot" = {
     neededForBoot = true;
     device = "/dev/xvda";
     fsType = "btrfs";
-    options = ["subvol=boot" "noatime"];
+    options = ["subvol=@boot" "noatime"];
   };
 
+  fileSystems."/var" = {
+    neededForBoot = true;
+    device = "/dev/xvda";
+    fsType = "btrfs";
+    options = ["subvol=@var" "noatime"];
+  };
   # Persistent swap file on /persist subvolume.
   # The /persist directory must exist and contain a swapfile created with:
   #   mkswap -U clear /persist/swapfile
