@@ -20,7 +20,7 @@
       inputs.preservation.nixosModules.default
       inputs.disko.nixosModules.default
       ./xen-config/configuration.nix
-      ./xen-config/disko.nix
+      ./xen-config/filesystems.nix
       ./xen-config/preservation.nix
     ];
   };
