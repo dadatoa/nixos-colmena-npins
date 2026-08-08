@@ -284,7 +284,7 @@ in
 {
   # Common configuration for Xen DomU NixOS virtual machines.
   boot = {
-    growPartition = true;
+    growPartition = false; # to avoid Failed to start growpart.service with impermanence
     kernelParams = [ "console=ttyS0" "vga=0x317" "nomodeset" ];
     loader.grub.enable = true;
     initrd.systemd.enable = true;
@@ -806,8 +806,6 @@ in
     preserveAt."/persist" = {
       directories = [
         "/etc/nixos"
-        "/var/lib/tailscale"
-        "/var/lib/glusterd"
         {
           directory = "/var/lib/nixos";
           inInitrd = true;
@@ -816,9 +814,10 @@ in
 
       files = [
         "/etc/ssh/authorized_keys.d/operateur"
-        {
+        { # PRevent Failed to start Save Transient machine-id to Disk
           file = "/etc/machine-id";
           inInitrd = true;
+          how = "symlink";
         }
       ];
 
