@@ -34,7 +34,6 @@
   # The /persist directory must exist and contain a swapfile created with:
   #   mkswap -U clear /persist/swapfile
   #   chmod 600 /persist/swapfile
-  fileSystems."/persist".neededForBoot = true;
   swapDevices = [
     {
       device = "/persist/swapfile";
