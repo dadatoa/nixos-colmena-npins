@@ -5,7 +5,7 @@
   ];
   # Common configuration for Xen DomU NixOS virtual machines.
   boot = {
-    growPartition = true;
+    growPartition = false; ## c'est là
     kernelParams = [
       "console=hvc0"
       "vga=0x317"
