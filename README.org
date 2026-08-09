@@ -1,5 +1,11 @@
 #+title: Documentation
-
+* Structure
+- Flake -> bootstrap des system
+  -> xen-config : pour l'hyperviseur xen
+  -> vm-config : pour les domU
+- Colmena -> configurations des systèmes en utilisant nixos colmena pour tout déployer
+- xl_configs -> fichiers .cfg pour démarrer les vm xen
+- npins -> systeme de pin des dépendance nix utilisé avec colmena (colmena config flakeless)
 * Colmena
 ** hive
 #+begin_src nix :tangle ./colmena/hive.nix :noweb tangle
@@ -749,4 +755,19 @@ in
     };
   };
 }
+#+end_src
+* xl configs
+#+begin_src ini :tangle ./xl_configs/nas.cfg
+
+name = "nas"
+type = "pvh"
+memory = 4096
+vcpus = 2
+vif = [ "bridge=xenbr50,mac=02:b0:9a:91:34:40" ]
+on_poweroff = "destroy"
+on_reboot = "restart"
+on_crash = "restart"
+disk = [ "/dev/sys/nas,,xvda", "/dev/rust/media,,xvdb", "/dev/nvme_vg/appdata,,xvdc"  ]
+kernel="/run/current-system/sw/lib/grub-xen_pvh/grub-i386-xen_pvh.bin"
+
 #+end_src
