@@ -681,7 +681,7 @@ in
   };
 #+end_src
 *** Nas
-add to hive:
+**** add to hive:
 #+NAME: hive-nas
 #+begin_src nix
   nas = { ... }:
@@ -693,7 +693,7 @@ add to hive:
       tags = [ "domu" ];
     };
     imports = [
-      ./hosts/nas
+      ./hosts/nas-configuration.nix
       ./common/remote.nix
     ];
   };
@@ -704,8 +704,8 @@ add to hive:
   networking.firewall.enable = false;
 }
 #+end_src
-
-#+begin_src nix :tangle ./colmena/hosts/nas/default.nix
+**** configuration
+#+begin_src nix :tangle ./colmena/hosts/nas-configuration.nix
   ## gluster server volumes
   fileSystems."/srv/gluster/appdata" = {
     device = "/dev/disk/by-label/appdata";
@@ -717,9 +717,7 @@ add to hive:
     fsType = "btrfs";
     options = [ "noatime" ];
   };
-#+end_src
 
-#+begin_src nix :tangle ./colmena/hosts/nas/default.nix
   preservation = {
     enable = true;
 

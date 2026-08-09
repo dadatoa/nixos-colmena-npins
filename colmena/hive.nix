@@ -84,7 +84,7 @@ in
       tags = [ "domu" ];
     };
     imports = [
-      ./hosts/nas
+      ./hosts/nas-configuration.nix
       ./common/remote.nix
     ];
   };
