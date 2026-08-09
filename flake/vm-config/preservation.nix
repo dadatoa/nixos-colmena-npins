@@ -6,12 +6,6 @@
       directories = [
         "/etc/nixos"
         # "/var/lib/bluetooth"
-        "/var/lib/tailscale"
-        "/var/lib/glusterd"
-        {
-          directory = "/var/lib/nixos";
-          inInitrd = true;
-        }
       ];
 
       files = [
