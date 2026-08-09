@@ -75,56 +75,5 @@ in
       ./common/remote.nix
     ];
   };
-  nas = { ... }:
-  {
-    networking.hostName = "nas";
-    deployment = {
-      targetHost = "100.70.23.23";
-      targetUser = "operateur";
-      tags = [ "domu" ];
-    };
-    imports = [
-      ./hosts/nas
-      ./common/remote.nix
-    ];
-  };
-  deckard = { ... }:
-  {
-    networking.hostName = "deckard";
-    deployment = {
-      # Allow local deployment with `colmena apply-local`
-      allowLocalDeployment = true;
-      targetHost = "100.127.50.22";
-      targetUser = "operateur";
-      # tags = [ "domu" ];
-    };
-    imports = [
-      ./hosts/deckard
-      ./common/remote.nix
-    ];
-  };
 
-  bender = { ... }:
-  {
-    networking.hostName = "bender";
-    deployment = {
-      targetHost = "100.90.137.95";
-      targetUser = "operateur";
-      # tags = [ "domu" ];
-    };
-    imports = [
-      ./hosts/bender
-      ./common/remote.nix
-    ];
-  };
-
-  orbnix = { ... }:
-  {
-    deployment = {
-      targetHost = null;
-    };
-    imports = [
-      ./hosts/orbnix/configuration.nix
-    ];
-  };
 }
