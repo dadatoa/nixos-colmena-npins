@@ -22,13 +22,6 @@ in
 
     # Make the pinned sources available to every node module.
     specialArgs = { inherit sources; };
-
-    # For non-x86_64 nodes, override nixpkgs per node so the overlay is applied
-    # with the correct system, e.g.:
-    # nodeNixpkgs.arm01 = import sources.nixpkgs {
-    #   system = "aarch64-linux";
-    #   overlays = [ unstableOverlay ];
-    # };
   };
 
   # Applied to every node.
@@ -103,7 +96,7 @@ in
       allowLocalDeployment = true;
       targetHost = "100.127.50.22";
       targetUser = "operateur";
-      tags = [ "domu" ];
+      # tags = [ "domu" ];
     };
     imports = [
       ./hosts/deckard
@@ -117,7 +110,7 @@ in
     deployment = {
       targetHost = "100.90.137.95";
       targetUser = "operateur";
-      tags = [ "domu" ];
+      # tags = [ "domu" ];
     };
     imports = [
       ./hosts/bender

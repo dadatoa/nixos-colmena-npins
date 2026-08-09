@@ -24,10 +24,6 @@
     preserveAt."/persist" = {
       directories = [
         "/etc/nixos"
-        {
-          directory = "/var/lib/nixos";
-          inInitrd = true;
-        }
       ];
 
       files = [
