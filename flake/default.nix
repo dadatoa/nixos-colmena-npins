@@ -5,10 +5,12 @@
     specialArgs = { inherit inputs; };
     modules = [
       inputs.preservation.nixosModules.default
-      inputs.disko.nixosModules.default
-      ./vm-config/configuration.nix
-      ./vm-config/filesystems.nix
-      ./vm-config/preservation.nix
+      ../colmena/common/xen_domU.nix
+      ../colmena/common/users.nix
+      ../colmena/common/locale.nix
+      # ./vm-config/configuration.nix
+      # ./vm-config/filesystems.nix
+      # ./vm-config/preservation.nix
       ./vm-config/networking.nix
     ];
   };
