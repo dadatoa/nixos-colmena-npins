@@ -2,7 +2,7 @@
 
 * Colmena
 ** hive
-#+begin_src nix :tangle ./colmena/hive.nix
+#+begin_src nix :tangle ./colmena/hive.nix :noweb tangle
 
 let sources = import ../npins;
 
@@ -68,32 +68,8 @@ in
     ];
   };
 
-  xen = { ... }:
-  {
-    networking.hostName = "xen";
-    deployment = {
-      targetHost = "100.107.28.98";
-      targetUser = "operateur";
-      tags = [ "dom0" ];
-    };
-    imports = [
-      ./hosts/xen
-      ./common/remote.nix
-    ];
-  };
-  nas = { ... }:
-  {
-    networking.hostName = "nas";
-    deployment = {
-      targetHost = "100.70.23.23";
-      targetUser = "operateur";
-      tags = [ "domu" ];
-    };
-    imports = [
-      ./hosts/nas
-      ./common/remote.nix
-    ];
-  };
+<<hive-xen>>
+<<hive-nix>>
 }
 #+end_src
 
@@ -430,6 +406,23 @@ in
 #+end_src
 ** Configuations des hôtes
 *** Xen
+**** add xen to hive
+#+NAME: hive-xen
+#+begin_src nix
+  xen = { ... }:
+  {
+    networking.hostName = "xen";
+    deployment = {
+      targetHost = "100.107.28.98";
+      targetUser = "operateur";
+      tags = [ "dom0" ];
+    };
+    imports = [
+      ./hosts/xen
+      ./common/remote.nix
+    ];
+  };
+#+end_src
 **** point d'entrée : default.nix
 #+begin_src nix :tangle ./colmena/hosts/xen/default.nix
 { ... }:
@@ -789,14 +782,28 @@ in
 }
 #+end_src
 *** Nas
+add to hive:
+#+NAME: hive-nas
+#+begin_src nix
+  nas = { ... }:
+  {
+    networking.hostName = "nas";
+    deployment = {
+      targetHost = "100.70.23.23";
+      targetUser = "operateur";
+      tags = [ "domu" ];
+    };
+    imports = [
+      ./hosts/nas
+      ./common/remote.nix
+    ];
+  };
+#+end_src
 #+begin_src nix :tangle ./colmena/hosts/nas/default.nix
 { ... }:
 {
-  imports = [
-    ../../common/xen_domU.nix
-  ];
-
   networking.firewall.enable = false;
+}
 #+end_src
 
 #+begin_src nix :tangle ./colmena/hosts/nas/default.nix
