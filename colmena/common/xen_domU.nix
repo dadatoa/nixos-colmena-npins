@@ -91,7 +91,8 @@
     device = "/dev/xvda";
     fsType = "btrfs";
     options = [
-      "subvol=varlib"
+      "subvol=var"
+      "compress=zstd"
       "noatime"
     ];
   };
