@@ -69,7 +69,7 @@ in
   };
 
 <<hive-xen>>
-<<hive-nix>>
+<<hive-nas>>
 }
 #+end_src
 
@@ -418,13 +418,13 @@ in
       tags = [ "dom0" ];
     };
     imports = [
-      ./hosts/xen
+      ./hosts/xen-configuration.nix
       ./common/remote.nix
     ];
   };
 #+end_src
-**** point d'entrée : default.nix
-#+begin_src nix :tangle ./colmena/hosts/xen/default.nix
+**** point d'entrée : default.nix - a effacer
+#+begin_src nix
 { ... }:
 {
   imports = [
@@ -437,9 +437,13 @@ in
 #+end_src
 
 **** Configuration principale
-#+begin_src nix :tangle ./colmena/hosts/xen/configuration.nix
-{ pkgs, ... }:
+#+begin_src nix :tangle ./colmena/hosts/xen-configuration.nix :noweb tangle
+{ config, lib, pkgs, modulesPath, ... }:
 {
+
+  nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
+  system.stateVersion = "26.05";
+
   # Minimal bootable layout so the configuration evaluates/builds.
   # Replace these with the real values from the target's hardware-configuration.nix.
   #
@@ -500,14 +504,14 @@ in
     # python3 # add python for Xen guest management with ansible
   ];
 
-  system.stateVersion = "26.05";
+<<xen-filesystem>>
+<<xen-networking>>
+<<xen-preserve>>
 }
 #+end_src
 **** Systèmes de fichiers
-#+begin_src nix :tangle ./colmena/hosts/xen/filesystems.nix
-{ config, lib, pkgs, modulesPath, ... }:
-
-{
+#+NAME: xen-filesystem
+#+begin_src nix
   fileSystems."/" = {
     device = "none";
     fsType = "tmpfs";
@@ -546,14 +550,11 @@ in
     [ { device = "/dev/disk/by-uuid/a6a0f0a7-f380-496e-b341-65466510ffca"; }
     ];
 
-  nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
 
-}
 #+end_src
 **** Configuration réseau
-#+begin_src nix :tangle ./colmena/hosts/xen/networking.nix
-{ ... }:
-{
+#+NAME: xen-networking
+#+begin_src nix
   networking.firewall.enable = false;
 
   ## manage network with systemd
@@ -649,111 +650,10 @@ in
       };
     };
   };
-}
-#+end_src
-#+begin_src nix :tangle ./colmena/hosts/xen/disko.nix
-{
-  fileSystems."/nix".neededForBoot = true;
-  fileSystems."/persist".neededForBoot = true; # sometimes needed too
-
-  disko.devices = {
-    nodev = {
-      "/" = {
-        fsType = "tmpfs";
-        mountOptions = [
-          "size=25%"
-          "mode=755"
-        ];
-      };
-    };
-
-    disk.main = {
-      # device = "/dev/nvme0n1";
-      device = "/dev/disk/by-id/nvme-EDILOCA_EN600_Pro_512GB_AA240220910";
-      type = "disk";
-      content = {
-        type = "gpt";
-        partitions = {
-          boot = {
-            name = "boot";
-            size = "1M";
-            type = "EF02";
-          };
-          esp = {
-            name = "ESP";
-            size = "1G";
-            type = "EF00";
-            content = {
-              type = "filesystem";
-              format = "vfat";
-              mountpoint = "/boot";
-              mountOptions = [ "umask=0077" ];
-            };
-          };
-          swap = {
-            size = "4G";
-            content = {
-              type = "swap";
-              resumeDevice = true;
-            };
-          };
-          # root
-          main = {
-            name = "main";
-            size = "100%";
-            content = {
-              type = "lvm_pv";
-              # vg = "root_vg";
-              vg = "nvme_vg";
-            };
-          };
-        };
-      };
-    };
-    lvm_vg = {
-      # root_vg
-      nvme_vg = {
-        type = "lvm_vg";
-        lvs = {
-          dom0 = {
-            size = "40G";
-            content = {
-              type = "btrfs";
-              extraArgs = [ "-f" ];
-              subvolumes = {
-                "/nix" = {
-                  mountOptions = [
-                    "subvol=nix"
-                    "noatime"
-                  ];
-                  mountpoint = "/nix";
-                };
-                "/persist" = {
-                  mountOptions = [
-                    "subvol=persist"
-                    "noatime"
-                  ];
-                  mountpoint = "/persist";
-                };
-                # "/var" = {
-                #   mountOptions = [
-                #     "subvol=var"
-                #     "noatime"
-                #   ];
-                #   mountpoint = "/var";
-                #
-              };
-            };
-          };
-        };
-      };
-    };
-  };
-}
 #+end_src
 **** Impermanence : preservation
-#+begin_src nix :tangle ./colmena/hosts/xen/preservation.nix
-{
+#+NAME: xen-preserve
+#+begin_src nix
   preservation = {
     enable = true;
 
@@ -779,7 +679,6 @@ in
 
     };
   };
-}
 #+end_src
 *** Nas
 add to hive:

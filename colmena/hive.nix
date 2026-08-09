@@ -71,9 +71,21 @@ in
       tags = [ "dom0" ];
     };
     imports = [
-      ./hosts/xen
+      ./hosts/xen-configuration.nix
       ./common/remote.nix
     ];
   };
-
+  nas = { ... }:
+  {
+    networking.hostName = "nas";
+    deployment = {
+      targetHost = "100.70.23.23";
+      targetUser = "operateur";
+      tags = [ "domu" ];
+    };
+    imports = [
+      ./hosts/nas
+      ./common/remote.nix
+    ];
+  };
 }
