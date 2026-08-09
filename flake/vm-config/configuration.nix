@@ -8,11 +8,12 @@
     growPartition = false;
     kernelParams = [
       "console=hvc0"
-      "vga=0x317"
       "nomodeset"
     ];
     loader.grub.enable = true;
     initrd.systemd.enable = true;
+    # GRUB must not wait forever at the menu in a headless domU.
+    loader.timeout = 5;
   };
   # Grub loader to allow pvh grub usage
   boot.loader.grub.device = "nodev";
