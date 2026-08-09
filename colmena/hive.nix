@@ -86,6 +86,7 @@ in
     imports = [
       ./hosts/nas-configuration.nix
       ./common/remote.nix
+      ./common/xen_domU.nix
     ];
   };
 }

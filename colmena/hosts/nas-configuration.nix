@@ -1,5 +1,8 @@
 { ... }:
 {
+
+  networking.firewall.enable = false;
+
   ## gluster server volumes
   fileSystems."/srv/gluster/appdata" = {
     device = "/dev/disk/by-label/appdata";
