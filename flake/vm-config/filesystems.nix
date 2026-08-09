@@ -23,12 +23,16 @@
     fsType = "btrfs";
     options = ["subvol=boot" "noatime"];
   };
-
+  fileSystems."/var" = {
+    neededForBoot = true;
+    device = "/dev/xvda";
+    fsType = "btrfs";
+    options = ["subvol=var" "noatime"];
+  };
   # Persistent swap file on /persist subvolume.
   # The /persist directory must exist and contain a swapfile created with:
   #   mkswap -U clear /persist/swapfile
   #   chmod 600 /persist/swapfile
-  fileSystems."/persist".neededForBoot = true;
   swapDevices = [
     {
       device = "/persist/swapfile";
