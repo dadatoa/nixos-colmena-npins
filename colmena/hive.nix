@@ -22,13 +22,6 @@ in
 
     # Make the pinned sources available to every node module.
     specialArgs = { inherit sources; };
-
-    # For non-x86_64 nodes, override nixpkgs per node so the overlay is applied
-    # with the correct system, e.g.:
-    # nodeNixpkgs.arm01 = import sources.nixpkgs {
-    #   system = "aarch64-linux";
-    #   overlays = [ unstableOverlay ];
-    # };
   };
 
   # Applied to every node.
@@ -78,7 +71,7 @@ in
       tags = [ "dom0" ];
     };
     imports = [
-      ./hosts/xen
+      ./hosts/xen-configuration.nix
       ./common/remote.nix
     ];
   };
@@ -91,47 +84,9 @@ in
       tags = [ "domu" ];
     };
     imports = [
-      ./hosts/nas
+      ./hosts/nas-configuration.nix
       ./common/remote.nix
-    ];
-  };
-  deckard = { ... }:
-  {
-    networking.hostName = "deckard";
-    deployment = {
-      # Allow local deployment with `colmena apply-local`
-      allowLocalDeployment = true;
-      targetHost = "100.127.50.22";
-      targetUser = "operateur";
-      tags = [ "domu" ];
-    };
-    imports = [
-      ./hosts/deckard
-      ./common/remote.nix
-    ];
-  };
-
-  bender = { ... }:
-  {
-    networking.hostName = "bender";
-    deployment = {
-      targetHost = "100.90.137.95";
-      targetUser = "operateur";
-      tags = [ "domu" ];
-    };
-    imports = [
-      ./hosts/bender
-      ./common/remote.nix
-    ];
-  };
-
-  orbnix = { ... }:
-  {
-    deployment = {
-      targetHost = null;
-    };
-    imports = [
-      ./hosts/orbnix/configuration.nix
+      ./common/xen_domU.nix
     ];
   };
 }

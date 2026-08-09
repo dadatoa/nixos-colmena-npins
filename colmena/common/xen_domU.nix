@@ -2,8 +2,8 @@
 {
   # Common configuration for Xen DomU NixOS virtual machines.
   boot = {
-    growPartition = true;
-    kernelParams = [ "console=ttyS0" "vga=0x317" "nomodeset" ];
+    growPartition = false; # to avoid Failed to start growpart.service with impermanence
+    kernelParams = [ "console=hvc0" "nomodeset" ];
     loader.grub.enable = true;
     initrd.systemd.enable = true;
   };
@@ -91,7 +91,8 @@
     device = "/dev/xvda";
     fsType = "btrfs";
     options = [
-      "subvol=varlib"
+      "subvol=var"
+      "compress=zstd"
       "noatime"
     ];
   };

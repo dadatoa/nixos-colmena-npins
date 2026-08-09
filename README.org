@@ -1,0 +1,774 @@
+#+title: Documentation
+* Structure
+- Flake -> bootstrap des system
+  -> xen-config : pour l'hyperviseur xen
+  -> vm-config : pour les domU
+- Colmena -> configurations des systèmes en utilisant nixos colmena pour tout déployer
+- xl_configs -> fichiers .cfg pour démarrer les vm xen
+- npins -> systeme de pin des dépendance nix utilisé avec colmena (colmena config flakeless)
+* Colmena
+** hive
+#+begin_src nix :tangle ./colmena/hive.nix :noweb tangle
+
+let sources = import ../npins;
+
+  # Overlay that exposes the unstable channel as `pkgs.unstable.*` on every node.# It inherits the base system and config (allowUnfree, etc.) so unstable packages evaluate consistently with the rest of the system.
+  unstableOverlay = final: prev: {
+    unstable = import sources.unstable {
+      inherit (prev) system;
+      config = prev.config;
+    };
+  };
+
+  pkgs = import sources.nixpkgs {
+    config = {
+      allowUnfree = true;
+    };
+    overlays = [ unstableOverlay ];
+  };
+in
+{
+  meta = {
+    # Pin colmena's nixpkgs to the stable channel from npins.
+    nixpkgs = pkgs;
+
+    # Make the pinned sources available to every node module.
+    specialArgs = { inherit sources; };
+  };
+
+  # Applied to every node.
+  defaults = { pkgs, ... }:
+  {
+    deployment.buildOnTarget = true;
+    deployment.allowLocalDeployment = true; # allow all hosts to deploy locally
+    boot.supportedFilesystems.btrfs = true;
+
+    imports = [
+      (sources.disko + "/module.nix")
+      (sources.preservation + "/module.nix")
+      ./common/locale.nix
+      ./common/users.nix
+    ];
+
+    nix.gc = {
+      automatic = true;
+      dates = "weekly";
+      options = "--delete-older-than 7d";
+    };
+
+    nix.settings.experimental-features = [
+      "nix-command"
+      "flakes"
+    ];
+    nix.channel.enable = false;
+
+    environment.systemPackages = with pkgs; [
+      btrfs-progs
+      e2fsprogs # ext2,3,4 filesytem
+      git
+      iproute2
+      pciutils
+      usbutils
+      vim
+      wget
+    ];
+  };
+
+<<hive-xen>>
+<<hive-nas>>
+}
+#+end_src
+
+** Configurations communes
+*** Environnement local: locale.nix
+
+#+begin_src nix :tangle ./colmena/common/locale.nix
+
+# French localization, applied to every node via hive.nix `defaults`.
+# Sets the system locale, all per-category LC_* settings, the timezone and the
+# console/X11 keyboard layout to French.
+{ ... }:
+{
+  # Generate and use the French UTF-8 locale as the system default.
+  i18n.defaultLocale = "fr_FR.UTF-8";
+
+  # Make sure both the C and French locales are built into the system.
+  i18n.supportedLocales = [
+    "C.UTF-8/UTF-8"
+    "fr_FR.UTF-8/UTF-8"
+  ];
+
+  # Localise every LC_* category (numbers, dates, currency, sorting, ...).
+  i18n.extraLocaleSettings = {
+    LC_ADDRESS = "fr_FR.UTF-8";
+    LC_IDENTIFICATION = "fr_FR.UTF-8";
+    LC_MEASUREMENT = "fr_FR.UTF-8";
+    LC_MONETARY = "fr_FR.UTF-8";
+    LC_NAME = "fr_FR.UTF-8";
+    LC_NUMERIC = "fr_FR.UTF-8";
+    LC_PAPER = "fr_FR.UTF-8";
+    LC_TELEPHONE = "fr_FR.UTF-8";
+    LC_TIME = "fr_FR.UTF-8";
+  };
+
+  # Timezone (Bangkok, Thailand).
+  time.timeZone = "Asia/Bangkok";
+
+  # French keyboard for the virtual consoles (TTYs).
+  # console.keyMap = "fr";
+
+  # French keyboard for X11 / Wayland sessions (no-op on headless hosts, but
+  # ensures any graphical session is localised as well).
+  # services.xserver.xkb = {
+  #   layout = "fr";
+  #   variant = "";
+  # };
+}
+#+end_src
+
+*** Accès distant: remote.nix
+#+begin_src nix :tangle ./colmena/common/remote.nix
+
+{ config, lib, pkgs, ... }:
+
+{
+  # start ssh-agent
+  programs.ssh.startAgent = true;
+
+  services.openssh.enable = true;
+
+  services.tailscale = {
+    enable = true;
+    package = pkgs.unstable.tailscale;
+  };
+
+  # Enable mDNS autodiscovery
+  services.avahi = {
+    publish = {
+      enable = true;
+      userServices = true;
+    };
+    enable = true;
+    openFirewall = true;
+    nssmdns4 = true;
+  };
+
+}
+#+end_src
+
+*** Utilisateurs: users.nix
+#+begin_src nix :tangle ./colmena/common/users.nix
+
+# Shared "operateur" account, applied to every node via hive.nix `defaults`.
+# - uid 1000
+# - passwordless sudo
+# - may reboot/poweroff without sudo (polkit)
+{ pkgs, ... }:
+{
+  users.users.operateur = {
+    isNormalUser = true;
+    uid = 1000;
+    description = "Operator";
+    extraGroups = [ "wheel" "video" ];
+    shell = pkgs.nushell;
+    packages = with pkgs; [ nushell zoxide fish carapace starship chezmoi ];
+  };
+
+  environment.shells = [ pkgs.nushell ];
+
+  users.users.root.hashedPassword = "$y$j9T$7KS0JnyfiA/D3xjb5KhkL.$4ftVKMN9aVxQZ4HGXWOB8eVaq9EOXFL01Jq8vyEBG93";
+
+  # Passwordless sudo, scoped to the operateur user only.
+  security.sudo.extraRules = [
+    {
+      users = [ "operateur" ];
+      commands = [
+        {
+          command = "ALL";
+          options = [ "NOPASSWD" ];
+        }
+      ];
+    }
+  ];
+
+  # Allow operateur to reboot/power off without sudo (or any authentication),
+  # even when other sessions are active or inhibitors are set.
+  security.polkit.enable = true;
+  security.polkit.extraConfig = ''
+    polkit.addRule(function(action, subject) {
+      if (subject.user == "operateur" &&
+          (action.id == "org.freedesktop.login1.power-off" ||
+           action.id == "org.freedesktop.login1.power-off-multiple-sessions" ||
+           action.id == "org.freedesktop.login1.power-off-ignore-inhibit" ||
+           action.id == "org.freedesktop.login1.reboot" ||
+           action.id == "org.freedesktop.login1.reboot-multiple-sessions" ||
+           action.id == "org.freedesktop.login1.reboot-ignore-inhibit")) {
+        return polkit.Result.YES;
+      }
+    });
+  '';
+
+  # allow nix-copy to live system
+  nix.settings.trusted-users = [ "operateur" ];
+}
+#+end_src
+*** Xen VMs: xen_domU.nix
+#+begin_src nix :tangle ./colmena/common/xen_domU.nix
+{ config, pkgs, lib, ... }:
+{
+  # Common configuration for Xen DomU NixOS virtual machines.
+  boot = {
+    growPartition = false; # to avoid Failed to start growpart.service with impermanence
+    kernelParams = [ "console=hvc0" "nomodeset" ];
+    loader.grub.enable = true;
+    initrd.systemd.enable = true;
+  };
+  # Grub loader to allow pvh grub usage
+  boot.loader.grub.device = "nodev";
+
+  boot.initrd.kernelModules = [
+    "xen-blkfront"
+    "xen-tpmfront"
+    "xen-kbdfront"
+    "xen-fbfront"
+    "xen-netfront"
+    "xen-pcifront"
+    "xen-scsifront"
+  ];
+
+  # Send syslog messages to the Xen console.
+  services.syslogd.tty = "hvc0";
+
+  # Don't run ntpd, since we should get the correct time from Dom0.
+  services.timesyncd.enable = false;
+
+  # Automatically log in at the virtual consoles.
+  services.getty.autologinUser = "operateur";
+
+  nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
+
+  system.stateVersion = "26.05";
+
+  # environment.systemPackages = with pkgs; [ forgejo-runner ];
+
+
+  # Manage network with systemd
+  networking.useNetworkd = true;
+  systemd.network.enable = true;
+  systemd.network.networks = {
+    "30-lan" = {
+      matchConfig.Name = "enX0";
+      networkConfig.DHCP = "ipv4";
+    };
+  };
+
+  services.glusterfs.enable = true;
+#+end_src
+**** systèmes de fichiers
+#+begin_src nix :tangle ./colmena/common/xen_domU.nix
+
+  fileSystems."/" = {
+    device = "none";
+    fsType = "tmpfs";
+    options = [
+      "size=25%"
+      "mode=755"
+    ]; # mode=755 so only root can write to those files
+  };
+
+  fileSystems."/nix" = {
+    neededForBoot = true;
+    device = "/dev/xvda";
+    fsType = "btrfs";
+    options = [
+      "subvol=nix"
+      "compress=zstd"
+      "noatime"
+    ];
+  };
+  fileSystems."/persist" = {
+    neededForBoot = true;
+    device = "/dev/xvda";
+    fsType = "btrfs";
+    options = [
+      "subvol=persist"
+      "compress=zstd"
+      "noatime"
+    ];
+  };
+  fileSystems."/boot" = {
+    neededForBoot = true;
+    device = "/dev/xvda";
+    fsType = "btrfs";
+    options = [
+      "subvol=boot"
+      "noatime"
+    ];
+  };
+  fileSystems."/var" = {
+    neededForBoot = true;
+    device = "/dev/xvda";
+    fsType = "btrfs";
+    options = [
+      "subvol=var"
+      "compress=zstd"
+      "noatime"
+    ];
+  };
+
+
+  swapDevices = [
+    {
+      device = "/persist/swapfile";
+      size = 4 * 1024; # Creates an 4GB swap file
+    }
+  ];
+}
+#+end_src
+
+*** Docker: docker.nix
+#+begin_src nix :tangle ./colmena/common/docker.nix
+{ pkgs, ... }:
+{
+  virtualisation.docker = {
+    enable = true;
+    storageDriver = "btrfs";
+    rootless = {
+      enable = true;
+      setSocketVariable = true;
+    };
+    daemon.settings = {
+      userland-proxy = false;
+      experimental = true;
+      metrics-addr = "0.0.0.0:9323";
+      ipv6 = true;
+      fixed-cidr-v6 = "fd00::/80";
+    };
+  };
+
+  users.users.mobi = {
+    isNormalUser = true;
+    uid = 1005;
+    description = "docker user";
+    extraGroups = [ "docker" ];
+    shell = pkgs.nushell;
+    packages = with pkgs; [ nushell zoxide fish carapace starship chezmoi ];
+  };
+}
+#+end_src
+*** Wirguard - ProtonVPN
+
+*A Modifier!*
+#+begin_src nix
+{ config, pkgs, ... }:
+
+{
+  networking.useNetworkd = true;
+  networking.useDHCP = false; # systemd-networkd handles things natively
+
+  # Ensure resolved is enabled for DNS handling
+  services.resolved.enable = true;
+
+  systemd.network = {
+    enable = true;
+
+    # 1. Define the WireGuard NetDev interface
+    netdevs = {
+      "50-wg-proton" = {
+        netdevConfig = {
+          Kind = "wireguard";
+          Name = "wg-proton";
+          MTUBytes = "1420";
+        };
+        wireguardConfig = {
+          PrivateKeyFile = "/etc/systemd/network/keys/proton.key";
+        };
+        wireguardPeers = [
+          {
+            PublicKey = "SERVER_PUBLIC_KEY_FROM_PROTON";
+            Endpoint = "SERVER_IP_ADDRESS:51820";
+            AllowedIPs = [ "0.0.0.0/0" ]; # Route all traffic through VPN
+            PersistentKeepalive = 25;
+          }
+        ];
+      };
+    };
+
+    # 2. Configure network assignment and routing for the interface
+    networks = {
+      "50-wg-proton" = {
+        matchConfig.Name = "wg-proton";
+        address = [
+          "10.2.0.2/32" # Replace with your ProtonVPN assigned IPv4 address
+        ];
+        networkConfig = {
+          # Automatically assign routes for the allowedIPs
+          DNS = [ "10.2.0.1" ]; # ProtonVPN's internal DNS server if applicable
+        };
+        linkConfig.RequiredForOnline = "no"; # Prevents boot hangs if VPN is slow to connect
+      };
+    };
+  };
+}
+#+end_src
+** Configuations des hôtes
+*** Xen
+**** add xen to hive
+#+NAME: hive-xen
+#+begin_src nix
+  xen = { ... }:
+  {
+    networking.hostName = "xen";
+    deployment = {
+      targetHost = "100.107.28.98";
+      targetUser = "operateur";
+      tags = [ "dom0" ];
+    };
+    imports = [
+      ./hosts/xen-configuration.nix
+      ./common/remote.nix
+    ];
+  };
+#+end_src
+**** point d'entrée : default.nix - a effacer
+#+begin_src nix
+{ ... }:
+{
+  imports = [
+    ./preservation.nix
+    ./networking.nix
+    ./configuration.nix
+    ./filesystems.nix
+  ];
+}
+#+end_src
+
+**** Configuration principale
+#+begin_src nix :tangle ./colmena/hosts/xen-configuration.nix :noweb tangle
+{ config, lib, pkgs, modulesPath, ... }:
+{
+
+  nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
+  system.stateVersion = "26.05";
+
+  # Minimal bootable layout so the configuration evaluates/builds.
+  # Replace these with the real values from the target's hardware-configuration.nix.
+  #
+  # The Xen dom0 module requires systemd-boot (or Lanzaboote/Limine) and a
+  # systemd-based initrd, so this host boots via UEFI rather than GRUB.
+  boot.kernelParams = [
+    ### xen special boot kernel param
+    ### hide pci device wifi from dom0 to be abble to pass it on anther damain
+    # "xen-pciback.hide=(03:00.0)"
+    "intel_iommu=on"
+  ];
+  boot.loader.systemd-boot.enable = true;
+  boot.loader.systemd-boot.configurationLimit = 10;
+  boot.loader.systemd-boot.consoleMode = "0";
+
+  boot.loader.efi.canTouchEfiVariables = true;
+
+  ## use latest kernel available
+  boot.kernelPackages = pkgs.linuxPackages_latest;
+
+  # to disable "A start job is running for /dev/tpmrm0" timeout
+  systemd.tpm2.enable = false;
+  # if the previous one is not enough:
+  boot.initrd.systemd.tpm2.enable = false;
+
+  boot.initrd.systemd.enable = true;
+  boot.initrd.kernelModules = [
+    "vfio_pci"
+    "vfio"
+    "vfio_iommu_type1"
+  ];
+
+  # Run as a Xen Project type-1 hypervisor; NixOS becomes the privileged dom0.
+  virtualisation.xen = {
+    enable = true;
+    boot.builderVerbosity = "info";
+    ## Adds a handy report that lets you know which Xen boot entries were created.
+    boot.params = [
+      # "vga=ask"
+      "dom0=pvh"
+    ];
+    # Uses the PVH virtualisation mode for the Domain 0, instead of PV.
+    # Cap dom0's own resources so guest domains have headroom (adjust per host).
+    dom0Resources = {
+      memory = 2048; # MiB pinned to dom0
+      maxVCPUs = 2;
+    };
+  };
+
+  ## aditionnal usefull packages for xen
+  environment.systemPackages = with pkgs; [
+    qemu_xen
+    grub2_xen
+    grub2_xen_pvh
+    grub2_pvhgrub_image
+    grub2_pvgrub_image
+    # grub2
+    # python3 # add python for Xen guest management with ansible
+  ];
+
+<<xen-filesystem>>
+<<xen-networking>>
+<<xen-preserve>>
+}
+#+end_src
+**** Systèmes de fichiers
+#+NAME: xen-filesystem
+#+begin_src nix
+  fileSystems."/" = {
+    device = "none";
+    fsType = "tmpfs";
+    options = [ "size=25%" "mode=755" ]; # mode=755 so only root can write to those files
+    };
+
+  fileSystems."/boot" = {
+    neededForBoot = true;
+    device = "/dev/disk/by-uuid/A39E-73FE";
+    fsType = "vfat";
+    options = [ "fmask=0077" "dmask=0077" ];
+    };
+
+  fileSystems."/var" ={
+    neededForBoot = true;
+    device = "/dev/mapper/sys-dom0";
+    fsType = "btrfs";
+    options = [ "subvol=@var" "compress=zstd" "noatime" ];
+    };
+
+  fileSystems."/persist" = {
+    neededForBoot = true;
+    device = "/dev/mapper/sys-dom0";
+    fsType = "btrfs";
+    options = [ "subvol=@persist" "compress=zstd" "noatime"];
+    };
+
+  fileSystems."/nix" = {
+    neededForBoot = true;
+    device = "/dev/mapper/sys-dom0";
+    fsType = "btrfs";
+    options = [ "subvol=@nix" "compress=zstd" "noatime" ];
+    };
+
+  swapDevices =
+    [ { device = "/dev/disk/by-uuid/a6a0f0a7-f380-496e-b341-65466510ffca"; }
+    ];
+
+
+#+end_src
+**** Configuration réseau
+#+NAME: xen-networking
+#+begin_src nix
+  networking.firewall.enable = false;
+
+  ## manage network with systemd
+  networking.useNetworkd = true;
+  systemd.network.enable = true;
+  systemd.network = {
+    netdevs = {
+      # declare virtual devices
+      "20-xenbr0" = {
+        netdevConfig = {
+          Kind = "bridge";
+          Name = "xenbr0";
+          Description = "xen default bridge";
+        };
+      };
+
+      # VLAN 50 & 66 interface on the physical NIC
+      "20-vlan50" = {
+        netdevConfig = {
+          Kind = "vlan";
+          Name = "enp2s0.50";
+        };
+        vlanConfig.Id = 50;
+      };
+
+      "20-vlan66" = {
+        netdevConfig = {
+          Kind = "vlan";
+          Name = "enp2s0.66";
+        };
+        vlanConfig.Id = 66;
+      };
+
+      # Isolated bridge for VLAN 50 & 66 — dom0 has no IP on this bridge
+      "20-xenbr50" = {
+        netdevConfig = {
+          Kind = "bridge";
+          Name = "xenbr50";
+          Description = "xen isolated bridge for VLAN 50";
+        };
+      };
+      "20-xenbr66" = {
+        netdevConfig = {
+          Kind = "bridge";
+          Name = "xenbr66";
+          Description = "xen isolated bridge for VLAN 66";
+        };
+      };
+    };
+
+    networks = {
+      # network interfaces configurations
+      "30-lan" = {
+        enable = true;
+        matchConfig.Name = "enp2s0";
+        networkConfig.Bridge = "xenbr0";
+        # Declare the VLAN sub-interface so systemd-networkd creates it
+        vlan = [ "enp2s0.50" "enp2s0.66"];
+      };
+
+      # Enslave the VLAN 50 interface to the isolated bridge
+      "35-vlan50" = {
+        matchConfig.Name = "enp2s0.50";
+        networkConfig.Bridge = "xenbr50";
+      };
+
+      # Enslave the VLAN 66 interface to the isolated bridge
+      "35-vlan66" = {
+        matchConfig.Name = "enp2s0.66";
+        networkConfig.Bridge = "xenbr66";
+      };
+
+      "40-xenbr0" = {
+        matchConfig.Name = "xenbr0";
+        networkConfig.DHCP = "ipv4";
+      };
+
+      # No IP on dom0 for this bridge — only domU guests use VLAN 50
+      "40-xenbr50" = {
+        matchConfig.Name = "xenbr50";
+        networkConfig = {
+          DHCP = "no";
+          LinkLocalAddressing = "no";
+        };
+      };
+      # No IP on dom0 for this bridge — only domU guests use VLAN 66
+      "40-xenbr66" = {
+        matchConfig.Name = "xenbr66";
+        networkConfig = {
+          DHCP = "no";
+          LinkLocalAddressing = "no";
+        };
+      };
+    };
+  };
+#+end_src
+**** Impermanence : preservation
+#+NAME: xen-preserve
+#+begin_src nix
+  preservation = {
+    enable = true;
+
+    preserveAt."/persist" = {
+      directories = [
+        "/etc/nixos"
+      ];
+
+      files = [
+        "/etc/ssh/authorized_keys.d/operateur"
+        # "/etc/xen/auto/bender.cfg"
+        # "/etc/xen/auto/nas.cfg"
+        # "/etc/xen/auto/deckard.cfg"
+        {
+          file = "/etc/machine-id";
+          inInitrd = true;
+        }
+      ];
+      users.operateur = {
+        directories = [ ".ssh" ".config" "xl-configs" ];
+        files = [ ".gitconfig" ];
+      };
+
+    };
+  };
+#+end_src
+*** Nas
+**** add to hive:
+#+NAME: hive-nas
+#+begin_src nix
+  nas = { ... }:
+  {
+    networking.hostName = "nas";
+    deployment = {
+      targetHost = "100.70.23.23";
+      targetUser = "operateur";
+      tags = [ "domu" ];
+    };
+    imports = [
+      ./hosts/nas-configuration.nix
+      ./common/remote.nix
+      ./common/xen_domU.nix
+    ];
+  };
+#+end_src
+
+**** configuration
+#+begin_src nix :tangle ./colmena/hosts/nas-configuration.nix
+{ ... }:
+{
+
+  networking.firewall.enable = false;
+
+  ## gluster server volumes
+  # fileSystems."/srv/gluster/appdata" = {
+  #   device = "/dev/disk/by-label/appdata";
+  #   fsType = "btrfs";
+  #   options = [ "noatime" ];
+  # };
+  # fileSystems."/srv/gluster/media" = {
+  #   device = "/dev/disk/by-label/media";
+  #   fsType = "btrfs";
+  #   options = [ "noatime" ];
+  # };
+
+  preservation = {
+    enable = true;
+
+    preserveAt."/persist" = {
+      directories = [
+        "/etc/nixos"
+      ];
+
+      files = [
+        "/etc/ssh/authorized_keys.d/operateur"
+        { # PRevent Failed to start Save Transient machine-id to Disk
+          file = "/etc/machine-id";
+          inInitrd = true;
+          how = "symlink";
+        }
+      ];
+
+      # Preserve user files
+      users.operateur = {
+        directories = [ ".ssh" ];
+        files = [ ".gitconfig" ".config/nushell/config.nu" ".config/nushell/zoxide.nu" ];
+      };
+      users.root = {
+        home = "/root";
+        directories = [];
+        files = [ ".gitconfig" ];
+      };
+    };
+  };
+}
+#+end_src
+* xl configs
+#+begin_src ini :tangle ./xl_configs/nas.cfg
+
+name = "nas"
+type = "pvh"
+memory = 4096
+vcpus = 2
+vif = [ "bridge=xenbr50,mac=02:b0:9a:91:34:40" ]
+on_poweroff = "destroy"
+on_reboot = "restart"
+on_crash = "restart"
+disk = [ "/dev/sys/nas,,xvda", "/dev/rust/media,,xvdb", "/dev/nvme_vg/appdata,,xvdc"  ]
+kernel="/run/current-system/sw/lib/grub-xen_pvh/grub-i386-xen_pvh.bin"
+
+#+end_src

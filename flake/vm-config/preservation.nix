@@ -11,14 +11,6 @@
       files = [
         "/etc/ssh/authorized_keys.d/operateur"
         {
-          file = "/persist/secrets/root-password.txt";
-          inInitrd = true;
-        }
-        {
-          file = "/persist/secrets/ts-key.txt";
-          inInitrd = true;
-        }
-        {
           file = "/etc/machine-id";
           inInitrd = true;
           how = "symlink";

@@ -1,8 +1,8 @@
 {
   networking.hostName = "nixos-vm";
   
-  networking.firewall.enable = false; 
-  
+  networking.firewall.enable = false;
+
 ## manage network with systemd
   networking.useNetworkd = true;
   systemd.network.enable = true;
