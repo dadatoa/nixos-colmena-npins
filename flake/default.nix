@@ -5,7 +5,6 @@
     specialArgs = { inherit inputs; };
     modules = [
       inputs.preservation.nixosModules.default
-      inputs.disko.nixosModules.default
       ./vm-config/configuration.nix
       ./vm-config/filesystems.nix
       ./vm-config/preservation.nix
