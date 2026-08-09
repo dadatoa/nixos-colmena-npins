@@ -706,6 +706,8 @@ in
 #+end_src
 **** configuration
 #+begin_src nix :tangle ./colmena/hosts/nas-configuration.nix
+{ ... }:
+{
   ## gluster server volumes
   fileSystems."/srv/gluster/appdata" = {
     device = "/dev/disk/by-label/appdata";
