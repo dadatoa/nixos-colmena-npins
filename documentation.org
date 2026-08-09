@@ -98,7 +98,7 @@ in
 #+end_src
 
 ** Configurations communes
-*** Environnement local
+*** Environnement local: locale.nix
 
 #+begin_src nix :tangle ./colmena/common/locale.nix
 
@@ -144,7 +144,7 @@ in
 }
 #+end_src
 
-*** Accès distant
+*** Accès distant: remote.nix
 #+begin_src nix :tangle ./colmena/common/remote.nix
 
 { config, lib, pkgs, ... }:
@@ -174,7 +174,7 @@ in
 }
 #+end_src
 
-*** Utilisateurs
+*** Utilisateurs: users.nix
 #+begin_src nix :tangle ./colmena/common/users.nix
 
 # Shared "operateur" account, applied to every node via hive.nix `defaults`.
@@ -230,8 +230,7 @@ in
   nix.settings.trusted-users = [ "operateur" ];
 }
 #+end_src
-*** Xen VMs
-**** base
+*** Xen VMs: xen_domU.nix
 #+begin_src nix :tangle ./colmena/common/xen_domU.nix
 { config, pkgs, lib, ... }:
 {
@@ -344,7 +343,7 @@ in
 }
 #+end_src
 
-*** Docker
+*** Docker: docker.nix
 #+begin_src nix :tangle ./colmena/common/docker.nix
 { pkgs, ... }:
 {
