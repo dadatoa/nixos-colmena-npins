@@ -20,6 +20,8 @@ jobs:
         with:
           nix_path: nixpkgs=channel:nixos-26.05
       - run: nix-env -i colmena -f '<nixpkgs>'
+      - name: "install bao CLI"
+        run: nix-env -i openbao -f '<nixpkgs>'
       - name: "Tailscale"
         uses: tailscale/github-action@v4
         with:
@@ -42,6 +44,23 @@ jobs:
             StrictHostKeyChecking no
             UserKnownHostsFile /dev/null
           END
+
+      - name: "Login to OpenBao (colmena-app AppRole)"
+        env:
+          OPENBAO_ADDR: ${{ secrets.OPENBAO_ADDR }}
+          BAO_ADDR: ${{ secrets.OPENBAO_ADDR }}
+          COLOMENA_APP_ROLE_ID: ${{ secrets.COLOMENA_APP_ROLE_ID }}
+          COLOMENA_APP_SECRET_ID: ${{ secrets.COLOMENA_APP_SECRET_ID }}
+        run: |
+          set -euo pipefail
+          TOKEN=$(bao write -format=json auth/approle/login \
+            role_id="$COLOMENA_APP_ROLE_ID" secret_id="$COLOMENA_APP_SECRET_ID" \
+            | jq -er '.auth.client_token')
+
+          echo "BAO_ADDR=$BAO_ADDR" >> "$GITHUB_ENV"
+          echo "OPENBAO_ADDR=$OPENBAO_ADDR" >> "$GITHUB_ENV"
+          echo "BAO_TOKEN=$TOKEN" >> "$GITHUB_ENV"
+          echo "OPENBAO_TOKEN=$TOKEN" >> "$GITHUB_ENV"
 
       - name: "deployment to vms"
         run: colmena apply -f colmena/hive.nix --reboot --on @domu
