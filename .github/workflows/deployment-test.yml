@@ -4,7 +4,12 @@ on:
   workflow_dispatch:
 
 jobs:
+  unseal-openbao:
+    uses: ./.github/workflows/unseal-openbao.yml
+    secrets: inherit
+
   deploy-nixos:
+    needs: unseal-openbao
     runs-on: ubuntu-latest
 
     steps:
