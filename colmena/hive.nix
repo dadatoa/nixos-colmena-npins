@@ -54,7 +54,9 @@ in
       btrfs-progs
       e2fsprogs # ext2,3,4 filesytem
       git
+      gnupg
       iproute2
+      pass
       pciutils
       usbutils
       vim
