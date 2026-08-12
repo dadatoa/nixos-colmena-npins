@@ -66,7 +66,7 @@ in
   {
     networking.hostName = "xen";
     deployment = {
-      targetHost = "100.107.28.98";
+      targetHost = "100.85.206.102";
       targetUser = "operateur";
       tags = [ "dom0" ];
     };
@@ -79,7 +79,7 @@ in
   {
     networking.hostName = "nas";
     deployment = {
-      targetHost = "100.70.23.23";
+      targetHost = "10.10.10.209";
       targetUser = "operateur";
       tags = [ "domu" ];
     };

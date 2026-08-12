@@ -21,12 +21,6 @@
     preserveAt."/persist" = {
       directories = [
         "/etc/nixos"
-        # "/var/lib/tailscale"
-        # "/var/lib/glusterd"
-        # {
-        #   directory = "/var/lib/nixos";
-        #   inInitrd = true;
-        # }
       ];
 
       files = [
