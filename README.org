@@ -1,4 +1,8 @@
 #+title: Documentation
+- [ ]  update open bao unseal keys in github secrets
+- [ ]  integrate bao unseal into workflows
+- [ ]  condition: si bao unseal depuis workflow, reseal après éxécution du workflow
+- [ ]  ajout secret management avec bao dans hive colmena -> root passwd et op passwd
 * Structure
 - Flake -> bootstrap des system
   -> xen-config : pour l'hyperviseur xen
