@@ -1,0 +1,46 @@
+name: Test ssh connectivity on hive hosts
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy-nixos:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: "checkout repo"
+        uses: actions/checkout@v6
+      - name: "Tailscale"
+        uses: tailscale/github-action@v4
+        with:
+          oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+          oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
+          tags: tag:cicd
+          ping: xen.${{ secrets.TS_TAILNET }}
+      - name: "Configure SSH"
+        env:
+          SSH_KEY: ${{ secrets.SSH_KEY }}
+        run: |
+          mkdir -p ~/.ssh/
+          echo "$SSH_KEY" > ~/.ssh/external-machine.key
+          chmod 600 ~/.ssh/external-machine.key
+          cat >>~/.ssh/config <<END
+          Host *
+            IdentityFile ~/.ssh/external-machine.key
+            StrictHostKeyChecking no
+            UserKnownHostsFile /dev/null
+          END
+
+      - name: "ssh test"
+        run: |
+          ips=("10.10.10.209" "100.85.206.102")
+          timeout="3"
+          for ip in "${ips[@]}"; do
+            echo "trying to connect to $ip"
+            if ! ssh -F /dev/null -o BatchMode=yes -o ConnectTimeout="${timeout}" "${ip}" true &>/dev/null
+            then
+              echo "$0 cannot connect to the $ip. Check your vpn connectivity"
+            else
+              echo "it worked!"
+            fi
+          done
