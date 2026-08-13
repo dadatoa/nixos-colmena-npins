@@ -50,21 +50,27 @@ in
     deployment.keys = {
       root_password_hash = {
         keyCommand = [ "bao" "kv" "get" "-field=root_password_hash" "secrets/projects/colmena" ];
+        destDir = "/persist/keys";
       };
       operateur_password_hash = {
         keyCommand = [ "bao" "kv" "get" "-field=operateur_password_hash" "secrets/projects/colmena" ];
+        destDir = "/persist/keys";
       };
       ts_secret = {
         keyCommand = [ "bao" "kv" "get" "-field=ts_secret" "secrets/projects/colmena" ];
+        destDir = "/persist/keys";
       };
       proton_private_key = {
         keyCommand = [ "bao" "kv" "get" "-field=proton_private_key" "secrets/projects/colmena" ];
+        destDir = "/persist/keys";
       };
       approle_id = {
         keyCommand = [ "bao" "kv" "get" "-field=approle-id" "secrets/projects/colmena" ];
+        destDir = "/persist/keys";
       };
       approle_secret = {
         keyCommand = [ "bao" "kv" "get" "-field=approle-secret" "secrets/projects/colmena" ];
+        destDir = "/persist/keys";
       };
     };
 
