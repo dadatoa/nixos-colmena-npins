@@ -122,6 +122,7 @@ in
       ./hosts/nas-configuration.nix
       ./common/remote.nix
       ./common/xen_domU.nix
+      ./common/proton-vpn.nix
     ];
   };
 }

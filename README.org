@@ -422,8 +422,7 @@ in
 #+end_src
 *** Wireguard - ProtonVPN
 
-*A Modifier!*
-#+begin_src nix
+#+begin_src nix :tangle ./colmena/common/proton-vpn.nix
 { config, pkgs, ... }:
 
 {
@@ -449,8 +448,8 @@ in
         };
         wireguardPeers = [
           {
-            PublicKey = "SERVER_PUBLIC_KEY_FROM_PROTON";
-            Endpoint = "SERVER_IP_ADDRESS:51820";
+            PublicKey = "WgRtf+TKPVKDfc/3B81bf+EfmPvwGYzucIyg8nCj800=";
+            Endpoint = "103.216.223.50:51820";
             AllowedIPs = [ "0.0.0.0/0" ]; # Route all traffic through VPN
             PersistentKeepalive = 25;
           }
@@ -758,6 +757,7 @@ in
       ./hosts/nas-configuration.nix
       ./common/remote.nix
       ./common/xen_domU.nix
+      ./common/proton-vpn.nix
     ];
   };
 #+end_src
