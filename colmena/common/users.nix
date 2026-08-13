@@ -11,12 +11,13 @@
     extraGroups = [ "wheel" "video" ];
     # shell = pkgs.nushell;
     packages = with pkgs; [ nushell zoxide fish carapace starship chezmoi ];
+    hashedPasswordFile = "/run/keys/operateur_password_hash";
   };
 
   environment.shells = [ pkgs.nushell ];
 
-  users.users.root.hashedPassword = "$y$j9T$7KS0JnyfiA/D3xjb5KhkL.$4ftVKMN9aVxQZ4HGXWOB8eVaq9EOXFL01Jq8vyEBG93";
-
+  # users.users.root.hashedPassword = "$y$j9T$7KS0JnyfiA/D3xjb5KhkL.$4ftVKMN9aVxQZ4HGXWOB8eVaq9EOXFL01Jq8vyEBG93";
+  users.users.root.hashedPasswordFile = "/run/keys/root_password_hash";
   # Passwordless sudo, scoped to the operateur user only.
   security.sudo.extraRules = [
     {
