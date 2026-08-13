@@ -23,7 +23,7 @@
         MTUBytes = "1420";
       };
       wireguardConfig = {
-        PrivateKeyFile = "/etc/systemd/network/keys/proton.key";
+        PrivateKeyFile = "/persist/keys/proton.key";
       };
       wireguardPeers = [
         {
@@ -52,7 +52,7 @@
   preservation = {
     preserveAt."/persist" = {
       files = [
-        "/etc/systemd/network/keys/proton.key"
+        # "/etc/systemd/network/keys/proton.key"
       ];
       # Preserve user files
       users.operateur = {

@@ -49,7 +49,7 @@ in
       };
       "proton.key" = {
         keyCommand = [ "bao" "kv" "get" "-field=proton_private_key" "secrets/projects/colmena" ];
-        destDir = "/etc/systemd/network/keys";
+        destDir = "/persist/keys";
       };
       approle_id = {
         keyCommand = [ "bao" "kv" "get" "-field=approle-id" "secrets/projects/colmena" ];
