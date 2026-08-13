@@ -39,4 +39,4 @@ jobs:
           END
 
       - name: "deployment to vms"
-        run: colmena apply boot -f colmena/hive.nix --on @domu
+        run: colmena apply -f colmena/hive.nix --reboot --on @domu
