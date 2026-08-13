@@ -1,3 +1,4 @@
+[![deploy nixos on DomUs](https://github.com/dadatoa/nixos-colmena-npins/actions/workflows/deploy-domU.yml/badge.svg)](https://github.com/dadatoa/nixos-colmena-npins/actions/workflows/deploy-domU.yml)
 #+title: Documentation
 * Structure
 - Flake -> bootstrap des system
