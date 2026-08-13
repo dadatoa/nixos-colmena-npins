@@ -199,7 +199,6 @@
     };
   };
   preservation = {
-    enable = true;
 
     preserveAt."/persist" = {
       files = [
