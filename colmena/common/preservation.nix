@@ -6,7 +6,6 @@
     preserveAt."/persist" = {
       directories = [
         "/etc/nixos"
-        "/run/keys"
       ];
 
       files = [
