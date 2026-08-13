@@ -29,6 +29,32 @@ in
   {
     deployment.buildOnTarget = true;
     deployment.allowLocalDeployment = true; # allow all hosts to deploy locally
+
+    # Secrets fetched directly from OpenBao at deploy time by running a local
+    # `bao` command as the colmena-app AppRole, then uploaded to
+    # /run/keys/<name> on each target. Requires a valid BAO_ADDR/BAO_TOKEN
+    # session on the machine running `colmena apply`.
+    deployment.keys = {
+      root_password_hash = {
+        keyCommand = [ "bao" "kv" "get" "-field=root_password_hash" "secrets/projects/colmena" ];
+      };
+      operateur_password_hash = {
+        keyCommand = [ "bao" "kv" "get" "-field=operateur_password_hash" "secrets/projects/colmena" ];
+      };
+      ts_secret = {
+        keyCommand = [ "bao" "kv" "get" "-field=ts_secret" "secrets/projects/colmena" ];
+      };
+      proton_private_key = {
+        keyCommand = [ "bao" "kv" "get" "-field=proton_private_key" "secrets/projects/colmena" ];
+      };
+      approle_id = {
+        keyCommand = [ "bao" "kv" "get" "-field=approle-id" "secrets/projects/colmena" ];
+      };
+      approle_secret = {
+        keyCommand = [ "bao" "kv" "get" "-field=approle-secret" "secrets/projects/colmena" ];
+      };
+    };
+
     boot.supportedFilesystems.btrfs = true;
 
     imports = [
@@ -36,6 +62,7 @@ in
       (sources.preservation + "/module.nix")
       ./common/locale.nix
       ./common/users.nix
+      ./common/preservation.nix
     ];
 
     nix.gc = {
@@ -54,7 +81,9 @@ in
       btrfs-progs
       e2fsprogs # ext2,3,4 filesytem
       git
+      gnupg
       iproute2
+      pass
       pciutils
       usbutils
       vim
