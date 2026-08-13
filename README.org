@@ -420,7 +420,7 @@ in
   };
 }
 #+end_src
-*** Wirguard - ProtonVPN
+*** Wireguard - ProtonVPN
 
 *A Modifier!*
 #+begin_src nix
