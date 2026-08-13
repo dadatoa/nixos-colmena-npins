@@ -44,12 +44,12 @@ jobs:
         env:
           OPENBAO_ADDR: ${{ secrets.OPENBAO_ADDR }}
           BAO_ADDR: ${{ secrets.OPENBAO_ADDR }}
-          COLOMENA_APP_ROLE_ID: ${{ secrets.COLOMENA_APP_ROLE_ID }}
-          COLOMENA_APP_SECRET_ID: ${{ secrets.COLOMENA_APP_SECRET_ID }}
+          COLMENA_APP_ROLE_ID: ${{ secrets.COLMENA_APP_ROLE_ID }}
+          COLMENA_APP_SECRET_ID: ${{ secrets.COLMENA_APP_SECRET_ID }}
         run: |
           set -euo pipefail
           TOKEN=$(bao write -format=json auth/approle/login \
-            role_id="$COLOMENA_APP_ROLE_ID" secret_id="$COLOMENA_APP_SECRET_ID" \
+            role_id="$COLMENA_APP_ROLE_ID" secret_id="$COLMENA_APP_SECRET_ID" \
             | jq -er '.auth.client_token')
 
           echo "BAO_ADDR=$BAO_ADDR" >> "$GITHUB_ENV"
