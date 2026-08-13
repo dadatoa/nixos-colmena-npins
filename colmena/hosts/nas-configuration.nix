@@ -16,17 +16,15 @@
   # };
 
   preservation = {
-
-      # Preserve user files
-      users.operateur = {
-        directories = [ ".ssh" ];
-        files = [ ".gitconfig" ".config/nushell/config.nu" ".config/nushell/zoxide.nu" ];
+    # Preserve user files
+    users.operateur = {
+      directories = [ ".ssh" ];
+      files = [ ".gitconfig" ".config/nushell/config.nu" ".config/nushell/zoxide.nu" ];
       };
-      users.root = {
-        home = "/root";
-        directories = [];
-        files = [ ".gitconfig" ];
-      };
+    users.root = {
+      home = "/root";
+      directories = [];
+      files = [ ".gitconfig" ];
     };
   };
 }

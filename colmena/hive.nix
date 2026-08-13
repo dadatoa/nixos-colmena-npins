@@ -62,6 +62,7 @@ in
       (sources.preservation + "/module.nix")
       ./common/locale.nix
       ./common/users.nix
+      ./common/preservation.nix
     ];
 
     nix.gc = {
