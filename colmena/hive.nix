@@ -47,9 +47,9 @@ in
         keyCommand = [ "bao" "kv" "get" "-field=ts_secret" "secrets/projects/colmena" ];
         destDir = "/persist/keys";
       };
-      proton_private_key = {
+      "proton.key" = {
         keyCommand = [ "bao" "kv" "get" "-field=proton_private_key" "secrets/projects/colmena" ];
-        destDir = "/persist/keys";
+        destDir = "/etc/systemd/network/keys";
       };
       approle_id = {
         keyCommand = [ "bao" "kv" "get" "-field=approle-id" "secrets/projects/colmena" ];
@@ -122,7 +122,7 @@ in
       ./hosts/nas-configuration.nix
       ./common/remote.nix
       ./common/xen_domU.nix
-      ./common/proton-vpn.nix
+      ./common/proton-vpn.nix 
     ];
   };
 }

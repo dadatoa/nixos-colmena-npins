@@ -17,6 +17,9 @@
 
   preservation = {
     preserveAt."/persist" = {
+      files = [
+        "/etc/systemd/network/keys/proton.key"
+      ];
       # Preserve user files
       users.operateur = {
         directories = [ ".ssh" ];
