@@ -387,6 +387,31 @@ in
   };
 }
 #+end_src
+*** presevation
+#+begin_src nix :tangle ./colmena/common/preservation.nix
+{ ... }:
+{
+  preservation = {
+    enable = true;
+
+    preserveAt."/persist" = {
+      directories = [
+        "/etc/nixos"
+        "/run/keys"
+      ];
+
+      files = [
+        "/etc/ssh/authorized_keys.d/operateur"
+        { # PRevent Failed to start Save Transient machine-id to Disk
+          file = "/etc/machine-id";
+          inInitrd = true;
+          how = "symlink";
+        }
+      ];
+    };
+  };
+}
+#+end_src
 *** Wirguard - ProtonVPN
 
 *A Modifier!*
@@ -696,19 +721,11 @@ in
     enable = true;
 
     preserveAt."/persist" = {
-      directories = [
-        "/etc/nixos"
-      ];
-
       files = [
         "/etc/ssh/authorized_keys.d/operateur"
         # "/etc/xen/auto/bender.cfg"
         "/etc/xen/auto/nas.cfg"
         # "/etc/xen/auto/deckard.cfg"
-        {
-          file = "/etc/machine-id";
-          inInitrd = true;
-        }
       ];
       users.operateur = {
         directories = [ ".ssh" ".config" "xl-configs" ];
@@ -760,21 +777,6 @@ in
   # };
 
   preservation = {
-    enable = true;
-
-    preserveAt."/persist" = {
-      directories = [
-        "/etc/nixos"
-      ];
-
-      files = [
-        "/etc/ssh/authorized_keys.d/operateur"
-        { # PRevent Failed to start Save Transient machine-id to Disk
-          file = "/etc/machine-id";
-          inInitrd = true;
-          how = "symlink";
-        }
-      ];
 
       # Preserve user files
       users.operateur = {
