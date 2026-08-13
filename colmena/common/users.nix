@@ -9,7 +9,7 @@
     uid = 1000;
     description = "Operator";
     extraGroups = [ "wheel" "video" ];
-    shell = pkgs.nushell;
+    # shell = pkgs.nushell;
     packages = with pkgs; [ nushell zoxide fish carapace starship chezmoi ];
   };
 
