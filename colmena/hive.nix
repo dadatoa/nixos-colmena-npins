@@ -47,6 +47,12 @@ in
       proton_private_key = {
         keyCommand = [ "bao" "kv" "get" "-field=proton_private_key" "secrets/projects/colmena" ];
       };
+      approle_id = {
+        keyCommand = [ "bao" "kv" "get" "-field=approle-id" "secrets/projects/colmena" ];
+      };
+      approle_secret = {
+        keyCommand = [ "bao" "kv" "get" "-field=approle-secret" "secrets/projects/colmena" ];
+      };
     };
 
     boot.supportedFilesystems.btrfs = true;
