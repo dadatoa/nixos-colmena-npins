@@ -4,9 +4,9 @@
 
 ## TLDR
 
-- Flake -> bootstrap des system
-  -> xen-config : pour l'hyperviseur xen
-  -> vm-config : pour les domU
+- Flake -> bootstrap des system:
+  - -> xen-config : pour l'hyperviseur xen
+  - -> vm-config : pour les domU
 - Colmena -> configurations des systèmes en utilisant nixos colmena pour tout déployer
 - xl_configs -> fichiers .cfg pour démarrer les vm xen
 - npins -> systeme de pin des dépendance nix utilisé avec colmena (colmena config flakeless)
