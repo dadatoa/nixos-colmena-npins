@@ -1,4 +1,3 @@
-[![deploy nixos on DomUs](https://github.com/dadatoa/nixos-colmena-npins/actions/workflows/deploy-domU.yml/badge.svg)](https://github.com/dadatoa/nixos-colmena-npins/actions/workflows/deploy-domU.yml)
 #+title: Documentation
 * Structure
 - Flake -> bootstrap des system
@@ -794,3 +793,6 @@ disk = [ "/dev/sys/nas,,xvda", "/dev/rust/media,,xvdb", "/dev/nvme_vg/appdata,,x
 kernel="/run/current-system/sw/lib/grub-xen_pvh/grub-i386-xen_pvh.bin"
 
 #+end_src
+* Notes personnelles
+** 14/08/2026 : wireguard
+j'ai passé la journée d'hier à essayer d'installer wireguard à partir d'un fichier de configuration *protonvpn* sur mon nas. J'y suis finalement arrivé en utilisant la methode /wireguard quick/ du (des) wikis Nixos. Le problème : ça casse la route de tailscale router (j'ai advertise-routes sur mon router /openwrt/) pour la machine. Donc je laisse tomber pour l'instant, à retester plus tard. Comme je veux juste rediriger le traffic /torrent/ vers le tunnel wireguard Protonvpn, j'ai vais mettre mon server torrent dans un container et setup un container /GLuetun/ Pour le connecter au VPN.
