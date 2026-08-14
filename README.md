@@ -1,4 +1,4 @@
-[![deploy nixos on DomUs](https://github.com/dadatoa/nixos-colmena-npins/actions/workflows/deploy-domU.yml/badge.svg)](https://github.com/dadatoa/nixos-colmena-npins/actions/workflows/deploy-domU.yml)
+[![deploy nixos configurations](https://github.com/dadatoa/nixos-colmena-npins/actions/workflows/deployment.yml/badge.svg)](https://github.com/dadatoa/nixos-colmena-npins/actions/workflows/deployment.yml)
 
 # Homelab - Partie Nixos
 
