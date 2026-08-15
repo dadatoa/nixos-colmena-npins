@@ -15,7 +15,7 @@
     options = [ "noatime" ];
   };
   # mount gluster volume
-  filesystem."/data/media" = {
+  fileSystems."/data/media" = {
     device = "localhost:/srv/gluster/media";
     fsType = "glusterfs";
   };
