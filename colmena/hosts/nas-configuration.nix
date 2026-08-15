@@ -9,14 +9,14 @@
   #   fsType = "btrfs";
   #   options = [ "noatime" ];
   # };
-  fileSystems."/srv/gluster/media" = {
+  fileSystems."/srv/gluster/chill" = {
     device = "/dev/disk/by-label/media";
     fsType = "btrfs";
     options = [ "noatime" ];
   };
   # mount gluster volume
   fileSystems."/data/media" = {
-    device = "localhost:/srv/gluster/media";
+    device = "nas.local:/media";
     fsType = "glusterfs";
   };
   systemd.network = {
