@@ -94,6 +94,7 @@ in
       git
       gnupg
       iproute2
+      herdr
       pass
       pciutils
       usbutils
@@ -701,7 +702,7 @@ in
 
 **** configuration
 #+begin_src nix :tangle ./colmena/hosts/nas-configuration.nix
-{ ... }:
+{ pkgs, ... }:
 {
 
   networking.firewall.enable = false;
@@ -722,6 +723,18 @@ in
     device = "nas.local:/media";
     fsType = "glusterfs";
   };
+
+  services.jellyfin = {
+    enable = true;
+    package = pkgs.unstable.jellyfin
+
+  };
+  environment.systemPackages = [
+    pkgs.unstable.jellyfin-web
+    pkgs.unstable.jellyfin-ffmpeg
+  ];
+
+
   systemd.network = {
     # 1. Define the WireGuard NetDev interface
     netdevs."50-wg-proton" = {
