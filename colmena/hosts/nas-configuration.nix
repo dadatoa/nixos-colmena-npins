@@ -1,4 +1,4 @@
-{ ... }:
+{ pkgs, ... }:
 {
 
   networking.firewall.enable = false;
@@ -19,6 +19,18 @@
     device = "nas.local:/media";
     fsType = "glusterfs";
   };
+
+  services.jellyfin = {
+    enable = true;
+    package = pkgs.unstable.jellyfin
+
+  };
+  environment.systemPackages = [
+    pkgs.unstable.jellyfin-web
+    pkgs.unstable.jellyfin-ffmpeg
+  ];
+
+
   systemd.network = {
     # 1. Define the WireGuard NetDev interface
     netdevs."50-wg-proton" = {
