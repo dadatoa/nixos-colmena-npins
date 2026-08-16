@@ -94,7 +94,6 @@ in
       git
       gnupg
       iproute2
-      herdr
       pass
       pciutils
       usbutils
