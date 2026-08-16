@@ -22,9 +22,9 @@
 
   services.jellyfin = {
     enable = true;
-    package = pkgs.unstable.jellyfin
-
+    package = pkgs.unstable.jellyfin;
   };
+
   environment.systemPackages = [
     pkgs.unstable.jellyfin-web
     pkgs.unstable.jellyfin-ffmpeg
