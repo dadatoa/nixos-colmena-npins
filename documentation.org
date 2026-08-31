@@ -667,9 +667,8 @@ in
     preserveAt."/persist" = {
       files = [
         "/etc/ssh/authorized_keys.d/operateur"
-        # "/etc/xen/auto/bender.cfg"
         "/etc/xen/auto/nas.cfg"
-        # "/etc/xen/auto/deckard.cfg"
+        "/etc/xen/auto/alp-dns1.cfg"
       ];
       users.operateur = {
         directories = [ ".ssh" ".config" "xl-configs" ];
@@ -701,22 +700,39 @@ in
 
 **** configuration
 #+begin_src nix :tangle ./colmena/hosts/nas-configuration.nix
-{ ... }:
+{ pkgs, ... }:
 {
 
   networking.firewall.enable = false;
 
-  ## gluster server volumes
+  # gluster server volumes
   # fileSystems."/srv/gluster/appdata" = {
   #   device = "/dev/disk/by-label/appdata";
   #   fsType = "btrfs";
   #   options = [ "noatime" ];
   # };
-  # fileSystems."/srv/gluster/media" = {
-  #   device = "/dev/disk/by-label/media";
-  #   fsType = "btrfs";
-  #   options = [ "noatime" ];
-  # };
+  fileSystems."/srv/gluster/chill" = {
+    device = "/dev/disk/by-label/media";
+    fsType = "btrfs";
+    options = [ "noatime" ];
+  };
+  # mount gluster volume
+  fileSystems."/data/media" = {
+    device = "nas.local:/media";
+    fsType = "glusterfs";
+  };
+
+  services.jellyfin = {
+    enable = true;
+    package = pkgs.unstable.jellyfin;
+  };
+
+  environment.systemPackages = [
+    pkgs.unstable.jellyfin-web
+    pkgs.unstable.jellyfin-ffmpeg
+  ];
+
+
   systemd.network = {
     # 1. Define the WireGuard NetDev interface
     netdevs."50-wg-proton" = {
@@ -783,6 +799,19 @@ on_poweroff = "destroy"
 on_reboot = "restart"
 on_crash = "restart"
 disk = [ "/dev/sys/nas,,xvda", "/dev/rust/media,,xvdb", "/dev/nvme_vg/appdata,,xvdc"  ]
+kernel="/run/current-system/sw/lib/grub-xen_pvh/grub-i386-xen_pvh.bin"
+
+#+end_src
+
+#+begin_src ini :tangle ./xl_configs/alp-dns1.cfg
+name = "alp-dns1"
+type = "pvh"
+memory = 512
+vcpus = 1
+vif = ['bridge=xenbr50,mac=90:FA:28:00:10:C9']
+vfb = [ "vnc=1,vnclisten=127.0.0.1,vncunused=1" ]
+on_poweroff = "destroy"
+disk = [ "/dev/sys/alp-dns1,,xvda" ]
 kernel="/run/current-system/sw/lib/grub-xen_pvh/grub-i386-xen_pvh.bin"
 
 #+end_src

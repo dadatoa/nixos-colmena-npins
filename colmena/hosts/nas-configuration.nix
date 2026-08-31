@@ -1,19 +1,36 @@
-{ ... }:
+{ pkgs, ... }:
 {
 
   networking.firewall.enable = false;
 
-  ## gluster server volumes
+  # gluster server volumes
   # fileSystems."/srv/gluster/appdata" = {
   #   device = "/dev/disk/by-label/appdata";
   #   fsType = "btrfs";
   #   options = [ "noatime" ];
   # };
-  # fileSystems."/srv/gluster/media" = {
-  #   device = "/dev/disk/by-label/media";
-  #   fsType = "btrfs";
-  #   options = [ "noatime" ];
-  # };
+  fileSystems."/srv/gluster/chill" = {
+    device = "/dev/disk/by-label/media";
+    fsType = "btrfs";
+    options = [ "noatime" ];
+  };
+  # mount gluster volume
+  fileSystems."/data/media" = {
+    device = "nas.local:/media";
+    fsType = "glusterfs";
+  };
+
+  services.jellyfin = {
+    enable = true;
+    package = pkgs.unstable.jellyfin;
+  };
+
+  environment.systemPackages = [
+    pkgs.unstable.jellyfin-web
+    pkgs.unstable.jellyfin-ffmpeg
+  ];
+
+
   systemd.network = {
     # 1. Define the WireGuard NetDev interface
     netdevs."50-wg-proton" = {
