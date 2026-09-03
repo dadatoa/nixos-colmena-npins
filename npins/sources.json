@@ -30,8 +30,8 @@
       "type": "Channel",
       "name": "nixos-26.05",
       "artifact": "nixexprs.tar.xz",
-      "url": "https://releases.nixos.org/nixos/26.05/nixos-26.05.8477.062346a6d85b/nixexprs.tar.xz",
-      "hash": "sha256-mGPB6ofYpLaHyCO7tI0L1hCb69lsY0t7dqIsYIhXP7Y="
+      "url": "https://releases.nixos.org/nixos/26.05/nixos-26.05.8954.a5cc6f2c37bf/nixexprs.tar.xz",
+      "hash": "sha256-z3ACU3NTAstjK+JNjW0zmIH2Q0GYo2pgGfJddesv7Xo="
     },
     "preservation": {
       "type": "Git",
@@ -55,9 +55,9 @@
       },
       "branch": "nixos-unstable",
       "submodules": false,
-      "revision": "9fbb54b33e91ee4ca368e35a78e0613c720600b3",
-      "url": "https://github.com/nixos/nixpkgs/archive/9fbb54b33e91ee4ca368e35a78e0613c720600b3.tar.gz",
-      "hash": "sha256-cV5xEJJK3BvhU8rEd4mC9UsmDi5qscv/kzGPhBRC5WA="
+      "revision": "3ed67ec0a4d3c7ab4ae1f04f8ee8df07bfa506a2",
+      "url": "https://github.com/nixos/nixpkgs/archive/3ed67ec0a4d3c7ab4ae1f04f8ee8df07bfa506a2.tar.gz",
+      "hash": "sha256-bc7rSpXIdn9QWGNqfWcPZWOhEVF8NoeAZkWq0XWnf/k="
     }
   },
   "version": 8
