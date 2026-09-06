@@ -81,7 +81,17 @@
           SERVER_COUNTRIES = "Singapore";
         };
         environmentFiles = [ /persist/keys/proton.key];
+        ports = [ "8080:8080/tcp" "6881:6881/tcp" "6881:6881/udp" ];
         image = "qmcgaw/gluetun";
+      };
+      containers."qbitorrent" = {
+        podman.user = "operateur";
+        environment = {
+          TZ = "Asia/Bangkok";
+        };
+        extraOptions = [ "--network container:gluetun" ];
+        volumes = [ "qbittorrent.etc:/qbittorrent/etc" "qbittorrent.var:/qbittorrent/var" ];
+        image = "quay.io/11notes/qbittorrent:5.2.1";
       };
     };
 }
