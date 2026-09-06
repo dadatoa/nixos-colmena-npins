@@ -42,6 +42,8 @@ in
       operateur_password_hash = {
         keyCommand = [ "bao" "kv" "get" "-field=operateur_password_hash" "secrets/projects/colmena" ];
         destDir = "/persist/keys";
+        user = "operateur";
+        group = "users";
       };
       ts_secret = {
         keyCommand = [ "bao" "kv" "get" "-field=ts_secret" "secrets/projects/colmena" ];
@@ -50,6 +52,8 @@ in
       "proton.key" = {
         keyCommand = [ "bao" "kv" "get" "-field=proton_private_key" "secrets/projects/colmena" ];
         destDir = "/persist/keys";
+        user = "operateur";
+        group = "users";
       };
       approle_id = {
         keyCommand = [ "bao" "kv" "get" "-field=approle-id" "secrets/projects/colmena" ];

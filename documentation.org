@@ -47,6 +47,8 @@ in
       operateur_password_hash = {
         keyCommand = [ "bao" "kv" "get" "-field=operateur_password_hash" "secrets/projects/colmena" ];
         destDir = "/persist/keys";
+        user = "operateur";
+        group = "users";
       };
       ts_secret = {
         keyCommand = [ "bao" "kv" "get" "-field=ts_secret" "secrets/projects/colmena" ];
@@ -55,6 +57,8 @@ in
       "proton.key" = {
         keyCommand = [ "bao" "kv" "get" "-field=proton_private_key" "secrets/projects/colmena" ];
         destDir = "/persist/keys";
+        user = "operateur";
+        group = "users";
       };
       approle_id = {
         keyCommand = [ "bao" "kv" "get" "-field=approle-id" "secrets/projects/colmena" ];
@@ -710,10 +714,9 @@ in
 #+end_src
 
 **** configuration
-#+begin_src nix :tangle ./colmena/hosts/nas-configuration.nix
-{ pkgs, ... }:
+#+begin_src nix :tangle ./colmena/hosts/nas-configuration.nix :noweb tangle
+{ pkgs, lib, ... }:
 {
-
   networking.firewall.enable = false;
 
   # gluster server volumes
@@ -741,43 +744,8 @@ in
   environment.systemPackages = [
     pkgs.unstable.jellyfin-web
     pkgs.unstable.jellyfin-ffmpeg
+    pkgs.colmena
   ];
-
-
-  systemd.network = {
-    # 1. Define the WireGuard NetDev interface
-    netdevs."50-wg-proton" = {
-      netdevConfig = {
-        Kind = "wireguard";
-        Name = "wg-proton";
-        MTUBytes = "1420";
-      };
-      wireguardConfig = {
-        PrivateKeyFile = "/persist/keys/proton.key";
-      };
-      wireguardPeers = [
-        {
-        PublicKey = "WgRtf+TKPVKDfc/3B81bf+EfmPvwGYzucIyg8nCj800=";
-        Endpoint = "103.216.223.50:51820";
-        AllowedIPs = [ "0.0.0.0/0" ]; # Route all traffic through VPN
-        PersistentKeepalive = 25;
-        }
-      ];
-    };
-
-    # 2. Configure network assignment and routing for the interface
-    networks."50-wg-proton" = {
-      matchConfig.Name = "wg-proton";
-      address = [
-        "10.2.0.2/32" # Replace with your ProtonVPN assigned IPv4 address
-      ];
-      networkConfig = {
-        # Automatically assign routes for the allowedIPs
-        DNS = [ "10.2.0.1" ]; # ProtonVPN's internal DNS server if applicable
-      };
-      linkConfig.RequiredForOnline = "no"; # Prevents boot hangs if VPN is slow to connect
-    };
-  };
 
   preservation = {
     preserveAt."/persist" = {
@@ -796,7 +764,54 @@ in
       };
     };
   };
+
+  <<nas-cockpit>>
+  <<nas-containers>>
 }
+#+end_src
+
+**** Cockpit
+#+NAME: nas-cockpit
+#+begin_src nix
+  services.cockpit = {
+    enable = true;
+    port = 9090;
+    plugins = [
+      pkgs.cockpit-files
+      pkgs.cockpit-podman
+    ];
+    # openFirewall = true; # Please see the comments section
+    settings = {
+      WebService = {
+        # AllowUnencrypted = true; # 2026-08-04: Not needed anymore?
+        Origins = lib.mkForce "http://127.0.0.1:9090 https://127.0.0.1:9090 http://10.10.10.209:9090 https://10.10.10.209:9090";
+      };
+    };
+  };
+  ## add udisk2 to enable disk visualisation in cockpit
+  services.udisks2.enable = true;
+#+end_src
+
+**** containers
+#+NAME: nas-containers
+#+begin_src nix
+  virtualisation.containers.enable = true;
+  virtualisation.podman.enable = true;
+  virtualisation.oci-containers.backend = "podman";
+  virtualisation.oci-containers = {
+    containers."gluetun" = {
+      podman.user = "operateur";
+      capabilities.NET_ADMIN = true;
+      devices = [ "/dev/net/tun:/dev/net/tun" ];
+      environment = {
+        VPN_SERVICE_PROVIDER ="protonvpn";
+        VPN_TYPE = "wireguard";
+        SERVER_COUNTRIES = "Singapore";
+      };
+      environmentFiles = [ /persist/keys/proton.key];
+      image = "qmcgaw/gluetun";
+    };
+  };
 #+end_src
 * xl configs
 #+begin_src ini :tangle ./xl_configs/nas.cfg
