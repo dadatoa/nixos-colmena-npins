@@ -63,4 +63,4 @@ jobs:
           echo "OPENBAO_TOKEN=$TOKEN" >> "$GITHUB_ENV"
 
       - name: "deployment to vms"
-        run: colmena upload-keys -f colmena/hive.nix --on @domu
+        run: colmena upload-keys -f colmena/hive.nix
