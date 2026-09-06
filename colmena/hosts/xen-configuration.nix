@@ -229,5 +229,6 @@
       };
     };
   };
-
+  ## add udisk2 to enable disk visualisation in cockpit
+  services.udisks2.enable = true;
 }
