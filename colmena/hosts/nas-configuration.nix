@@ -90,7 +90,7 @@
           TZ = "Asia/Bangkok";
         };
         dependsOn = [ "gluetun" ];
-        extraOptions = [ "--network container:gluetun" ];
+        extraOptions = [ "--network=container:gluetun" ];
         volumes = [ "qbittorrent.etc:/qbittorrent/etc" "qbittorrent.var:/qbittorrent/var" ];
         image = "quay.io/11notes/qbittorrent:5.2.1";
       };
