@@ -795,6 +795,8 @@ in
 **** containers
 #+NAME: nas-containers
 #+begin_src nix
+  users.users.operateur.linger = true;
+  systemd.services.linger-users.unitConfig.StartLimitBurst = 20;
   virtualisation.containers.enable = true;
   virtualisation.podman.enable = true;
   virtualisation.oci-containers.backend = "podman";

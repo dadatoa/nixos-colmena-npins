@@ -65,6 +65,8 @@
     };
     ## add udisk2 to enable disk visualisation in cockpit
     services.udisks2.enable = true;
+    users.users.operateur.linger = true;
+    systemd.services.linger-users.unitConfig.StartLimitBurst = 20;
     virtualisation.containers.enable = true;
     virtualisation.podman.enable = true;
     virtualisation.oci-containers.backend = "podman";
