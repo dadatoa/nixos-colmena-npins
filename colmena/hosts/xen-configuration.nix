@@ -64,6 +64,23 @@
     # python3 # add python for Xen guest management with ansible
   ];
 
+
+  services.cockpit = {
+    enable = true;
+    port = 9090;
+    plugins = [
+      pkgs.cockpit-files
+      pkgs.cockpit-podman
+    ];
+    # openFirewall = true; # Please see the comments section
+    settings = {
+      WebService = {
+        # AllowUnencrypted = true; # 2026-08-04: Not needed anymore?
+        Origins = lib.mkForce "http://100.85.206.102:9090 https://100.85.206.102:9090";
+      };
+    };
+  };
+
   fileSystems."/" = {
     device = "none";
     fsType = "tmpfs";
