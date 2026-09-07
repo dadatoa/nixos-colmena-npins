@@ -35,6 +35,7 @@
       files = [
         # "/etc/systemd/network/keys/proton.key"
       ];
+      directories = [ "/data" ];
       # Preserve user files
       users.operateur = {
         directories = [ ".ssh" ".local/share/containers" ];
@@ -59,7 +60,7 @@
       settings = {
         WebService = {
           # AllowUnencrypted = true; # 2026-08-04: Not needed anymore?
-          Origins = lib.mkForce "http://127.0.0.1:9090 https://127.0.0.1:9090 http://10.10.10.209:9090 https://10.10.10.209:9090";
+          Origins = lib.mkForce "http://127.0.0.1:9090 https://127.0.0.1:9090 http://10.10.10.209:9090 https://10.10.10.209:9090 https://nas.blue-edmontosaurus.ts.net";
         };
       };
     };
