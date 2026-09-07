@@ -108,4 +108,11 @@
         image = "quay.io/11notes/qbittorrent:5.2.1";
       };
     };
+      # qbitorrent bind-mount /data/media: doit attendre l'automount glusterfs
+      # sinon podman tente le bind avant que data-media.automount soit déclenché -> erreur au démarrage
+      systemd.services.podman-qbitorrent = {
+        after = [ "data-media.automount" "data-media.mount" "network-online.target" "glusterd.service" ];
+        wants = [ "data-media.automount" ];
+        requires = [ "data-media.automount" ];
+      };
 }
