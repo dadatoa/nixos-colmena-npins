@@ -21,10 +21,11 @@
     fsType = "glusterfs";
     options = [
       "_netdev"
+      "nofail"
       "x-systemd.automount"
       "noauto"
-      "x-systemd.device-timeout=30"
-      "x-systemd.requires=glusterd.service"
+      "x-systemd.device-timeout=60"
+      "x-systemd.mount-timeout=60"
       "x-systemd.after=network-online.target"
       "x-systemd.after=glusterd.service"
     ];
@@ -109,10 +110,10 @@
       };
     };
       # qbitorrent bind-mount /data/media: doit attendre l'automount glusterfs
-      # sinon podman tente le bind avant que data-media.automount soit déclenché -> erreur au démarrage
+      # nofail sur le mount => le 1er échec (glusterd pas encore prêt, 22:25:01) ne bloque pas le boot,
+      # l'automount réessaie à 22:25:02 et réussit
       systemd.services.podman-qbitorrent = {
-        after = [ "data-media.automount" "data-media.mount" "network-online.target" "glusterd.service" ];
+        after = [ "data-media.automount" "network-online.target" "glusterd.service" ];
         wants = [ "data-media.automount" ];
-        requires = [ "data-media.automount" ];
       };
 }
