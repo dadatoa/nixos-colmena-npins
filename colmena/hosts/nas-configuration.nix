@@ -78,6 +78,7 @@
         environment = {
           VPN_SERVICE_PROVIDER ="protonvpn";
           VPN_TYPE = "wireguard";
+          VPN_PORT_FORWARDING = "on";
           SERVER_COUNTRIES = "Singapore";
         };
         environmentFiles = [ /persist/keys/proton.key];
