@@ -733,10 +733,21 @@ in
     fsType = "btrfs";
     options = [ "noatime" ];
   };
-  # mount gluster volume
+  # mount gluster volume - loopback mount, must wait for glusterd + network
+  # manual `mount /data/media` works because glusterd is already running; at boot it failed
+  # with `data-media.mount: Failed with result 'exit-code'` (18:52:04) -> use automount + _netdev
   fileSystems."/data/media" = {
-    device = "nas.local:/media";
+    device = "127.0.0.1:/media";
     fsType = "glusterfs";
+    options = [
+      "_netdev"
+      "x-systemd.automount"
+      "noauto"
+      "x-systemd.device-timeout=30"
+      "x-systemd.requires=glusterd.service"
+      "x-systemd.after=network-online.target"
+      "x-systemd.after=glusterd.service"
+    ];
   };
 
   services.jellyfin = {
