@@ -33,7 +33,7 @@
       directories = [ "/data" ];
       # Preserve user files
       users.operateur = {
-        directories = [ ".ssh" ".local/share/containers" ];
+        directories = [ ".ssh" ]; #".local/share/containers" ];
         files = [ ".gitconfig" ".config/nushell/config.nu" ".config/nushell/zoxide.nu" ];
       };
       users.root = {
