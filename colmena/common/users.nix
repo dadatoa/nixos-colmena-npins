@@ -12,7 +12,6 @@
     description = "Operator";
     extraGroups = [ "wheel" "video" ];
     # rootless podman: /data/media bind mount Permission denied sans subuid/gid
-    # voir journal qbittorrent: file_open ... Permission denied
     autoSubUidGidRange = true;
     # shell = pkgs.nushell;
     packages = with pkgs; [ nushell zoxide fish carapace starship chezmoi ];
