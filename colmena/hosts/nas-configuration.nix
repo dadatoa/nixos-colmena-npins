@@ -96,10 +96,11 @@
     fileSystems."/data/media" = {
       device = "/dev/disk/by-label/media";
       fsType = "btrfs";
-      options = [
-        "subvol=media"
-        "compress=zstd"
-        "noatime"
-      ];
+      options = [ "subvol=media" "noatime" "compress=zstd:3" "space_cache=v2" "nossd" ]; // /dev/xvdb is HDD
+
+    };
+    systemd.services.podman-qbitorrent = {
+      after = [ "data-media.mount" ];
+      wants = [ "data-media.mount" ];
     };
 }
