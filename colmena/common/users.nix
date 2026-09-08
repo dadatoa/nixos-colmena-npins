@@ -4,10 +4,10 @@
 # - may reboot/poweroff without sudo (polkit)
 { pkgs, ... }:
 {
+  users.groups.operateur = { gid = 1000; };
   users.users.operateur = {
     isNormalUser = true;
     group = "operateur";
-    gid = 1000;
     uid = 1000;
     description = "Operator";
     extraGroups = [ "wheel" "video" ];

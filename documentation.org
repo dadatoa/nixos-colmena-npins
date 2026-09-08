@@ -200,10 +200,10 @@ in
 # - may reboot/poweroff without sudo (polkit)
 { pkgs, ... }:
 {
+  users.groups.operateur = { gid = 1000; };
   users.users.operateur = {
     isNormalUser = true;
     group = "operateur";
-    gid = 1000;
     uid = 1000;
     description = "Operator";
     extraGroups = [ "wheel" "video" ];
@@ -250,6 +250,9 @@ in
   nix.settings.trusted-users = [ "operateur" ];
 }
 #+end_src
+
+#+RESULTS:
+
 *** Xen VMs: xen_domU.nix
 #+begin_src nix :tangle ./colmena/common/xen_domU.nix
 { config, pkgs, lib, ... }:
