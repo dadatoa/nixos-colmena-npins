@@ -6,6 +6,8 @@
 {
   users.users.operateur = {
     isNormalUser = true;
+    group = "operateur";
+    gid = 1000;
     uid = 1000;
     description = "Operator";
     extraGroups = [ "wheel" "video" ];
