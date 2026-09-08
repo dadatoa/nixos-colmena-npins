@@ -821,13 +821,13 @@ in
       ports = [ "8080:8080/tcp" "6881:6881/tcp" "6881:6881/udp" ];
       image = "qmcgaw/gluetun";
     };
-    containers."qbitorrent" = {
+    containers."qbittorrent" = {
       podman.user = "operateur";
       environment = {
         TZ = "Asia/Bangkok";
       };
       dependsOn = [ "gluetun" ];
-      extraOptions = [ "--network=container:gluetun" ];
+      extraOptions = [ "--network=container:gluetun" "--userns=keep-id" ];
       volumes = [ "qbittorrent.etc:/qbittorrent/etc" "qbittorrent.var:/qbittorrent/var" "/data/media:/media"];
       image = "quay.io/11notes/qbittorrent:5.2.1";
     };
