@@ -19,16 +19,16 @@
   fileSystems."/data/media" = {
     device = "127.0.0.1:/media";
     fsType = "glusterfs";
-    options = [
-      "_netdev"
-      "nofail"
-      "x-systemd.automount"
-      "noauto"
-      "x-systemd.device-timeout=60"
-      "x-systemd.mount-timeout=60"
-      "x-systemd.after=network-online.target"
-      "x-systemd.after=glusterd.service"
-    ];
+    # options = [
+    #   "_netdev"
+    #   "nofail"
+    #   "x-systemd.automount"
+    #   "noauto"
+    #   "x-systemd.device-timeout=60"
+    #   "x-systemd.mount-timeout=60"
+    #   "x-systemd.after=network-online.target"
+    #   "x-systemd.after=glusterd.service"
+    # ];
   };
 
   services.jellyfin = {
@@ -110,10 +110,8 @@
       };
     };
       # qbitorrent bind-mount /data/media: doit attendre l'automount glusterfs
-      # nofail sur le mount => le 1er échec (glusterd pas encore prêt, 22:25:01) ne bloque pas le boot,
-      # l'automount réessaie à 22:25:02 et réussit
+      # nofail sur le mount => le 1er échec (glusterd pas encore prêt, 22:25:01) ne bloque pas le boot
       systemd.services.podman-qbitorrent = {
-        after = [ "data-media.automount" "network-online.target" "glusterd.service" ];
-        wants = [ "data-media.automount" ];
+        after = [ "network-online.target" "glusterd.service" ];
       };
 }
