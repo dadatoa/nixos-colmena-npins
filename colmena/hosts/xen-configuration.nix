@@ -206,7 +206,7 @@
       files = [
         "/etc/ssh/authorized_keys.d/operateur"
         "/etc/xen/auto/nas.cfg"
-        "/etc/xen/auto/alp-dns1.cfg"
+        "/etc/xen/auto/alp1.cfg"
       ];
       users.operateur = {
         directories = [ ".ssh" ".config" "xl-configs" ];
