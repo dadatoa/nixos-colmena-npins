@@ -16,6 +16,9 @@
 
   environment.systemPackages = [
     pkgs.colmena
+    pkgs.unstable.jellyfin
+    pkgs.unstable.jellyfin-web
+    pkgs.unstable.jellyfin-ffmpeg
   ];
 
   preservation = {
@@ -117,18 +120,6 @@
         ports = [ "8989:8989/tcp" ];
         image = "lscr.io/linuxserver/sonarr:latest";
       };
-      containers."jellyfin" = {
-        podman.user = "operateur";
-        environment = {
-          PUID = "1000";
-          PGID = "1000";
-          TZ = "Asia/Bangkok";
-        };
-        ports = [ "8096:8096/tcp"];
-        extraOptions = [ "--userns=keep-id" ];
-        volumes = [ "jellyfin.etc:/config" "/data/media:/media"];
-        image = "lscr.io/linuxserver/jellyfin:latest";
-      };
     };
     ## mount media subvolume for container bittorrent
     fileSystems."/data/media" = {
@@ -140,5 +131,10 @@
     systemd.services.podman-qbitorrent = {
       after = [ "data-media.mount" ];
       wants = [ "data-media.mount" ];
+    };
+  services.jellyfin = {
+      enable = true;
+      openFirewall = true;
+      package = pkgs.unstable.jellyfin;
     };
 }

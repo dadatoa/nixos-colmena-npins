@@ -745,6 +745,9 @@ in
 
   environment.systemPackages = [
     pkgs.colmena
+    pkgs.unstable.jellyfin
+    pkgs.unstable.jellyfin-web
+    pkgs.unstable.jellyfin-ffmpeg
   ];
 
   preservation = {
@@ -768,6 +771,7 @@ in
 
   <<nas-cockpit>>
   <<nas-containers>>
+  <<nas-services>>
 }
 #+end_src
 
@@ -859,18 +863,6 @@ in
       ports = [ "8989:8989/tcp" ];
       image = "lscr.io/linuxserver/sonarr:latest";
     };
-    containers."jellyfin" = {
-      podman.user = "operateur";
-      environment = {
-        PUID = "1000";
-        PGID = "1000";
-        TZ = "Asia/Bangkok";
-      };
-      ports = [ "8096:8096/tcp"];
-      extraOptions = [ "--userns=keep-id" ];
-      volumes = [ "jellyfin.etc:/config" "/data/media:/media"];
-      image = "lscr.io/linuxserver/jellyfin:latest";
-    };
   };
   ## mount media subvolume for container bittorrent
   fileSystems."/data/media" = {
@@ -884,6 +876,17 @@ in
     wants = [ "data-media.mount" ];
   };
 #+end_src
+
+**** services
+#+NAME: nas-services
+#+begin_src nix
+services.jellyfin = {
+    enable = true;
+    openFirewall = true;
+    package = pkgs.unstable.jellyfin;
+  };
+#+end_src
+
 * xl configs
 #+begin_src ini :tangle ./xl_configs/nas.cfg
 
