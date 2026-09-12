@@ -117,14 +117,6 @@
         ports = [ "8989:8989/tcp" ];
         image = "lscr.io/linuxserver/sonarr:latest";
       };
-      containers."technitium" = {
-        podman.user = "operateur";
-        ports = [
-          "53:53/tcp"
-          "53:53/udp"
-          "5380:5380/tcp"
-        ];
-      };
       containers."jellyfin" = {
         podman.user = "operateur";
         environment = {
