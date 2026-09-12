@@ -14,14 +14,7 @@
     options = [ "noatime" ];
   };
 
-  services.jellyfin = {
-    enable = true;
-    package = pkgs.unstable.jellyfin;
-  };
-
   environment.systemPackages = [
-    pkgs.unstable.jellyfin-web
-    pkgs.unstable.jellyfin-ffmpeg
     pkgs.colmena
   ];
 
@@ -55,7 +48,7 @@
       settings = {
         WebService = {
           # AllowUnencrypted = true; # 2026-08-04: Not needed anymore?
-          Origins = lib.mkForce "http://127.0.0.1:9090 https://127.0.0.1:9090 http://10.10.10.209:9090 https://10.10.10.209:9090 https://nas.blue-edmontosaurus.ts.net";
+          Origins = lib.mkForce "http://127.0.0.1:9090 https://127.0.0.1:9090 http://10.10.10.209:9090 https://10.10.10.209:9090 http://nas.local:9090 https://nas.local:9090" ;
         };
       };
     };
@@ -90,6 +83,51 @@
         extraOptions = [ "--network=container:gluetun" "--userns=keep-id" ];
         volumes = [ "qbittorrent.etc:/qbittorrent/etc" "qbittorrent.var:/qbittorrent/var" "/data/media:/media"];
         image = "quay.io/11notes/qbittorrent:5.2.1";
+      };
+      containers."prowlarr" = {
+        podman.user = "operateur";
+        environment = {
+          TZ = "Asia/Bangkok";
+          PUID = "1000";
+          PGID = "1000";
+        };
+        volumes = [ "prowlarr.etc:/config" ];
+        ports = [ "9696:9696/tcp" ];
+        image = "lscr.io/linuxserver/prowlarr:latest";
+      };
+      containers."radarr" = {
+        podman.user = "operateur";
+        environment = {
+          PUID = "1000";
+          PGID = "1000";
+          TZ = "Asia/Bangkok";
+        };
+        volumes = [ "radarr.etc:/config" "/data/media:/media"];
+        ports = [ "7878:7878/tcp" ];
+        image = "lscr.io/linuxserver/radarr:latest";
+      };
+      containers."sonarr" = {
+        podman.user = "operateur";
+        environment = {
+          PUID = "1000";
+          PGID = "1000";
+          TZ = "Asia/Bangkok";
+        };
+        volumes = [ "sonarr.etc:/config" "/data/media:/media"];
+        ports = [ "8989:8989/tcp" ];
+        image = "lscr.io/linuxserver/sonarr:latest";
+      };
+      containers."jellyfin" = {
+        podman.user = "operateur";
+        environment = {
+          PUID = "1000";
+          PGID = "1000";
+          TZ = "Asia/Bangkok";
+        };
+        ports = [ "8096:8096/tcp"];
+        extraOptions = [ "--userns=keep-id" ];
+        volumes = [ "jellyfin.etc:/config" "/data/media:/media"];
+        image = "lscr.io/linuxserver/jellyfin:latest";
       };
     };
     ## mount media subvolume for container bittorrent
