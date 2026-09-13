@@ -87,6 +87,7 @@
         podman.user = "operateur";
         capabilities.NET_ADMIN = true;
         devices = [ "/dev/net/tun:/dev/net/tun" ];
+        extraOptions = [ "--network=7seas" ];
         environment = {
           VPN_SERVICE_PROVIDER ="protonvpn";
           VPN_TYPE = "wireguard";
