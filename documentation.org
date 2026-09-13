@@ -805,6 +805,26 @@ in
   virtualisation.containers.enable = true;
   virtualisation.podman.enable = true;
   virtualisation.oci-containers.backend = "podman";
+  # Create System service that ensures the rootless network exists for user 'operateur'
+  # need to attach prowlarr and flaresolver to the samenetwork in order to make it work
+  # i will put all -arr stack under th same network
+  systemd.services.create-7seas-network = {
+    description = "Create 7seas Podman network for operateur";
+    wantedBy = [ "multi-user.target" ];
+    before = [
+      "podman-flaresolverr.service"
+      "podman-prowlarr.service"
+      "podman-radarr.service"
+      "podman-sonaar.service"
+    ];
+    serviceConfig = {
+      Type = "oneshot";
+      User = "operateur";
+      RemainAfterExit = true;
+      ExecStart = "${pkgs.podman}/bin/podman network exists 7seas || ${pkgs.podman}/bin/podman network create 7seas";
+    };
+  };
+
   virtualisation.oci-containers = {
     containers."gluetun" = {
       podman.user = "operateur";
@@ -837,12 +857,15 @@ in
         PUID = "1000";
         PGID = "1000";
       };
+      extraOptions = [ "--network=7seas" ];
+      dependsOn = [ "flaresolverr" ];
       volumes = [ "prowlarr.etc:/config" ];
       ports = [ "9696:9696/tcp" ];
       image = "lscr.io/linuxserver/prowlarr:latest";
     };
     containers."radarr" = {
       podman.user = "operateur";
+      extraOptions = [ "--network=7seas" ];
       environment = {
         PUID = "1000";
         PGID = "1000";
@@ -854,6 +877,7 @@ in
     };
     containers."sonarr" = {
       podman.user = "operateur";
+      extraOptions = [ "--network=7seas" ];
       environment = {
         PUID = "1000";
         PGID = "1000";
@@ -862,6 +886,16 @@ in
       volumes = [ "sonarr.etc:/config" "/data/media:/media"];
       ports = [ "8989:8989/tcp" ];
       image = "lscr.io/linuxserver/sonarr:latest";
+    };
+    containers."flaresolverr" = {
+      image = "ghcr.io/flaresolverr/flaresolverr:latest";
+      podman.user = "operateur";
+      autoStart = true;
+      extraOptions = [
+        "--network=7seas"
+        "--name=flaresolverr"
+      ];
+      ports = [ "8191:8191" ];
     };
   };
   ## mount media subvolume for container bittorrent
