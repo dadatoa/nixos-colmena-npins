@@ -115,7 +115,7 @@
           PUID = "1000";
           PGID = "1000";
         };
-        extraOptions = [ "--network=7seas" ];
+        extraOptions = [ "--network=7seas" "--userns=keep-id" ];
         dependsOn = [ "flaresolverr" ];
         volumes = [ "prowlarr.etc:/config" ];
         ports = [ "9696:9696/tcp" ];
@@ -123,7 +123,7 @@
       };
       containers."radarr" = {
         podman.user = "operateur";
-        extraOptions = [ "--network=7seas" ];
+        extraOptions = [ "--network=7seas" "--userns=keep-id" ];
         environment = {
           PUID = "1000";
           PGID = "1000";
@@ -135,7 +135,7 @@
       };
       containers."sonarr" = {
         podman.user = "operateur";
-        extraOptions = [ "--network=7seas" ];
+        extraOptions = [ "--network=7seas" "--userns=keep-id" ];
         environment = {
           PUID = "1000";
           PGID = "1000";
@@ -152,6 +152,7 @@
         extraOptions = [
           "--network=7seas"
           "--name=flaresolverr"
+          "--userns=keep-id"
         ];
         ports = [ "8191:8191" ];
       };
