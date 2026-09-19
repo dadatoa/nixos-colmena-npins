@@ -50,7 +50,7 @@
       # openFirewall = true; # Please see the comments section
       settings = {
         WebService = {
-          # AllowUnencrypted = true; # 2026-08-04: Not needed anymore?
+          AllowUnencrypted = true; # 2026-08-04: Not needed anymore?
           Origins = lib.mkForce "http://127.0.0.1:9090 https://127.0.0.1:9090 http://10.10.10.209:9090 https://10.10.10.209:9090 http://nas.local:9090 https://nas.local:9090" ;
         };
       };
@@ -62,25 +62,6 @@
     virtualisation.containers.enable = true;
     virtualisation.podman.enable = true;
     virtualisation.oci-containers.backend = "podman";
-    # Create System service that ensures the rootless network exists for user 'operateur'
-    # need to attach prowlarr and flaresolver to the samenetwork in order to make it work
-    # i will put all -arr stack under th same network
-    systemd.services.create-7seas-network = {
-      description = "Create 7seas Podman network for operateur";
-      wantedBy = [ "multi-user.target" ];
-      before = [
-        "podman-flaresolverr.service"
-        "podman-prowlarr.service"
-        "podman-radarr.service"
-        "podman-sonaar.service"
-      ];
-      serviceConfig = {
-        Type = "oneshot";
-        User = "operateur";
-        RemainAfterExit = true;
-        ExecStart = "${pkgs.podman}/bin/podman network exists 7seas || ${pkgs.podman}/bin/podman network create 7seas";
-      };
-    };
   
     virtualisation.oci-containers = {
       containers."gluetun" = {
@@ -168,9 +149,4 @@
       after = [ "data-media.mount" ];
       wants = [ "data-media.mount" ];
     };
-  # services.jellyfin = {
-  #     enable = true;
-  #     openFirewall = true;
-  #     package = pkgs.unstable.jellyfin;
-  #   };
 }
