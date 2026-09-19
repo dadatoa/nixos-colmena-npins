@@ -916,11 +916,11 @@ in
 **** services
 #+NAME: nas-services
 #+begin_src nix
-services.jellyfin = {
-    enable = true;
-    openFirewall = true;
-    package = pkgs.unstable.jellyfin;
-  };
+# services.jellyfin = {
+#     enable = true;
+#     openFirewall = true;
+#     package = pkgs.unstable.jellyfin;
+#   };
 #+end_src
 
 * xl configs

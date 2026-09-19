@@ -168,9 +168,9 @@
       after = [ "data-media.mount" ];
       wants = [ "data-media.mount" ];
     };
-  services.jellyfin = {
-      enable = true;
-      openFirewall = true;
-      package = pkgs.unstable.jellyfin;
-    };
+  # services.jellyfin = {
+  #     enable = true;
+  #     openFirewall = true;
+  #     package = pkgs.unstable.jellyfin;
+  #   };
 }
