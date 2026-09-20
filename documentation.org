@@ -891,7 +891,6 @@ in
   };
 #+end_src
 
-<<<<<<< HEAD
 * xl configs
 #+begin_src ini :tangle ./xl_configs/nas.cfg
 
