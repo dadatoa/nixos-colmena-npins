@@ -34,7 +34,12 @@
     "vfio_pci"
     "vfio"
     "vfio_iommu_type1"
+    "nbd" ## add nbd module to be able to mount qcow and raw images disks
   ];
+  ## allow qcow image to have multiple partition (up to 7)
+  boot.extraModprobeConfig = ''
+    options nbd max_part=8
+  '';
 
   # Run as a Xen Project type-1 hypervisor; NixOS becomes the privileged dom0.
   virtualisation.xen = {
