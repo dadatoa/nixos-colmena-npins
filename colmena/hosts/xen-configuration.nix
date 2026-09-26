@@ -109,7 +109,7 @@
   fileSystems."/data/disks" = {
     neededForBoot = true;
     device = "/dev/mapper/sys-disk_images";
-    fstype = "ext4";
+    fsType = "ext4";
   };
 
   swapDevices =
@@ -237,7 +237,7 @@
     settings = {
       WebService = {
         AllowUnencrypted = true; # 2026-08-04: Not needed anymore?
-        Origins = lib.mkForce "http://127.0.0.1:9090 https://127.0.0.1:9090 https://100.113.83.131 https://xen-cockpit.blue-edmontosaurus.ts.net https://100.85.206.102:9090 http://100.85.206.102:9090";
+        Origins = lib.mkForce "http://127.0.0.1:9090 https://127.0.0.1:9090 https://100.113.83.131 https://xen-cockpit.blue-edmontosaurus.ts.net https://100.85.206.102:9090 http://100.85.206.102:9090 https://xen.dadatoa.net";
       };
     };
   };
