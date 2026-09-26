@@ -106,6 +106,12 @@
     options = [ "subvol=@nix" "compress=zstd" "noatime" ];
     };
 
+  fileSystems."/data/disks" = {
+    neededForBoot = true;
+    device = "/dev/mapper/sys-disk_images";
+    fstype = "ext4";
+  };
+
   swapDevices =
     [ { device = "/dev/disk/by-uuid/a6a0f0a7-f380-496e-b341-65466510ffca"; }
     ];
