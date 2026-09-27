@@ -106,7 +106,7 @@ in
     networking.hostName = "xen";
     deployment = {
       targetHost = "100.85.206.102";
-      targetUser = "operateur";
+      targetUser = "root";
       tags = [ "dom0" ];
     };
     imports = [
@@ -118,8 +118,8 @@ in
   {
     networking.hostName = "nas";
     deployment = {
-      targetHost = "10.10.10.209";
-      targetUser = "operateur";
+      targetHost = "100.75.154.28";
+      targetUser = "root";
       tags = [ "domu" ];
     };
     imports = [

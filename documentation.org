@@ -264,7 +264,7 @@ in
   '';
 
   # allow nix-copy to live system
-  nix.settings.trusted-users = [ "operateur" ];
+  nix.settings.trusted-users = [ "root" ];
 }
 #+end_src
 
@@ -425,7 +425,7 @@ in
     networking.hostName = "xen";
     deployment = {
       targetHost = "100.85.206.102";
-      targetUser = "operateur";
+      targetUser = "root";
       tags = [ "dom0" ];
     };
     imports = [
@@ -713,8 +713,8 @@ in
   {
     networking.hostName = "nas";
     deployment = {
-      targetHost = "10.10.10.209";
-      targetUser = "operateur";
+      targetHost = "100.75.154.28";
+      targetUser = "root";
       tags = [ "domu" ];
     };
     imports = [

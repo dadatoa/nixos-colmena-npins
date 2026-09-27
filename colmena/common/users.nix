@@ -64,5 +64,5 @@
   '';
 
   # allow nix-copy to live system
-  nix.settings.trusted-users = [ "operateur" ];
+  nix.settings.trusted-users = [ "root" ];
 }
