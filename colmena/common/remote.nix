@@ -15,7 +15,7 @@
     authKeyFile = "/persist/keys/ts_secret";
     authKeyParameters.ephemeral = false;
     authKeyParameters.preauthorized = true;
-    extraUpFlags = [ "--advertise-tags=tag:prod" ];
+    extraUpFlags = [ "--advertise-tags=tag:prod" "--ssh" ];
   };
 
   # Enable mDNS autodiscovery
