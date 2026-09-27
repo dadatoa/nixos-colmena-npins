@@ -405,7 +405,7 @@ in
 
       users.operateur = {
         directories = [ ".ssh" ".local/share/containers" ".config" ];
-        files = [ ".gitconfig" ];
+        files = [ ".gitconfig" ".bashrc" ".bash_profile" ];
       };
     };
   };
