@@ -28,6 +28,7 @@
       ];
       directories = [ "/data" ];
       # Preserve user files
+      users.operateur.directories = [ ".local/share/containers" ];
 
       users.root = {
         home = "/root";

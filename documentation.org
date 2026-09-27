@@ -408,7 +408,7 @@ in
       ];
 
       users.operateur = {
-        directories = [ ".ssh" ".local/share/containers" ".config" ];
+        directories = [ ".ssh" ".config" ".cache" ];
         files = [ ".gitconfig" ".bashrc" ".bash_profile" ];
       };
     };
@@ -757,6 +757,7 @@ in
       ];
       directories = [ "/data" ];
       # Preserve user files
+      users.operateur.directories = [ ".local/share/containers" ];
 
       users.root = {
         home = "/root";

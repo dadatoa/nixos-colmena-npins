@@ -18,7 +18,7 @@
       ];
 
       users.operateur = {
-        directories = [ ".ssh" ".local/share/containers" ".config" ];
+        directories = [ ".ssh" ".config" ".cache" ];
         files = [ ".gitconfig" ".bashrc" ".bash_profile" ];
       };
     };
