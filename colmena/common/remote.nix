@@ -12,6 +12,9 @@
   services.tailscale = {
     enable = true;
     package = pkgs.unstable.tailscale;
+    authKeyFile = "/persist/keys/ts_secret";
+    authKeyParameters.ephemeral = false;
+    authKeyParameters.preauthorized = true;
   };
 
   # Enable mDNS autodiscovery
