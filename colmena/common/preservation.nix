@@ -16,6 +16,11 @@
           how = "symlink";
         }
       ];
+
+      users.operateur = {
+        directories = [ ".ssh" ".local/share/containers" ".config" ];
+        files = [ ".gitconfig" ".bashrc" "bash_profile" ];
+      };
     };
   };
 }

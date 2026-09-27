@@ -222,8 +222,7 @@
         "/etc/xen/auto/alp1.cfg"
       ];
       users.operateur = {
-        directories = [ ".ssh" ".config" "xl-configs" ];
-        files = [ ".gitconfig" ];
+        directories = [ "xl-configs" ];
       };
 
     };

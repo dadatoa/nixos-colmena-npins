@@ -28,10 +28,7 @@
       ];
       directories = [ "/data" ];
       # Preserve user files
-      users.operateur = {
-        directories = [ ".ssh" ".local/share/containers" ".config" ];
-        files = [ ".gitconfig" ".config/nushell/config.nu" ];
-      };
+
       users.root = {
         home = "/root";
         directories = [];

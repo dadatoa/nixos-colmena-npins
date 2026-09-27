@@ -421,6 +421,11 @@ in
           how = "symlink";
         }
       ];
+
+      users.operateur = {
+        directories = [ ".ssh" ".local/share/containers" ".config" ];
+        files = [ ".gitconfig" ".bashrc" "bash_profile" ];
+      };
     };
   };
 }
@@ -687,8 +692,7 @@ in
         "/etc/xen/auto/alp1.cfg"
       ];
       users.operateur = {
-        directories = [ ".ssh" ".config" "xl-configs" ];
-        files = [ ".gitconfig" ];
+        directories = [ "xl-configs" ];
       };
 
     };
@@ -768,10 +772,7 @@ in
       ];
       directories = [ "/data" ];
       # Preserve user files
-      users.operateur = {
-        directories = [ ".ssh" ".local/share/containers" ".config" ];
-        files = [ ".gitconfig" ".config/nushell/config.nu" ];
-      };
+
       users.root = {
         home = "/root";
         directories = [];
