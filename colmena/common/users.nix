@@ -2,6 +2,7 @@
 # - uid 1000
 # - passwordless sudo
 # - may reboot/poweroff without sudo (polkit)
+# - shell: bash, avec ble.sh + starship (config starship via chezmoi)
 { pkgs, ... }:
 {
   users.groups.operateur = { gid = 1000; };
@@ -13,12 +14,22 @@
     extraGroups = [ "wheel" "video" ];
     # rootless podman: /data/media bind mount Permission denied sans subuid/gid
     autoSubUidGidRange = true;
-    # shell = pkgs.nushell;
-    packages = with pkgs; [ nushell zoxide fish carapace starship chezmoi ];
+    # programs.bash (default = true) fournit /etc/profile, /etc/bashrc,
+    # /etc/bash_logout et users.defaultUserShell = pkgs.bashInteractive
+    shell = pkgs.bashInteractive;
+    packages = with pkgs; [ zoxide chezmoi ];
     hashedPasswordFile = "/persist/keys/operateur_password_hash";
   };
 
-  environment.shells = [ pkgs.nushell ];
+  # /etc/bashrc : prompt starship, puis ble.sh (sourcé en premier via mkBefore)
+  programs.starship.enable = true;
+  programs.bash.blesh.enable = true;
+
+  # bash-completion est déjà activé (programs.bash.completion.enable = true)
+  environment.systemPackages = [ pkgs.carapace ];
+  environment.interactiveShellInit = ''
+    source <(carapace bash)
+  '';
 
   # users.users.root.hashedPassword = "$y$j9T$7KS0JnyfiA/D3xjb5KhkL.$4ftVKMN9aVxQZ4HGXWOB8eVaq9EOXFL01Jq8vyEBG93";
   users.users.root.hashedPasswordFile = "/persist/keys/root_password_hash";
