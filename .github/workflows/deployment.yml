@@ -62,8 +62,5 @@ jobs:
           echo "BAO_TOKEN=$TOKEN" >> "$GITHUB_ENV"
           echo "OPENBAO_TOKEN=$TOKEN" >> "$GITHUB_ENV"
 
-      - name: "deployment to vms"
-        run: colmena apply -f colmena/hive.nix --reboot --on @domu
-
-      - name: "deployment to xen"
-        run: colmena apply -f colmena/hive.nix --reboot --on @dom0
+      - name: "deploy"
+        run: colmena apply switch -f colmena/hive.nix
