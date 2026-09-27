@@ -917,6 +917,7 @@ kernel="/run/current-system/sw/lib/grub-xen_pvh/grub-i386-xen_pvh.bin"
 * Notes personnelles
 ** reboot if nixos
 #+begin_src bash
+#!/usr/bin/env bash
 current=$(uname -r)
 last="$(ls /run/current-system/kernel-modules/lib/modules)"
 if [ $current == $last ]; then echo "no reboot"; else echo "reboot"; fi
