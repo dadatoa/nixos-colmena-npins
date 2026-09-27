@@ -13,7 +13,7 @@
     extraGroups = [ "wheel" "video" ];
     # rootless podman: /data/media bind mount Permission denied sans subuid/gid
     autoSubUidGidRange = true;
-    # shell = pkgs.nushell;
+    shell = pkgs.nushell;
     packages = with pkgs; [ nushell zoxide fish carapace starship chezmoi ];
     hashedPasswordFile = "/persist/keys/operateur_password_hash";
   };

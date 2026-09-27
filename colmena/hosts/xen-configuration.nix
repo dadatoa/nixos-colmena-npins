@@ -69,6 +69,7 @@
     # python3 # add python for Xen guest management with ansible
     colmena
     cdrkit
+    opencode
   ];
 
 
