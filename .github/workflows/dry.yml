@@ -1,4 +1,4 @@
-name: deploy nixos on DomUs
+name: dry-activate nixos configurations
 
 on:
   workflow_dispatch:
@@ -62,5 +62,5 @@ jobs:
           echo "BAO_TOKEN=$TOKEN" >> "$GITHUB_ENV"
           echo "OPENBAO_TOKEN=$TOKEN" >> "$GITHUB_ENV"
 
-      - name: "deployment to vms"
-        run: colmena apply -f colmena/hive.nix --reboot --on @domu
+      - name: "dry-activate"
+        run: colmena apply dry-activate -f colmena/hive.nix
