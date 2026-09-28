@@ -118,6 +118,10 @@
     ];
 
 
+  services.nfs.server.enable = true;
+  services.nfs.server.exports = ''
+    /data/vm  10.10.10.0/24(rw,nohide,insecure,no_subtree_check)
+  '';
   networking.firewall.enable = false;
 
   ## manage network with systemd
