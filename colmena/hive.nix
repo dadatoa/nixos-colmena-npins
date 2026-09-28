@@ -93,6 +93,7 @@ in
       git
       gnupg
       iproute2
+      nushell
       pass
       pciutils
       usbutils
