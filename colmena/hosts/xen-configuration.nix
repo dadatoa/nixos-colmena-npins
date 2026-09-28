@@ -107,9 +107,9 @@
     options = [ "subvol=@nix" "compress=zstd" "noatime" ];
     };
 
-  fileSystems."/data/disks" = {
+  fileSystems."/data/vm" = {
     neededForBoot = true;
-    device = "/dev/mapper/sys-disk_images";
+    device = "/dev/mapper/sys-vm";
     fsType = "ext4";
   };
 
