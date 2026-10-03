@@ -2,6 +2,17 @@ name: deploy nixos configurations
 
 on:
   workflow_dispatch:
+    inputs:
+      reboot-dom0:
+        description: "also reboot xen (dom0) if its kernel changed (restarts the running domUs)"
+        type: boolean
+        required: false
+        default: false
+
+# Deployment targets, keep in sync with deployment.targetHost in colmena/hive.nix
+env:
+  HOST_DOM0: 100.85.206.102
+  HOST_DOMU: 100.75.154.28
 
 jobs:
   unseal-openbao:
@@ -64,3 +75,13 @@ jobs:
 
       - name: "deploy"
         run: colmena apply switch -f colmena/hive.nix
+
+      # The switch above only activates the new userland: the old kernel keeps
+      # running until the node is rebooted, so reboot when the kernel changed.
+      - name: "reboot @domu if needed"
+        run: .github/scripts/reboot-if-needed.sh nas "$HOST_DOMU"
+
+      # Rebooting dom0 also destroys and restarts every domU, so it stays opt-in.
+      - name: "reboot @dom0 if needed"
+        if: ${{ inputs.reboot-dom0 }}
+        run: .github/scripts/reboot-if-needed.sh xen "$HOST_DOM0"
