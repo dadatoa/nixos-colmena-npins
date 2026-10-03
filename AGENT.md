@@ -32,7 +32,8 @@ alpine/                #  reboot_if.sh
 documentation.org      # *** SOURCE OF TRUTH — org-mode literate file that tangles to colmena/**/*.nix + xl_configs/*.cfg
 deploy.sh              # Local deploy helper: pass→bao AppRole login → `colmena apply -f colmena/hive.nix`
 test-colmena-approle.sh# Verify colmena-app AppRole capabilities against OpenBao (admin AppRole → mint secret-id)
-.github/workflows/     # deployment.yml (colmena apply), deploy-domU.yml, deploy-keys.yml, unseal-openbao.yml, update-flake/npins.yml
+.github/workflows/     # deployment.yml (colmena apply switch + reboot), dry.yml, deploy-keys.yml, unseal-openbao.yml, update-flake/npins.yml
+.github/scripts/       # reboot-if-needed.sh: reboot a node only if the activated kernel differs from the running one
 ```
 
 ## 3. Tech Stack & Pins
@@ -100,7 +101,7 @@ Global config: `allowUnfree = true`, `nix.channel.enable = false`, `experimental
   ```
   Requires `colmena`, `bao`, `jq`, `pass` entries `bao/approle/colmena-role-id` + `colmena-secret-id`, and `BAO_ADDR` (default `https://bao.dadatoa.net`). The script logs into OpenBao, exports `BAO_TOKEN`, then `exec colmena apply -f colmena/hive.nix`.
 - **Verify secrets only:** `./test-colmena-approle.sh` (needs admin AppRole in `pass`).
-- **CI:** Push → GitHub Actions `deployment.yml` / `deploy-domU.yml` / `deploy-keys.yml` (each: `unseal-openbao` → install Nix+Colmena+Bao → Tailscale `tag:cicd` → `bao write auth/approle/login` → `colmena apply/upload-keys`). Secrets: `OPENBAO_ADDR`, `COLMENA_APP_ROLE_ID/SECRET_ID`, `TS_OAUTH_*`, `SSH_USER/KEY`, `TS_TAILNET`.
+- **CI:** Dispatch GitHub Actions `deployment.yml` / `dry.yml` / `deploy-keys.yml` (each: `unseal-openbao` → install Nix+Colmena+Bao → Tailscale `tag:cicd` → `bao write auth/approle/login` → `colmena apply switch`/`upload-keys` → `.github/scripts/reboot-if-needed.sh` on `@domu`, and on `@dom0` only if the `reboot-dom0` input is set). Secrets: `OPENBAO_ADDR`, `COLMENA_APP_ROLE_ID/SECRET_ID`, `TS_OAUTH_*`, `SSH_USER/KEY`, `TS_TAILNET`.
 
 ### Networking & Remote
 - Targets: `xen` → `100.85.206.102` (Tailscale), `nas` → `10.10.10.209` (VLAN 50). `targetUser = operateur` (`uid 1000`, `wheel`+`video`, `nushell`, passwordless sudo, polkit reboot/poweroff, `trusted-users`).
@@ -151,9 +152,9 @@ journalctl -u xencommons -b
 
 ## 9. CI Workflows
 
-- `deployment.yml` — full `colmena apply -f colmena/hive.nix` (all hosts).
-- `deploy-domU.yml` — `colmena apply --reboot --on @domu`.
-- `deploy-keys.yml` — `colmena upload-keys --on @domu`.
+- `deployment.yml` — `colmena apply switch -f colmena/hive.nix` (all hosts), then `.github/scripts/reboot-if-needed.sh`: `@domu` (nas) on every run, `@dom0` (xen) only when the `reboot-dom0` dispatch input is set (a dom0 reboot restarts the domUs). The script reboots only when the running kernel differs from the activated config's (`/run/current-system`, `/run/reboot-needed`), waits for the host to come back, and fails the run if it does not.
+- `dry.yml` — `colmena apply dry-activate` (no reboot).
+- `deploy-keys.yml` — `colmena upload-keys`.
 - `unseal-openbao.yml` — reusable; unseals Bao before deploy.
 - `update-flake.yml` / `update-npins.yml` — bump inputs/pins.
 
