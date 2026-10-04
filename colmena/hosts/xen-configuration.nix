@@ -58,20 +58,16 @@
     };
   };
 
-  ## add podman to try bootc provisionning machines
-  virtualisation.containers.enable = true;
-  virtualisation.podman.enable = true;
-
   ## aditionnal usefull packages for xen
   environment.systemPackages = with pkgs; [
-    bootc
-    podman-bootc
     qemu_xen
     grub2_xen
     grub2_xen_pvh
     grub2_pvhgrub_image
     grub2_pvgrub_image
     # grub2
+    OVMF
+    OVMF-xen
     # python3 # add python for Xen guest management with ansible
     colmena
     cdrkit
