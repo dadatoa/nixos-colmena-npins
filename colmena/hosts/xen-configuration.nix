@@ -58,8 +58,14 @@
     };
   };
 
+  ## add podman to try bootc provisionning machines
+  virtualisation.containers.enable = true;
+  virtualisation.podman.enable = true;
+
   ## aditionnal usefull packages for xen
   environment.systemPackages = with pkgs; [
+    bootc
+    podman-bootc
     qemu_xen
     grub2_xen
     grub2_xen_pvh
