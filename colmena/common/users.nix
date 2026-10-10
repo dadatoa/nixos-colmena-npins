@@ -17,7 +17,7 @@
     # programs.bash (default = true) fournit /etc/profile, /etc/bashrc,
     # /etc/bash_logout et users.defaultUserShell = pkgs.bashInteractive
     shell = pkgs.bashInteractive;
-    packages = with pkgs; [ zoxide chezmoi ];
+    packages = with pkgs; [ chezmoi ];
     hashedPasswordFile = "/persist/keys/operateur_password_hash";
   };
 

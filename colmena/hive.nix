@@ -99,6 +99,7 @@ in
       usbutils
       vim
       wget
+      zoxide
     ];
   };
 
