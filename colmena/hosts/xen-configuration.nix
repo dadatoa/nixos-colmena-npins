@@ -109,6 +109,13 @@
     options = [ "subvol=@nix" "compress=zstd" "noatime" ];
     };
 
+  fileSystems."/home/operateur/.local/share/containers" = {
+    neededForBoot = true;
+    device = "/dev/mapper/sys-dom0";
+    fsType = "btrfs";
+    options = [ "subvol=@containers" "compress=zstd" "noatime" ];
+    };
+
   fileSystems."/data/vm" = {
     neededForBoot = true;
     device = "/dev/mapper/sys-vm";
