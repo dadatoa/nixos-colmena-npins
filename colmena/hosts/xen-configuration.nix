@@ -113,7 +113,7 @@
     neededForBoot = true;
     device = "/dev/mapper/sys-dom0";
     fsType = "btrfs";
-    options = [ "subvol=@containers" "compress=zstd" "noatime" ];
+    options = [ "subvol=@containers" "compress=zstd" "noatime" "uid=1000" "gid=1000" ];
     };
 
   fileSystems."/data/vm" = {
@@ -235,7 +235,7 @@
         "/etc/xen/auto/alp1.cfg"
       ];
       users.operateur = {
-        directories = [ "xl-configs" ];
+        directories = [ "xl-configs" ".local/share"];
       };
 
     };
