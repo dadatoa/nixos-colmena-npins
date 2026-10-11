@@ -568,13 +568,6 @@ in
     options = [ "subvol=@nix" "compress=zstd" "noatime" ];
     };
 
-  fileSystems."/home/operateur/.local/share/containers" = {
-    neededForBoot = true;
-    device = "/dev/mapper/sys-dom0";
-    fsType = "btrfs";
-    options = [ "subvol=@containers" "compress=zstd" "noatime" "uid=1000" "gid=1000" ];
-    };
-
   fileSystems."/data/vm" = {
     neededForBoot = true;
     device = "/dev/mapper/sys-vm";
@@ -770,9 +763,6 @@ in
   };
   ## add udisk2 to enable disk visualisation in cockpit
   services.udisks2.enable = true;
-  ## add podman to play with bootc
-  virtualisation.containers.enable = true;
-  virtualisation.podman.enable = true;
 #+end_src
 
 *** Nas
