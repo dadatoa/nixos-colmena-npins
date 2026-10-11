@@ -224,8 +224,6 @@
     preserveAt."/persist" = {
       files = [
         "/etc/ssh/authorized_keys.d/operateur"
-        "/etc/xen/auto/nas.cfg"
-        "/etc/xen/auto/alp1.cfg"
       ];
       users.operateur = {
         directories = [ "xl-configs" ".local/share"];
