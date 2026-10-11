@@ -245,6 +245,7 @@
     port = 9090;
     plugins = [
       pkgs.cockpit-files
+      pkgs.cockpit-podman
     ];
     # openFirewall = true; # Please see the comments section
     settings = {
@@ -256,4 +257,7 @@
   };
   ## add udisk2 to enable disk visualisation in cockpit
   services.udisks2.enable = true;
+  ## add podman to play with bootc
+  virtualisation.containers.enable = true;
+  virtualisation.podman.enable = true;
 }
