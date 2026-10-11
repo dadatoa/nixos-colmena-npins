@@ -260,4 +260,41 @@
   ## add podman to play with bootc
   virtualisation.containers.enable = true;
   virtualisation.podman.enable = true;
+  environment.etc."xen/auto/fcos.cfg".text = ''
+    name = "fcos"
+    type = "pvh"
+    kernel = "${pkgs.OVMF-xen.mergedFirmware}"
+    vcpus = 2
+    memory = 2048
+    vif = [ "bridge=xenbr50,mac=00:16:3e:49:a2:58" ]
+    vfb = [ "vnc=1,vnclisten=127.0.0.1,vncunused=1" ]
+    on_poweroff = "destroy"
+    disk = [ 'format=qcow2, vdev=xvda, access=rw, target=/data/vm/fcos-metal.qcow2' ]
+  '';
+
+
+  environment.etc."xen/auto/alp1.cfg".text = ''
+    name = "alp1"
+    type = "pvh"
+    memory = 512
+    vcpus = 1
+    vif = ['bridge=xenbr50,mac=90:FA:28:00:10:C9']
+    vfb = [ "vnc=1,vnclisten=127.0.0.1,vncunused=1" ]
+    on_poweroff = "destroy"
+    disk = [ "/dev/sys/alp1,,xvda" ]
+    kernel="/run/current-system/sw/lib/grub-xen_pvh/grub-i386-xen_pvh.bin"
+  '';
+
+  environment.etc."xen/auto/nas.cfg".text = ''
+    name = "nas"
+    type = "pvh"
+    memory = 4096
+    vcpus = 2
+    vif = [ "bridge=xenbr50,mac=02:b0:9a:91:34:40" ]
+    on_poweroff = "destroy"
+    on_reboot = "restart"
+    on_crash = "restart"
+    disk = [ "/dev/sys/nas,,xvda", "/dev/rust/media,,xvdb"  ]
+    kernel="/run/current-system/sw/lib/grub-xen_pvh/grub-i386-xen_pvh.bin"
+  '';
 }
