@@ -248,16 +248,16 @@
   };
   ## add udisk2 to enable disk visualisation in cockpit
   services.udisks2.enable = true;
-  environment.etc."xen/auto/fcos.cfg".text = ''
-    name = "fcos"
+  environment.etc."xen/auto/microos.cfg".text = ''
+    name = "microos"
     type = "pvh"
     kernel = "${pkgs.OVMF-xen.mergedFirmware}"
     vcpus = 2
-    memory = 2048
+    memory = 4096
     vif = [ "bridge=xenbr50,mac=00:16:3e:49:a2:58" ]
     vfb = [ "vnc=1,vnclisten=127.0.0.1,vncunused=1" ]
     on_poweroff = "destroy"
-    disk = [ 'format=qcow2, vdev=xvda, access=rw, target=/data/vm/fcos-metal.qcow2' ]
+    disk = [ 'format=raw, vdev=xvda, access=rw, target=/dev/sys/microos' ]
   '';
 
 
