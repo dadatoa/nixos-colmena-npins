@@ -222,6 +222,7 @@
   preservation = {
 
     preserveAt."/persist" = {
+      directories = [ "/etc/xen/auto" ];
       files = [
         "/etc/ssh/authorized_keys.d/operateur"
       ];
