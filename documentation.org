@@ -507,6 +507,16 @@ in
     };
   };
 
+  # domUs start concurrently with dom0's own network stack. If xendomains runs
+  # before systemd-networkd has built the Xen bridges (xenbr50/xenbr66), guests
+  # come up attached to a bridge that isn't forwarding yet: DHCP may not land,
+  # and services that announce at boot (e.g. mDNS/avahi) stay silent until a
+  # manual restart. Wait for the network to be configured before starting domUs.
+  systemd.services.xendomains = {
+    after = [ "systemd-networkd.service" ];
+    wants = [ "systemd-networkd.service" ];
+  };
+
   ## aditionnal usefull packages for xen
   environment.systemPackages = with pkgs; [
     qemu_xen
