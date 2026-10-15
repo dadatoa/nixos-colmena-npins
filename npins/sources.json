@@ -22,16 +22,16 @@
       },
       "branch": "main",
       "submodules": false,
-      "revision": "2298bb926bee66b70b2f9a51de8649aa127d50e6",
-      "url": "https://github.com/herdrdev/herdr-nix/archive/2298bb926bee66b70b2f9a51de8649aa127d50e6.tar.gz",
-      "hash": "sha256-PSVLZbAfIeM/aCEG08eu0qlMjN6vHikc2F6H0Y2XNZ0="
+      "revision": "602c88543e53f33273ea913b774dfea0a812ac12",
+      "url": "https://github.com/herdrdev/herdr-nix/archive/602c88543e53f33273ea913b774dfea0a812ac12.tar.gz",
+      "hash": "sha256-o4QvYScvUHcOtYw3kFX5Tc+BG51kmyvHahIKZDERNG0="
     },
     "nixpkgs": {
       "type": "Channel",
       "name": "nixos-26.05",
       "artifact": "nixexprs.tar.xz",
-      "url": "https://releases.nixos.org/nixos/26.05/nixos-26.05.11576.7c8764b7c7b0/nixexprs.tar.xz",
-      "hash": "sha256-/hsaG8yWXZjTs6WJS2xnerd9VKBgJ8jN8e5ELHLt+bs="
+      "url": "https://releases.nixos.org/nixos/26.05/nixos-26.05.11829.a033e66ab94a/nixexprs.tar.xz",
+      "hash": "sha256-MdqpFMXQX2Vz1KgQ516wgEo4eiFzm3rEMyE3Qh4wyLA="
     },
     "preservation": {
       "type": "Git",
@@ -55,9 +55,9 @@
       },
       "branch": "nixos-unstable",
       "submodules": false,
-      "revision": "e7439b6b14ad3cc35d05608ebca9bce01a25f5f8",
-      "url": "https://github.com/nixos/nixpkgs/archive/e7439b6b14ad3cc35d05608ebca9bce01a25f5f8.tar.gz",
-      "hash": "sha256-H83yz/do+hjOO0uujHyH8RgtIQP2v7Mw+cLwcZK/xKc="
+      "revision": "55bfb4d7437bd4e09ab7cba58a43bd68eb310044",
+      "url": "https://github.com/nixos/nixpkgs/archive/55bfb4d7437bd4e09ab7cba58a43bd68eb310044.tar.gz",
+      "hash": "sha256-jBYGPi4udQ9uo4KQp9m2J0546nJVQitG15gvZSaVVAs="
     }
   },
   "version": 8
