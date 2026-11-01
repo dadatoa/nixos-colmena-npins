@@ -15,6 +15,18 @@
     # "xen-pciback.hide=(03:00.0)"
     "intel_iommu=on"
   ];
+
+  ## GPU et son passtrough
+  boot.blacklistedKernelModules = [
+    "i915"
+    "snd_hda_intel"           # HDA du PCH (audio HDMI + analogique)
+    "snd_sof_pci_intel_cnl"
+    "snd_soc_avs"
+  ];
+  boot.extraModprobeConfig = ''
+    options xen-pciback hide=(0000:00:02.0)(0000:00:1f.3)
+  '';
+
   boot.loader.systemd-boot.enable = true;
   boot.loader.systemd-boot.configurationLimit = 10;
   boot.loader.systemd-boot.consoleMode = "0";
@@ -49,6 +61,8 @@
     boot.params = [
       # "vga=ask"
       "dom0=pvh"
+      "iommu=on"
+      "intel_iommu=on"
     ];
     # Uses the PVH virtualisation mode for the Domain 0, instead of PV.
     # Cap dom0's own resources so guest domains have headroom (adjust per host).
