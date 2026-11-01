@@ -23,10 +23,14 @@
     "snd_sof_pci_intel_cnl"
     "snd_soc_avs"
   ];
+
+  ## allow qcow image to have multiple partition (up to 7)
+  ## hide pci devices to allow passthrough
   boot.extraModprobeConfig = ''
+    options nbd max_part=8
     options xen-pciback hide=(0000:00:02.0)(0000:00:1f.3)
   '';
-
+ 
   boot.loader.systemd-boot.enable = true;
   boot.loader.systemd-boot.configurationLimit = 10;
   boot.loader.systemd-boot.consoleMode = "0";
@@ -48,10 +52,6 @@
     "vfio_iommu_type1"
     "nbd" ## add nbd module to be able to mount qcow and raw images disks
   ];
-  ## allow qcow image to have multiple partition (up to 7)
-  boot.extraModprobeConfig = ''
-    options nbd max_part=8
-  '';
 
   # Run as a Xen Project type-1 hypervisor; NixOS becomes the privileged dom0.
   virtualisation.xen = {
