@@ -281,14 +281,34 @@
   services.udisks2.enable = true;
   environment.etc."xen/auto/microos.cfg".text = ''
     name = "microos"
-    type = "pvh"
-    kernel = "${pkgs.OVMF-xen.mergedFirmware}"
+    type = "hvm"
+    bios = "ovmf"
     vcpus = 2
     memory = 4096
     vif = [ "bridge=xenbr50,mac=00:16:3e:49:a2:58" ]
-    vfb = [ "vnc=1,vnclisten=127.0.0.1,vncunused=1" ]
     on_poweroff = "destroy"
     disk = [ 'format=raw, vdev=xvda, access=rw, target=/dev/sys/microos' ]
+
+    # Intel UHD Graphics 630 passthrough (the only GPU of the host). The device
+    # is taken away from dom0 at boot by xen-pciback, with i915 and
+    # snd_hda_intel blacklisted in dom0.
+    pci = [ '00:02.0' ]
+    # gfx_passthru is mandatory for an IGD: qemu hardcodes the 0:0:2.0 BDF and
+    # hvmloader programs the host OpRegion (VBT) so i915 finds the connectors.
+    # mmio_hole must cover the i915 DSM/stolen memory reservation (default 256M
+    # is too small).
+    gfx_passthru = 1
+    mmio_hole = 512
+    # With gfx_passthru there is no emulated VGA: the physical monitor wired to
+    # the iGPU is the guest display, and the emulated serial is the only text
+    # console (xl console). Requires the patched qemu_xen (see the overlay in
+    # colmena/hive.nix and patches/qemu-xen/README.md).
+    vga = "none"
+    serial = "pty"
+    # HDMI audio lives in the PCH HDA controller (00:1f.3), shared with the
+    # analog codec: assigning it gives the guest all audio outputs and takes
+    # audio away from dom0.
+    #pci = [ '00:02.0', '00:1f.3' ]
   '';
 
 

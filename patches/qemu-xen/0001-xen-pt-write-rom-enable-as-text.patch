@@ -1,0 +1,45 @@
+--- a/hw/xen/xen_pt_load_rom.c
++++ b/hw/xen/xen_pt_load_rom.c
+@@ -20,7 +20,6 @@
+ {
+     char name[32], rom_file[64];
+     FILE *fp;
+-    uint8_t val;
+     struct stat st;
+     void *ptr = NULL;
+     Object *owner = OBJECT(dev);
+@@ -47,8 +46,13 @@
+         goto close_rom;
+     }
+ 
+-    val = 1;
+-    if (fwrite(&val, 1, 1, fp) != 1) {
++    /*
++     * The kernel exposes the "rom" sysfs attribute as a boolean parsed by
++     * kstrtobool(): a raw binary byte 0x01 is rejected with -EINVAL, which
++     * left the ROM disabled and made every subsequent read fail.  Always
++     * write the enable/disable value as text.
++     */
++    if (fwrite("1", 1, 1, fp) != 1) {
+         goto close_rom;
+     }
+     fseek(fp, 0, SEEK_SET);
+@@ -73,6 +77,8 @@
+         error_printf("Device option ROM contents are probably invalid "
+                      "(check dmesg).\nSkip option ROM probe with rombar=0, "
+                      "or load from file with romfile=\n");
++        /* Don't hand back a partially filled buffer with *size unset. */
++        ptr = NULL;
+         goto close_rom;
+     }
+ 
+@@ -82,8 +88,7 @@
+ close_rom:
+     /* Write "0" to disable ROM */
+     fseek(fp, 0, SEEK_SET);
+-    val = 0;
+-    if (!fwrite(&val, 1, 1, fp)) {
++    if (!fwrite("0", 1, 1, fp)) {
+         XEN_PT_WARN(dev, "%s\n", "Failed to disable pci-sysfs rom file");
+     }
+     fclose(fp);

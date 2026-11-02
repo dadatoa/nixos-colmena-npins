@@ -1,0 +1,18 @@
+--- a/hw/xen/xen_pt.c
++++ b/hw/xen/xen_pt.c
+@@ -495,7 +495,14 @@
+     }
+ 
+     /* Register expansion ROM address */
+-    if (d->rom.base_addr && d->rom.size) {
++    /*
++     * For IGD passthrough xen_pt_setup_vga() already registered the ROM BAR
++     * (backed by the VBIOS read from /sys/bus/pci/devices/.../rom).  When the
++     * host exposes the video ROM as a shadow ROM at 0xc0000, d->rom.base_addr
++     * and d->rom.size are both set and registering the BAR a second time
++     * trips assert(!r->size) in pci_register_bar().
++     */
++    if (d->rom.base_addr && d->rom.size && !is_igd_vga_passthrough(d)) {
+         uint32_t bar_data = 0;
+ 
+         /* Re-set BAR reported by OS, otherwise ROM can't be read. */

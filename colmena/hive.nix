@@ -8,11 +8,26 @@ let sources = import ../npins;
     };
   };
 
+  # qemu-xen patched so that Intel IGD passthrough works from a dom0 running a
+  # recent kernel (see patches/qemu-xen/README.md):
+  #  - the sysfs "rom" attribute is a kstrtobool(), a raw 0x01 byte is refused
+  #  - the VGA ROM BAR is registered twice for IGD passthrough because the host
+  #    exposes the iGPU VBIOS as a shadow ROM (assert(!r->size) in
+  #    pci_register_bar)
+  qemuXenIgdOverlay = final: prev: {
+    qemu_xen = prev.qemu_xen.overrideAttrs (old: {
+      patches = (old.patches or [ ]) ++ [
+        ../patches/qemu-xen/0001-xen-pt-write-rom-enable-as-text.patch
+        ../patches/qemu-xen/0002-xen-pt-skip-rom-bar-for-igd.patch
+      ];
+    });
+  };
+
   pkgs = import sources.nixpkgs {
     config = {
       allowUnfree = true;
     };
-    overlays = [ unstableOverlay ];
+    overlays = [ unstableOverlay qemuXenIgdOverlay ];
   };
 in
 {
