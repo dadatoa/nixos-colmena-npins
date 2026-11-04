@@ -145,7 +145,7 @@
         };
         volumes = [ "jellyfin.etc:/config" "/data/media:/media"];
         ports = [ "8096:8096/tcp" ];
-        image = "lscr.io/linuxserver/sonarr:latest";
+        image = "lscr.io/linuxserver/jellyfin:latest";
       };
     };
     ## mount media subvolume for container bittorrent
