@@ -893,6 +893,7 @@ in
 
   <<nas-cockpit>>
   <<nas-containers>>
+  <<nas-jellyfin>>
 }
 #+end_src
 
@@ -1015,6 +1016,14 @@ in
   };
 #+end_src
 
+**** Jellyfin Server
+#+NAME: nas-jellyfin
+#+begin_src nix
+services.jellyfin = {
+  enable = true;
+  user = "operateur";
+};
+#+end_src
 * xl configs
 #+begin_src ini :tangle ./xl_configs/nas.cfg
 

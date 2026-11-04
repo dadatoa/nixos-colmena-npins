@@ -147,4 +147,8 @@
       after = [ "data-media.mount" ];
       wants = [ "data-media.mount" ];
     };
+  services.jellyfin = {
+    enable = true;
+    user = "operateur";
+  };
 }

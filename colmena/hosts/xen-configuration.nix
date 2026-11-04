@@ -30,7 +30,7 @@
     options nbd max_part=8
     options xen-pciback hide=(0000:00:02.0)(0000:00:1f.3)
   '';
- 
+
   boot.loader.systemd-boot.enable = true;
   boot.loader.systemd-boot.configurationLimit = 10;
   boot.loader.systemd-boot.consoleMode = "0";
