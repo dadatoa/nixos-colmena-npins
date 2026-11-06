@@ -135,18 +135,6 @@
         ];
         ports = [ "8191:8191" ];
       };
-      containers."jellyfin" = {
-        podman.user = "operateur";
-        extraOptions = [ "--network=7seas" "--userns=keep-id" ];
-        environment = {
-          PUID = "1000";
-          PGID = "1000";
-          TZ = "Asia/Bangkok";
-        };
-        volumes = [ "jellyfin.etc:/config" "/data/media:/media"];
-        ports = [ "8096:8096/tcp" ];
-        image = "lscr.io/linuxserver/jellyfin:latest";
-      };
     };
     ## mount media subvolume for container bittorrent
     fileSystems."/data/media" = {
