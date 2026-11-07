@@ -87,8 +87,8 @@
       RemainAfterExit = true;
       ExecStart = pkgs.writeShellScript "vendor-reset-wx2100" ''
         for dev in /sys/bus/pci/devices/0000:01:00.0 /sys/bus/pci/devices/0000:01:00.1; do
-          if [ -e "$dev/reset_method" ] && grep -q device_specific "$dev/reset_method" 2>/dev/null; then
-            echo device_specific > "$dev/reset_method"
+          if [ -e "$dev/reset_method" ]; then
+            echo device_specific > "$dev/reset_method" 2>/dev/null || true
           fi
         done
       '';
@@ -296,7 +296,8 @@
     vfb = [ "vnc=1,vnclisten=127.0.0.1,vncunused=1" ]
     on_poweroff = "destroy"
     disk = [ 'format=raw, vdev=xvda, access=rw, target=/dev/sys/microos' ]
-    pci = [ '01:00.0,permissive=1', '01:00.1,permissive=1' ]
+    # romfile: VBIOS dump (vendor-reset can make the card ROM unreadable)
+    pci = [ '01:00.0,permissive=1,romfile=/persist/wx2100.rom', '01:00.1,permissive=1' ]
     pci_permissive = 1
   '';
 
