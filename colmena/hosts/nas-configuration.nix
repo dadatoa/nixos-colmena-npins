@@ -135,7 +135,7 @@
         ];
         ports = [ "8191:8191" ];
       };
-    };
+  
     ## mount media subvolume for container bittorrent
     fileSystems."/data/media" = {
       device = "/dev/disk/by-label/media";

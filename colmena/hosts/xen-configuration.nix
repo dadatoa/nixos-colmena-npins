@@ -188,11 +188,6 @@
           Name = "xenbr50";
           Description = "xen isolated bridge for VLAN 50";
         };
-        # Guest-to-guest mDNS is multicast on this isolated bridge. With IGMP
-        # snooping on and no querier on the segment, the bridge can prune mDNS
-        # to a guest whose group join raced the bridge coming up, leaving it
-        # invisible until avahi restarts. Flood multicast instead.
-        bridgeConfig.MulticastSnooping = false;
       };
       "20-xenbr66" = {
         netdevConfig = {
@@ -200,7 +195,6 @@
           Name = "xenbr66";
           Description = "xen isolated bridge for VLAN 66";
         };
-        bridgeConfig.MulticastSnooping = false;
       };
     };
 
