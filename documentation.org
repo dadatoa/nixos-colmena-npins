@@ -1009,7 +1009,6 @@ in
 
 * xl configs
 #+begin_src ini :tangle ./xl_configs/nas.cfg
-
 name = "nas"
 type = "pvh"
 memory = 4096
@@ -1018,23 +1017,49 @@ vif = [ "bridge=xenbr50,mac=02:b0:9a:91:34:40" ]
 on_poweroff = "destroy"
 on_reboot = "restart"
 on_crash = "restart"
-disk = [ "/dev/sys/nas,,xvda", "/dev/rust/media,,xvdb", "/dev/nvme_vg/appdata,,xvdc"  ]
+disk = [ "/dev/sys/nas,,xvda", "/dev/rust/media,,xvdb" ]
 kernel="/run/current-system/sw/lib/grub-xen_pvh/grub-i386-xen_pvh.bin"
-
 #+end_src
 
-#+begin_src ini :tangle ./xl_configs/alp-dns1.cfg
-name = "alp-dns1"
+#+begin_src ini :tangle ./xl_configs/alp1.cfg
+name = "alp1"
 type = "pvh"
 memory = 512
 vcpus = 1
 vif = ['bridge=xenbr50,mac=90:FA:28:00:10:C9']
 vfb = [ "vnc=1,vnclisten=127.0.0.1,vncunused=1" ]
 on_poweroff = "destroy"
-disk = [ "/dev/sys/alp-dns1,,xvda" ]
+disk = [ "/dev/sys/alp1,,xvda" ]
 kernel="/run/current-system/sw/lib/grub-xen_pvh/grub-i386-xen_pvh.bin"
-
 #+end_src
+
+#+begin_src ini :tangle ./xl_configs/microos.cfg
+name = "microos"
+type = "hvm"
+bios = "ovmf"
+vcpus = 2
+memory = 4096
+vif = [ "bridge=xenbr50,mac=00:16:3e:49:a2:58" ]
+vfb = [ "vnc=1,vnclisten=127.0.0.1,vncunused=1" ]
+on_poweroff = "destroy"
+disk = [ 'format=raw, vdev=xvda, access=rw, target=/dev/sys/microos' ]
+# VBIOS ROM becomes unreadable after vendor-reset; xl on this host doesn't support romfile= in pci spec.
+pci = [ '01:00.0,permissive=1', '01:00.1,permissive=1' ]
+pci_permissive = 1
+#+end_src
+
+#+begin_src ini :tangle ./xl_configs/microos-pvh.cfg
+name = "microos-pvh"
+type = "pvh"
+kernel = "${pkgs.OVMF-xen.mergedFirmware}"
+vcpus = 2
+memory = 4096
+vif = [ "bridge=xenbr50,mac=00:16:3e:49:a2:58" ]
+vfb = [ "vnc=1,vnclisten=127.0.0.1,vncunused=1" ]
+on_poweroff = "destroy"
+disk = [ 'format=raw, vdev=xvda, access=rw, target=/dev/sys/microos' ]
+#+end_src
+
 * Notes personnelles
 ** reboot if nixos
 #+begin_src bash
