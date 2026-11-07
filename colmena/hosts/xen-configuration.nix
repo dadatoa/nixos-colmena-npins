@@ -31,6 +31,7 @@
 
   ## use latest kernel available
   boot.kernelPackages = pkgs.linuxPackages_latest;
+  boot.extraModulePackages = with config.boot.kernelPackages; [ vendor-reset ];
 
   # to disable "A start job is running for /dev/tpmrm0" timeout
   systemd.tpm2.enable = false;
@@ -39,6 +40,7 @@
 
   boot.initrd.systemd.enable = true;
   boot.initrd.kernelModules = [
+    "vendor_reset" # AMD GPU reset quirks (Polaris) for passthrough
     "vfio_pci"
     "vfio"
     "vfio_iommu_type1"
@@ -72,6 +74,25 @@
   systemd.services.xendomains = {
     after = [ "systemd-networkd.service" ];
     wants = [ "systemd-networkd.service" ];
+  };
+
+  # vendor-reset provides device_specific reset for AMD GPUs (Polaris SMU quirks).
+  # Must be active so Xen/pciback can reset the WX 2100 (01:00.0/01:00.1) on assign.
+  systemd.services.vendor-reset-wx2100 = {
+    description = "Enable vendor-reset for Radeon Pro WX 2100";
+    wantedBy = [ "multi-user.target" ];
+    after = [ "systemd-modules-load.service" ];
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+      ExecStart = pkgs.writeShellScript "vendor-reset-wx2100" ''
+        for dev in /sys/bus/pci/devices/0000:01:00.0 /sys/bus/pci/devices/0000:01:00.1; do
+          if [ -e "$dev/reset_method" ] && grep -q device_specific "$dev/reset_method" 2>/dev/null; then
+            echo device_specific > "$dev/reset_method"
+          fi
+        done
+      '';
+    };
   };
 
   ## aditionnal usefull packages for xen
