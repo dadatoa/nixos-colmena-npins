@@ -483,14 +483,6 @@ in
     "intel_iommu=on"
   ];
 
-  ## GPU et son passtrough
-  boot.blacklistedKernelModules = [
-    "i915"
-    "snd_hda_intel"           # HDA du PCH (audio HDMI + analogique)
-    "snd_sof_pci_intel_cnl"
-    "snd_soc_avs"
-  ];
-
   ## allow qcow image to have multiple partition (up to 7)
   ## hide pci devices to allow passthrough
   boot.extraModprobeConfig = ''
