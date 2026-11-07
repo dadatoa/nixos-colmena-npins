@@ -264,7 +264,7 @@
         "/etc/ssh/authorized_keys.d/operateur"
       ];
       users.operateur = {
-        directories = [ "xl-configs" ".local/share"];
+        directories = [ "nixos" ".local/share"];
       };
 
     };
