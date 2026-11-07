@@ -495,7 +495,7 @@ in
   ## hide pci devices to allow passthrough
   boot.extraModprobeConfig = ''
     options nbd max_part=8
-    options xen-pciback hide=(0000:01:00.0)(0000:00:01.1)(0000:04:00.0)
+    options xen-pciback hide=(0000:01:00.0)(0000:01:00.1)(0000:04:00.0)
   '';
 
   boot.loader.systemd-boot.enable = true;
