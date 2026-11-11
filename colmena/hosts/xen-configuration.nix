@@ -286,21 +286,6 @@
   };
   ## add udisk2 to enable disk visualisation in cockpit
   services.udisks2.enable = true;
-  environment.etc."xen/auto/microos.cfg".text = ''
-    name = "microos"
-    type = "hvm"
-    bios = "ovmf"
-    vcpus = 2
-    memory = 4096
-    vif = [ "bridge=xenbr50,mac=00:16:3e:49:a2:58" ]
-    vfb = [ "vnc=1,vnclisten=127.0.0.1,vncunused=1" ]
-    on_poweroff = "destroy"
-    disk = [ 'format=raw, vdev=xvda, access=rw, target=/dev/sys/microos' ]
-    # VBIOS ROM becomes unreadable after vendor-reset; xl on this host doesn't support romfile= in pci spec.
-    pci = [ '01:00.0,permissive=1', '01:00.1,permissive=1' ]
-    pci_permissive = 1
-  '';
-
   environment.etc."xen/auto/alp1.cfg".text = ''
     name = "alp1"
     type = "pvh"
