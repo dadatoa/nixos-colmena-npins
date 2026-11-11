@@ -993,6 +993,22 @@ in
 #+end_src
 
 * xl configs
+#+begin_src ini :tangle ./xl_configs/alp2.cfg
+name = "alp2"
+type = "hvm"
+bios = "ovmf"
+memory = 2048
+vcpus = 2
+vif = [ 'bridge=xenbr50,mac=00:16:3e:71:06:9c' ]
+vfb = [ "vnc=1,vnclisten=127.0.0.1,vncunused=1" ]
+on_poweroff = "destroy"
+disk = [ 'format=raw, vdev=xvda, access=rw, target=/dev/sys/alp2' ]
+# Passthrough GPU AMD (WX 2100) — nécessite que les devices soient masqués/assignables côté dom0 (pciback).
+# VBIOS ROM becomes unreadable after vendor-reset; xl on this host doesn't support romfile= in pci spec.
+pci = [ '01:00.0,permissive=1', '01:00.1,permissive=1' ]
+pci_permissive = 1
+#+end_src
+
 #+begin_src ini :tangle ./xl_configs/nas.cfg
 name = "nas"
 type = "pvh"
