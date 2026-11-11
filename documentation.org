@@ -486,9 +486,11 @@ in
 
   ## allow qcow image to have multiple partition (up to 7)
   ## hide pci devices to allow passthrough
+
+
   boot.extraModprobeConfig = ''
     options nbd max_part=8
-    options xen-pciback hide=(0000:01:00.0)(0000:01:00.1)(0000:04:00.0)
+  # options xen-pciback hide=(0000:01:00.0)(0000:01:00.1)(0000:04:00.0)
   '';
 
   boot.loader.systemd-boot.enable = true;
@@ -548,22 +550,22 @@ in
 
   # vendor-reset provides device_specific reset for AMD GPUs (Polaris SMU quirks).
   # Must be active so Xen/pciback can reset the WX 2100 (01:00.0/01:00.1) on assign.
-  systemd.services.vendor-reset-wx2100 = {
-    description = "Enable vendor-reset for Radeon Pro WX 2100";
-    wantedBy = [ "multi-user.target" ];
-    after = [ "systemd-modules-load.service" ];
-    serviceConfig = {
-      Type = "oneshot";
-      RemainAfterExit = true;
-      ExecStart = pkgs.writeShellScript "vendor-reset-wx2100" ''
-        for dev in /sys/bus/pci/devices/0000:01:00.0 /sys/bus/pci/devices/0000:01:00.1; do
-          if [ -e "$dev/reset_method" ]; then
-            echo device_specific > "$dev/reset_method" 2>/dev/null || true
-          fi
-        done
-      '';
-    };
-  };
+  # systemd.services.vendor-reset-wx2100 = {
+  #   description = "Enable vendor-reset for Radeon Pro WX 2100";
+  #   wantedBy = [ "multi-user.target" ];
+  #   after = [ "systemd-modules-load.service" ];
+  #   serviceConfig = {
+  #     Type = "oneshot";
+  #     RemainAfterExit = true;
+  #     ExecStart = pkgs.writeShellScript "vendor-reset-wx2100" ''
+  #       for dev in /sys/bus/pci/devices/0000:01:00.0 /sys/bus/pci/devices/0000:01:00.1; do
+  #         if [ -e "$dev/reset_method" ]; then
+  #           echo device_specific > "$dev/reset_method" 2>/dev/null || true
+  #         fi
+  #       done
+  #     '';
+  #   };
+  # };
 
   ## aditionnal usefull packages for xen
   environment.systemPackages = with pkgs; [
