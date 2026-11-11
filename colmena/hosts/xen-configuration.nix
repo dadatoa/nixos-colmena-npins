@@ -51,6 +51,7 @@
   # Run as a Xen Project type-1 hypervisor; NixOS becomes the privileged dom0.
   virtualisation.xen = {
     enable = true;
+    package = pkgs.unstable.xen;
     boot.builderVerbosity = "info";
     ## Adds a handy report that lets you know which Xen boot entries were created.
     boot.params = [
@@ -99,14 +100,14 @@
 
   ## aditionnal usefull packages for xen
   environment.systemPackages = with pkgs; [
-    qemu_xen
-    grub2_xen
-    grub2_xen_pvh
-    grub2_pvhgrub_image
-    grub2_pvgrub_image
+    unstable.qemu_xen
+    unstable.grub2_xen
+    unstable.grub2_xen_pvh
+    unstable.grub2_pvhgrub_image
+    unstable.grub2_pvgrub_image
     # grub2
-    OVMF
-    OVMF-xen
+    unstable.OVMF
+    unstable.OVMF-xen
     # python3 # add python for Xen guest management with ansible
     colmena
     cdrkit
