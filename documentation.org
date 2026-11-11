@@ -481,6 +481,7 @@ in
     ### hide pci device wifi from dom0 to be abble to pass it on anther damain
     # "xen-pciback.hide=(03:00.0)"
     "intel_iommu=on"
+    "iommu=pt"
   ];
 
   ## allow qcow image to have multiple partition (up to 7)
@@ -524,6 +525,7 @@ in
       "dom0=pvh"
       "iommu=on"
       "intel_iommu=on"
+      "iommu=pt"
     ];
     # Uses the PVH virtualisation mode for the Domain 0, instead of PV.
     # Cap dom0's own resources so guest domains have headroom (adjust per host).
